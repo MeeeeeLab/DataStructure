@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-10-26",
+  "track": "java",
+  "title": "单链表节点与遍历短练习",
+  "goal": "手写最小 Node，理解 head 与 next，并安全遍历空、单节点和多节点链。",
+  "prerequisites": [
+    "类与对象基础",
+    "引用与 null",
+    "while 循环"
+  ],
+  "filename": "SinglyLinkedListIntro.java",
+  "runCommand": "java SinglyLinkedListIntro.java",
+  "starter": "public class SinglyLinkedListIntro {\n    static class Node { int value; Node next; Node(int value){this.value=value;} }\n    static String traverse(Node head){ return \"\"; }\n}\n",
+  "solution": "public class SinglyLinkedListIntro {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        Node current = head;\n        while (current != null) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n            current = current.next;\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        if (!traverse(null).equals(\"\")) throw new AssertionError(\"empty\");\n        Node first = new Node(10);\n        if (!traverse(first).equals(\"10\")) throw new AssertionError(\"single\");\n        first.next = new Node(20);\n        first.next.next = new Node(30);\n        if (!traverse(first).equals(\"10 -> 20 -> 30\")) throw new AssertionError(\"chain\");\n        System.out.println(\"linked-list checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "head 保存首节点入口，空链表为 null。",
+    "current 沿 next 移动，不修改 head。",
+    "遍历 n 个节点时间 O(n)。"
+  ],
+  "steps": [
+    {
+      "id": "node",
+      "day": "2026-10-26",
+      "title": "定义节点",
+      "instruction": "保存 value 与 next。",
+      "hint": "next 默认 null。",
+      "knowledge": [
+        "Node",
+        "next"
+      ]
+    },
+    {
+      "id": "head",
+      "day": "2026-10-26",
+      "title": "建立链",
+      "instruction": "让 head 指向首节点并手工连接三节点。",
+      "hint": "画箭头后再写。",
+      "knowledge": [
+        "head",
+        "引用"
+      ]
+    },
+    {
+      "id": "traverse",
+      "day": "2026-10-26",
+      "title": "安全遍历",
+      "instruction": "用 current 从 head 走到 null。",
+      "hint": "不要移动 head。",
+      "knowledge": [
+        "遍历",
+        "null"
+      ]
+    },
+    {
+      "id": "test",
+      "day": "2026-10-26",
+      "title": "边界检查",
+      "instruction": "测试空、单节点和三节点链。",
+      "hint": "条件写 current != null。",
+      "knowledge": [
+        "边界",
+        "O(n)"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "test-1",
+      "label": "空链表",
+      "input": "traverse(null)",
+      "output": "",
+      "purpose": "验证空入口"
+    },
+    {
+      "id": "test-2",
+      "label": "单节点",
+      "input": "Node a=new Node(10); traverse(a)",
+      "output": "10",
+      "purpose": "验证最小非空"
+    },
+    {
+      "id": "test-3",
+      "label": "三节点",
+      "input": "10 -> 20 -> 30 -> null",
+      "output": "10 -> 20 -> 30",
+      "purpose": "验证完整遍历"
+    }
+  ],
+  "recall": [
+    {
+      "id": "head",
+      "question": "head 保存什么？",
+      "answer": "首节点引用；空链表时为 null。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-10-26 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "attribution": "2026-10-26 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java Language Specification：Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "attribution": "2026-10-26 实际核对，项目为原创教学练习"
+    }
+  ]
+}
