@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-25",
+  "topic": "周末项目二数组与字符串章节验收",
+  "stage": "数组与字符串",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-10/2026-10-25_周末项目二数组与字符串章节验收.md",
+  "collectedAt": "2026-10-25",
+  "sources": [
+    {
+      "title": "Java SE 25：Character",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：Arrays",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java Language Specification：Arrays",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-10.html",
+      "kind": "Java 官方规范"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：空成绩摘要",
+      "difficulty": "基础",
+      "prompt": "scoreSummary(new int[]{}, 0) 的契约输出是什么？",
+      "answer": "[0, 0, 0, 0]",
+      "explanation": "四项依次是数量、总分、最低、最高；空数据按约定全为0。",
+      "hint": "不要读取下标0。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-25 实际阅读的官方资料原创，非官方原题",
+      "reviewOf": "2026-10-24",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：先后扫描复杂度",
+      "difficulty": "基础",
+      "prompt": "先扫描 n 个成绩，再扫描 n 个字符，总时间复杂度是什么？",
+      "answer": 1,
+      "explanation": "两段先后执行是 n+n，忽略常数后为 O(n)。",
+      "hint": "先后相加，嵌套相乘。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-25 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(2ⁿ)"
+      ],
+      "reviewOf": "2026-10-18",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "有效区间",
+      "difficulty": "基础",
+      "prompt": "数组 {80,90,0,0} 的 size=2，成绩摘要应读取哪些元素？",
+      "answer": 0,
+      "explanation": "只读取下标0和1；容量空位不属于有效数据。",
+      "hint": "区间是 [0,size)。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-25 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "80和90",
+        "全部四项",
+        "只读90",
+        "不读取任何项"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "混合字符验收",
+      "difficulty": "基础",
+      "prompt": "textSummary(\"A 2!\") 按 {字母,数字,空白,其他} 返回什么？",
+      "answer": "[1, 1, 1, 1]",
+      "explanation": "A、2、空格、! 各进入一类。",
+      "hint": "每个字符只计一次。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-25 实际阅读的官方资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "章节独立实现",
+      "difficulty": "综合",
+      "prompt": "独立实现成绩摘要、文本摘要和组合报告；覆盖正常、空和非法 size。",
+      "answer": "import java.util.Arrays;\n\npublic class TextGradeStatsAcceptance {\n    static int[] scoreSummary(int[] scores, int size) {\n        if (size < 0 || size > scores.length) throw new IllegalArgumentException(\"size\");\n        if (size == 0) return new int[] {0, 0, 0, 0};\n        int sum = 0, min = scores[0], max = scores[0];\n        for (int i = 0; i < size; i++) {\n            sum += scores[i];\n            if (scores[i] < min) min = scores[i];\n            if (scores[i] > max) max = scores[i];\n        }\n        return new int[] {size, sum, min, max};\n    }\n\n    static int[] textSummary(String text) {\n        int letters = 0, digits = 0, spaces = 0, others = 0;\n        for (int i = 0; i < text.length(); i++) {\n            char ch = text.charAt(i);\n            if (Character.isLetter(ch)) letters++;\n            else if (Character.isDigit(ch)) digits++;\n            else if (Character.isWhitespace(ch)) spaces++;\n            else others++;\n        }\n        return new int[] {letters, digits, spaces, others};\n    }\n\n    static String report(int[] scores, int size, String text) {\n        return \"scores=\" + Arrays.toString(scoreSummary(scores, size))\n                + \", text=\" + Arrays.toString(textSummary(text));\n    }\n\n    static void check(Object actual, Object expected) {\n        if (!actual.equals(expected)) throw new AssertionError(actual);\n    }\n\n    public static void main(String[] args) {\n        check(report(new int[] {70, 95, 70}, 3, \"Ab 2!中\"),\n              \"scores=[3, 235, 70, 95], text=[3, 1, 1, 1]\");\n        check(report(new int[] {}, 0, \"\"),\n              \"scores=[0, 0, 0, 0], text=[0, 0, 0, 0]\");\n        boolean rejected = false;\n        try { scoreSummary(new int[] {80}, 2); }\n        catch (IllegalArgumentException expected) { rejected = true; }\n        if (!rejected) throw new AssertionError(\"invalid size accepted\");\n        System.out.println(\"chapter acceptance: OK\");\n    }\n}\n",
+      "explanation": "先检查 size，空区间先返回；两个单次扫描保持职责独立，report 只组合。",
+      "hint": "隐藏参考实现后再写。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-25 实际阅读的官方资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class TextGradeStatsAcceptance {\n    static int[] scoreSummary(int[] scores,int size){ return null; }\n    static int[] textSummary(String text){ return null; }\n    static String report(int[] scores,int size,String text){ return \"\"; }\n}\n",
+      "tests": [
+        {
+          "input": "report(new int[]{70,95,70},3,\"Ab 2!中\")",
+          "output": "scores=[3, 235, 70, 95], text=[3, 1, 1, 1]"
+        },
+        {
+          "input": "report(new int[]{},0,\"\")",
+          "output": "scores=[0, 0, 0, 0], text=[0, 0, 0, 0]"
+        },
+        {
+          "input": "scoreSummary(new int[]{80},2)",
+          "output": "IllegalArgumentException"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "chapter-check",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-24",
+      "offset": 1,
+      "topic": "文本与成绩统计工具"
+    },
+    {
+      "sourceDate": "2026-10-18",
+      "offset": 7,
+      "topic": "数组边界测试与复杂度验收"
+    }
+  ]
+}
