@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-26",
+  "topic": "单链表节点与遍历",
+  "stage": "单链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-10/2026-10-26_单链表节点与遍历.md",
+  "collectedAt": "2026-10-26",
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java Language Specification：Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "kind": "Java 官方规范"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：有效区间契约",
+      "difficulty": "基础",
+      "prompt": "scoreSummary(new int[]{80}, 2) 应怎样处理？",
+      "answer": 2,
+      "explanation": "size 超过数组长度，按章节契约抛出 IllegalArgumentException。",
+      "hint": "先验证模型。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-26 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "返回80",
+        "忽略错误",
+        "抛出 IllegalArgumentException",
+        "自动扩容"
+      ],
+      "reviewOf": "2026-10-25",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：数组头插移动",
+      "difficulty": "基础",
+      "prompt": "有效长度 n、容量足够的数组在下标0插入，需要移动多少个已有元素？",
+      "answer": 3,
+      "explanation": "n 个已有元素全部右移，因此移动 n 次。",
+      "hint": "为新元素腾出第一格。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-26 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "0",
+        "1",
+        "n-1",
+        "n"
+      ],
+      "reviewOf": "2026-10-19",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "空链表表示",
+      "difficulty": "基础",
+      "prompt": "手写单链表中，空链表通常如何表示？",
+      "answer": 0,
+      "explanation": "没有首节点时 head 为 null。",
+      "hint": "入口不存在。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-26 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "head == null",
+        "head.value == 0",
+        "head.next == head",
+        "创建长度0数组"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "遍历输出",
+      "difficulty": "基础",
+      "prompt": "head 指向 10，next 依次指向 20、30、null。逐节点输出值的顺序是什么？",
+      "answer": "10 -> 20 -> 30",
+      "explanation": "从 head 开始，沿 next 依次访问直到 null。",
+      "hint": "沿箭头走。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-26 实际阅读的官方资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "安全遍历单链表",
+      "difficulty": "基础",
+      "prompt": "定义 Node 并实现 traverse(Node head)，返回用 ` -> ` 连接的值；覆盖空、单节点和三节点链，且不修改 head。",
+      "answer": "public class SinglyLinkedListIntro {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        Node current = head;\n        while (current != null) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n            current = current.next;\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        if (!traverse(null).equals(\"\")) throw new AssertionError(\"empty\");\n        Node first = new Node(10);\n        if (!traverse(first).equals(\"10\")) throw new AssertionError(\"single\");\n        first.next = new Node(20);\n        first.next.next = new Node(30);\n        if (!traverse(first).equals(\"10 -> 20 -> 30\")) throw new AssertionError(\"chain\");\n        System.out.println(\"linked-list checks: OK\");\n    }\n}\n",
+      "explanation": "current 是独立的临时引用；while(current != null) 能覆盖最后节点和空链表。",
+      "hint": "循环末尾必须移动 current。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-26 实际阅读的官方资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class SinglyLinkedListIntro {\n    static class Node {\n        int value;\n        Node next;\n        Node(int value){ this.value=value; }\n    }\n    static String traverse(Node head){ return \"\"; }\n}\n",
+      "tests": [
+        {
+          "input": "traverse(null)",
+          "output": ""
+        },
+        {
+          "input": "Node a=new Node(10); traverse(a)",
+          "output": "10"
+        },
+        {
+          "input": "Node a=new Node(10); a.next=new Node(20); a.next.next=new Node(30); traverse(a)",
+          "output": "10 -> 20 -> 30"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "new-knowledge",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-25",
+      "offset": 1,
+      "topic": "数组与字符串章节验收"
+    },
+    {
+      "sourceDate": "2026-10-19",
+      "offset": 7,
+      "topic": "数组有效长度与插入"
+    }
+  ]
+}
