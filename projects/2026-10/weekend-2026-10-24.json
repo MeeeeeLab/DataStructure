@@ -3,20 +3,20 @@
   "projectId": "weekend-2026-10-24",
   "track": "java",
   "title": "文本与成绩统计工具",
-  "goal": "用数组有效区间和字符串遍历完成两个可测试的统计模块，明确空数据与非法边界。",
+  "goal": "组合成绩与文本摘要，完成数组与字符串章节的正常、空数据和非法边界验收。",
   "prerequisites": [
     "数组有效长度",
     "字符串 char 遍历",
     "O(n) 单次扫描"
   ],
-  "filename": "TextGradeStats.java",
-  "runCommand": "java TextGradeStats.java",
+  "filename": "TextGradeStatsAcceptance.java",
+  "runCommand": "java TextGradeStatsAcceptance.java",
   "starter": "import java.util.Arrays;\n\npublic class TextGradeStats {\n    static int[] scoreSummary(int[] scores, int size) {\n        return null;\n    }\n\n    static int[] textSummary(String text) {\n        return null;\n    }\n\n    public static void main(String[] args) {\n        // 在这里加入断言式检查\n    }\n}\n",
-  "solution": "import java.util.Arrays;\n\npublic class TextGradeStats {\n    static int[] scoreSummary(int[] scores, int size) {\n        if (size < 0 || size > scores.length) {\n            throw new IllegalArgumentException(\"size out of range\");\n        }\n        if (size == 0) return new int[] {0, 0, 0, 0};\n\n        int sum = 0;\n        int min = scores[0];\n        int max = scores[0];\n        for (int i = 0; i < size; i++) {\n            int score = scores[i];\n            sum += score;\n            if (score < min) min = score;\n            if (score > max) max = score;\n        }\n        return new int[] {size, sum, min, max};\n    }\n\n    static int[] textSummary(String text) {\n        int letters = 0, digits = 0, spaces = 0, others = 0;\n        for (int i = 0; i < text.length(); i++) {\n            char ch = text.charAt(i);\n            if (Character.isLetter(ch)) letters++;\n            else if (Character.isDigit(ch)) digits++;\n            else if (Character.isWhitespace(ch)) spaces++;\n            else others++;\n        }\n        return new int[] {letters, digits, spaces, others};\n    }\n\n    static void check(int[] actual, int[] expected) {\n        if (!Arrays.equals(actual, expected)) {\n            throw new AssertionError(Arrays.toString(actual));\n        }\n    }\n\n    public static void main(String[] args) {\n        check(scoreSummary(new int[] {70, 95, 70}, 3),\n              new int[] {3, 235, 70, 95});\n        check(scoreSummary(new int[] {}, 0),\n              new int[] {0, 0, 0, 0});\n        check(scoreSummary(new int[] {0}, 1),\n              new int[] {1, 0, 0, 0});\n        check(textSummary(\"Ab 2!中\"),\n              new int[] {3, 1, 1, 1});\n\n        boolean rejected = false;\n        try {\n            scoreSummary(new int[] {80}, 2);\n        } catch (IllegalArgumentException expected) {\n            rejected = true;\n        }\n        if (!rejected) throw new AssertionError(\"invalid size must be rejected\");\n\n        System.out.println(\"java checks: OK\");\n    }\n}\n",
+  "solution": "import java.util.Arrays;\n\npublic class TextGradeStatsAcceptance {\n    static int[] scoreSummary(int[] scores, int size) {\n        if (size < 0 || size > scores.length) throw new IllegalArgumentException(\"size\");\n        if (size == 0) return new int[] {0, 0, 0, 0};\n        int sum = 0, min = scores[0], max = scores[0];\n        for (int i = 0; i < size; i++) {\n            sum += scores[i];\n            if (scores[i] < min) min = scores[i];\n            if (scores[i] > max) max = scores[i];\n        }\n        return new int[] {size, sum, min, max};\n    }\n\n    static int[] textSummary(String text) {\n        int letters = 0, digits = 0, spaces = 0, others = 0;\n        for (int i = 0; i < text.length(); i++) {\n            char ch = text.charAt(i);\n            if (Character.isLetter(ch)) letters++;\n            else if (Character.isDigit(ch)) digits++;\n            else if (Character.isWhitespace(ch)) spaces++;\n            else others++;\n        }\n        return new int[] {letters, digits, spaces, others};\n    }\n\n    static String report(int[] scores, int size, String text) {\n        return \"scores=\" + Arrays.toString(scoreSummary(scores, size))\n                + \", text=\" + Arrays.toString(textSummary(text));\n    }\n\n    static void check(Object actual, Object expected) {\n        if (!actual.equals(expected)) throw new AssertionError(actual);\n    }\n\n    public static void main(String[] args) {\n        check(report(new int[] {70, 95, 70}, 3, \"Ab 2!中\"),\n              \"scores=[3, 235, 70, 95], text=[3, 1, 1, 1]\");\n        check(report(new int[] {}, 0, \"\"),\n              \"scores=[0, 0, 0, 0], text=[0, 0, 0, 0]\");\n        boolean rejected = false;\n        try { scoreSummary(new int[] {80}, 2); }\n        catch (IllegalArgumentException expected) { rejected = true; }\n        if (!rejected) throw new AssertionError(\"invalid size accepted\");\n        System.out.println(\"chapter acceptance: OK\");\n    }\n}\n",
   "solutionExplanation": [
-    "先验证 size，避免非法模型和空数组越界。",
-    "成绩与文本各扫描一次，时间分别为 O(size) 和 O(text.length())。",
-    "固定四项摘要让边界输出可直接比较；非法 size 明确抛异常。"
+    "只访问数组有效区间，空区间先返回。",
+    "字符分类互斥，两个扫描保持职责独立。",
+    "周日加入组合报告并完成章节验收样例。"
   ],
   "steps": [
     {
@@ -132,17 +132,17 @@
     {
       "title": "Java SE 25：Character",
       "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Character.html",
-      "attribution": "2026-10-24 实际核对，项目为原创教学练习"
+      "attribution": "2026-10-25 实际核对，项目为原创教学练习"
     },
     {
       "title": "Java SE 25：Arrays",
       "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html",
-      "attribution": "2026-10-24 实际核对，项目为原创教学练习"
+      "attribution": "2026-10-25 实际核对，项目为原创教学练习"
     },
     {
       "title": "Java Language Specification：Arrays",
       "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-10.html",
-      "attribution": "2026-10-24 实际核对，项目为原创教学练习"
+      "attribution": "2026-10-25 实际核对，项目为原创教学练习"
     }
   ]
 }
