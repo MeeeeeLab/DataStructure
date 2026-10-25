@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24",
+  "updatedAt": "2026-10-26",
   "projects": [
     {
       "id": "weekend-2026-10-10",
@@ -311,7 +311,7 @@
       "endDate": "2026-10-25",
       "kind": "weekend",
       "title": "文本与成绩统计工具",
-      "description": "周六完成数组与文本统计核心；周日继续同一 Java 项目做组合报告和独立验收。",
+      "description": "周六完成数组与文本统计，周日继续同一 Java 项目完成组合报告与章节验收。",
       "concepts": [
         "Git",
         "查找",
@@ -347,8 +347,10 @@
         "功能职责"
       ],
       "javaConcepts": [
-        "链表按位置插入",
-        "寻找前驱"
+        "Node",
+        "head",
+        "next",
+        "单链表遍历"
       ],
       "minutes": 60,
       "javaMinutes": 20,
@@ -356,7 +358,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-26.json",
       "guidePath": "projects/2026-10/daily-2026-10-26.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-26.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-27",
