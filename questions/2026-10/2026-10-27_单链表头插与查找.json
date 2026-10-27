@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-27",
+  "topic": "单链表头插与查找",
+  "stage": "单链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-10/2026-10-27_单链表头插与查找.md",
+  "collectedAt": "2026-10-27",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java Language Specification §8 Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "kind": "Java 官方规范"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：空链表",
+      "difficulty": "基础",
+      "prompt": "空单链表的 head 是什么？",
+      "answer": 2,
+      "explanation": "没有首节点时 head 为 null。",
+      "hint": "入口不存在。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-27 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "0",
+        "new Node(0)",
+        "null",
+        "空数组"
+      ],
+      "reviewOf": "2026-10-26",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：有效区间查找",
+      "difficulty": "基础",
+      "prompt": "容量5、size=2的数组查找目标时应检查哪些下标？",
+      "answer": 0,
+      "explanation": "只检查有效区间 [0,2)，即0和1。",
+      "hint": "容量不等于数据量。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-27 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "0和1",
+        "0到4",
+        "只检查2",
+        "不检查"
+      ],
+      "reviewOf": "2026-10-20",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "short",
+      "title": "两次头插",
+      "difficulty": "基础",
+      "prompt": "空链表依次头插10、再头插20，遍历结果是什么？",
+      "answer": "20 -> 10",
+      "explanation": "每次新节点都成为新 head。",
+      "hint": "后插到最前面。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-27 实际阅读的官方资料原创，非官方原题"
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "头插复杂度",
+      "difficulty": "基础",
+      "prompt": "单链表头插的时间复杂度是什么？",
+      "answer": 0,
+      "explanation": "只改固定数量引用，不随链长增长。",
+      "hint": "无需遍历。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-27 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(log n)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "头插与查找",
+      "difficulty": "基础",
+      "prompt": "实现 pushFront 和 contains；覆盖空链、两次头插、命中与未命中。",
+      "answer": "public class LinkedListFrontSearch {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    static Node pushFront(Node head, int value) {\n        return new Node(value, head);\n    }\n\n    static boolean contains(Node head, int target) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.value == target) return true;\n        }\n        return false;\n    }\n\n    public static void main(String[] args) {\n        Node head = null;\n        if (contains(head, 10)) throw new AssertionError(\"empty\");\n        head = pushFront(head, 10);\n        head = pushFront(head, 20);\n        if (head.value != 20 || head.next.value != 10) throw new AssertionError(\"links\");\n        if (!contains(head, 10) || contains(head, 99)) throw new AssertionError(\"search\");\n        System.out.println(\"front/search checks: OK\");\n    }\n}\n",
+      "explanation": "新节点 next 指向旧 head；查找用 current 遍历到 null。",
+      "hint": "调用者要接住新的 head。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-27 实际阅读的官方资料原创，非官方原题",
+      "language": "java",
+      "starter": "static Node pushFront(Node head,int value){ return null; }\nstatic boolean contains(Node head,int target){ return false; }\n",
+      "tests": [
+        {
+          "input": "contains(null,10)",
+          "output": "false"
+        },
+        {
+          "input": "head=pushFront(null,10); head=pushFront(head,20)",
+          "output": "20 -> 10"
+        },
+        {
+          "input": "contains(head,10); contains(head,99)",
+          "output": "true\nfalse"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "new-knowledge",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-26",
+      "offset": 1,
+      "topic": "单链表节点与遍历"
+    },
+    {
+      "sourceDate": "2026-10-20",
+      "offset": 7,
+      "topic": "数组删除与有效区间查找"
+    }
+  ]
+}
