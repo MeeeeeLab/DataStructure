@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-10-28",
+  "track": "java",
+  "title": "单链表尾插与成本短练习",
+  "goal": "在只有 head 的模型中实现尾插，并比较头插 O(1) 与尾插 O(n)。",
+  "prerequisites": [
+    "Node、head 与 next",
+    "Java 引用与 null"
+  ],
+  "filename": "LinkedListAppendCost.java",
+  "runCommand": "java LinkedListAppendCost.java",
+  "starter": "static Node append(Node head,int value){ return null; }\n",
+  "solution": "public class LinkedListAppendCost {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static Node append(Node head, int value) {\n        Node added = new Node(value);\n        if (head == null) return added;\n        Node current = head;\n        while (current.next != null) current = current.next;\n        current.next = added;\n        return head;\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        Node head = append(null, 10);\n        if (!traverse(head).equals(\"10\")) throw new AssertionError(\"empty append\");\n        head = append(head, 20);\n        head = append(head, 30);\n        if (!traverse(head).equals(\"10 -> 20 -> 30\")) throw new AssertionError(\"append order\");\n        System.out.println(\"append checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "在只有 head 的模型中实现尾插，并比较头插 O(1) 与尾插 O(n)。",
+    "仅使用标准库与一个自检入口。"
+  ],
+  "steps": [
+    {
+      "id": "empty",
+      "day": "2026-10-28",
+      "title": "空链尾插",
+      "instruction": "返回新节点作为 head。",
+      "hint": "不要访问 null.next。",
+      "knowledge": [
+        "空链",
+        "head"
+      ]
+    },
+    {
+      "id": "append",
+      "day": "2026-10-28",
+      "title": "非空尾插",
+      "instruction": "找到末节点再连接。",
+      "hint": "条件是 current.next != null。",
+      "knowledge": [
+        "尾插",
+        "遍历"
+      ]
+    },
+    {
+      "id": "cost",
+      "day": "2026-10-28",
+      "title": "成本比较",
+      "instruction": "解释为何只有 head 时为 O(n)。",
+      "hint": "必须找尾节点。",
+      "knowledge": [
+        "O(1)",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "test",
+      "day": "2026-10-28",
+      "title": "顺序自检",
+      "instruction": "验证10、20、30顺序。",
+      "hint": "返回原 head。",
+      "knowledge": [
+        "assert",
+        "边界"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "空链",
+      "input": "append(null,10)",
+      "output": "10",
+      "purpose": "空边界"
+    },
+    {
+      "id": "t2",
+      "label": "连续尾插",
+      "input": "run main",
+      "output": "append checks: OK",
+      "purpose": "顺序与链接"
+    }
+  ],
+  "recall": [
+    {
+      "id": "cost",
+      "question": "为何尾插是 O(n)？",
+      "answer": "只有 head 时必须遍历找到末节点。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-10-28 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-10-28 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java Language Specification §8 Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "attribution": "2026-10-28 实际核对，项目为原创教学练习"
+    }
+  ]
+}
