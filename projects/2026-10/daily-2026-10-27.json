@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-10-27",
+  "track": "java",
+  "title": "单链表头插与查找短练习",
+  "goal": "用 O(1) 头插建立链，并用 O(n) 遍历查找目标。",
+  "prerequisites": [
+    "Node、head 与 next",
+    "Java 引用与 null"
+  ],
+  "filename": "LinkedListFrontSearch.java",
+  "runCommand": "java LinkedListFrontSearch.java",
+  "starter": "static Node pushFront(Node head,int value){ return null; }\nstatic boolean contains(Node head,int target){ return false; }\n",
+  "solution": "public class LinkedListFrontSearch {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    static Node pushFront(Node head, int value) {\n        return new Node(value, head);\n    }\n\n    static boolean contains(Node head, int target) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.value == target) return true;\n        }\n        return false;\n    }\n\n    public static void main(String[] args) {\n        Node head = null;\n        if (contains(head, 10)) throw new AssertionError(\"empty\");\n        head = pushFront(head, 10);\n        head = pushFront(head, 20);\n        if (head.value != 20 || head.next.value != 10) throw new AssertionError(\"links\");\n        if (!contains(head, 10) || contains(head, 99)) throw new AssertionError(\"search\");\n        System.out.println(\"front/search checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "用 O(1) 头插建立链，并用 O(n) 遍历查找目标。",
+    "仅使用标准库与一个自检入口。"
+  ],
+  "steps": [
+    {
+      "id": "front",
+      "day": "2026-10-27",
+      "title": "头插",
+      "instruction": "新节点 next 指向旧 head。",
+      "hint": "返回新节点。",
+      "knowledge": [
+        "head",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "find",
+      "day": "2026-10-27",
+      "title": "查找",
+      "instruction": "沿 next 比较到 null。",
+      "hint": "覆盖最后节点。",
+      "knowledge": [
+        "遍历",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "test",
+      "day": "2026-10-27",
+      "title": "边界",
+      "instruction": "测试空、命中和未命中。",
+      "hint": "接住新 head。",
+      "knowledge": [
+        "null",
+        "assert"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "自检",
+      "input": "java LinkedListFrontSearch.java",
+      "output": "front/search checks: OK",
+      "purpose": "验证链接和查找"
+    }
+  ],
+  "recall": [
+    {
+      "id": "head",
+      "question": "头插后谁是 head？",
+      "answer": "新创建的节点。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-10-27 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-10-27 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java Language Specification §8 Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "attribution": "2026-10-27 实际核对，项目为原创教学练习"
+    }
+  ]
+}
