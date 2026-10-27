@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "topic": "单链表尾插与操作成本",
+  "stage": "单链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-10/2026-10-28_单链表尾插与操作成本.md",
+  "collectedAt": "2026-10-28",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java Language Specification §8 Classes",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html",
+      "kind": "Java 官方规范"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：头插顺序",
+      "difficulty": "基础",
+      "prompt": "空链表依次头插10、20，结果是什么？",
+      "answer": "20 -> 10",
+      "explanation": "每个新节点成为 head。",
+      "hint": "后插在前。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-28 实际阅读的官方资料原创，非官方原题",
+      "reviewOf": "2026-10-27",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：字符串遍历",
+      "difficulty": "基础",
+      "prompt": "遍历 String text 的所有 char，正确下标范围是什么？",
+      "answer": 1,
+      "explanation": "下标从0到length()-1，即 i < length()。",
+      "hint": "右端不包含。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-28 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "i <= text.length()",
+        "0 <= i < text.length()",
+        "1 <= i < text.length()",
+        "只访问0"
+      ],
+      "reviewOf": "2026-10-21",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "尾插空链表",
+      "difficulty": "基础",
+      "prompt": "append(null,10) 应返回什么？",
+      "answer": 2,
+      "explanation": "新节点同时是首节点和末节点，应成为新 head。",
+      "hint": "空链没有旧入口。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-28 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "null",
+        "原 head",
+        "值为10的新节点",
+        "长度0数组"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "尾插成本",
+      "difficulty": "基础",
+      "prompt": "只有 head、没有 tail 时，长度 n 的单链表尾插最坏复杂度是什么？",
+      "answer": 1,
+      "explanation": "必须沿 next 找到最后节点，最坏访问 n 个节点。",
+      "hint": "先找末尾。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-28 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(log n)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "安全尾插",
+      "difficulty": "基础",
+      "prompt": "实现 append，保持原顺序；覆盖空链表、单节点和连续尾插。",
+      "answer": "public class LinkedListAppendCost {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static Node append(Node head, int value) {\n        Node added = new Node(value);\n        if (head == null) return added;\n        Node current = head;\n        while (current.next != null) current = current.next;\n        current.next = added;\n        return head;\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        Node head = append(null, 10);\n        if (!traverse(head).equals(\"10\")) throw new AssertionError(\"empty append\");\n        head = append(head, 20);\n        head = append(head, 30);\n        if (!traverse(head).equals(\"10 -> 20 -> 30\")) throw new AssertionError(\"append order\");\n        System.out.println(\"append checks: OK\");\n    }\n}\n",
+      "explanation": "空链直接返回 added；非空链找到 current.next==null 后连接，并返回原 head。",
+      "hint": "非空时最终返回 head，不是 added。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-28 实际阅读的官方资料原创，非官方原题",
+      "language": "java",
+      "starter": "static Node append(Node head,int value){ return null; }\n",
+      "tests": [
+        {
+          "input": "traverse(append(null,10))",
+          "output": "10"
+        },
+        {
+          "input": "head=append(null,10); head=append(head,20); head=append(head,30); traverse(head)",
+          "output": "10 -> 20 -> 30"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "new-knowledge",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-27",
+      "offset": 1,
+      "topic": "单链表头插与查找"
+    },
+    {
+      "sourceDate": "2026-10-21",
+      "offset": 7,
+      "topic": "字符串长度与字符遍历"
+    }
+  ]
+}
