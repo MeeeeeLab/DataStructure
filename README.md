@@ -18,8 +18,7 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-上个周末项目：[文本与成绩统计工具](projects/2026-10/weekend-2026-10-24.md)（10 月 24–25 日同一项目；章节验收资料已发布，不记录个人完成状态）。\n\n今日工作日小练习：[单链表节点与遍历](projects/2026-10/daily-2026-10-26.md)。\n## 每日更新
-
+上个周末项目：[文本与成绩统计工具](projects/2026-10/weekend-2026-10-24.md)（10 月 24–25 日同一项目；章节验收资料已发布，不记录个人完成状态）。\n\n今日工作日小练习：[单链表尾插与操作成本](projects/2026-10/daily-2026-10-28.md)。上一练习：[单链表头插与查找](projects/2026-10/daily-2026-10-27.md)。\n
 每天生成一份中文 Markdown 笔记和 5 道题。笔记包含通俗解释、Java 示例、复杂度、易错点、练习和验收清单；每日 5 题会优先容纳到期的 D+1、D+7、D+30 复习，避免额外无限加量。
 
 答题进度和草稿按课程、日期与题号保存。更新学习计划不会修改进度键、旧日期或旧题号；重新打开网站后仍会恢复已有记录。
@@ -49,6 +48,8 @@
 | 2026-10-24 | [周末项目二：文本与成绩统计工具](notes/2026-10/2026-10-24_周末项目二文本与成绩统计工具.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-24_周末项目二文本与成绩统计工具.json) |
 | 2026-10-25 | [周末项目二：数组与字符串章节验收](notes/2026-10/2026-10-25_周末项目二数组与字符串章节验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-25_周末项目二数组与字符串章节验收.json) |
 | 2026-10-26 | [单链表节点与遍历](notes/2026-10/2026-10-26_单链表节点与遍历.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-26_单链表节点与遍历.json) |
+| 2026-10-27 | [单链表头插与查找](notes/2026-10/2026-10-27_单链表头插与查找.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-27_单链表头插与查找.json) |
+| 2026-10-28 | [单链表尾插与操作成本](notes/2026-10/2026-10-28_单链表尾插与操作成本.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-28_单链表尾插与操作成本.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
