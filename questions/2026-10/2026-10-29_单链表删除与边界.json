@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "topic": "单链表删除与边界",
+  "stage": "单链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-10/2026-10-29_单链表删除与边界.md",
+  "collectedAt": "2026-10-29",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：尾插空链",
+      "difficulty": "基础",
+      "prompt": "append(null,10) 应返回什么？",
+      "answer": 2,
+      "explanation": "新节点成为空链表的 head。",
+      "hint": "空链没有旧入口。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-29 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "null",
+        "原 head",
+        "值为10的新节点",
+        "空数组"
+      ],
+      "reviewOf": "2026-10-28",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：字符分类",
+      "difficulty": "基础",
+      "prompt": "按 {字母,数字,空白,其他} 分类 \"A 2!\"，结果是什么？",
+      "answer": "[1, 1, 1, 1]",
+      "explanation": "A、2、空格、! 各一项。",
+      "hint": "每个 char 只进一类。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-10-29 实际阅读的官方资料原创，非官方原题",
+      "reviewOf": "2026-10-22",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "删除 head",
+      "difficulty": "基础",
+      "prompt": "链表 10 -> 20 -> 30 删除第一次出现的10，新 head 是什么？",
+      "answer": 1,
+      "explanation": "旧 head 被删除，新入口是旧 head.next，即20节点。",
+      "hint": "返回 head.next。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-29 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "10节点",
+        "20节点",
+        "30节点",
+        "null"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "删除复杂度",
+      "difficulty": "基础",
+      "prompt": "按值删除第一次出现的目标，最坏时间复杂度是什么？",
+      "answer": 2,
+      "explanation": "目标可能在末尾或不存在，需要遍历整条链。",
+      "hint": "需要查找前驱。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-29 实际阅读的官方资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "删除第一次出现",
+      "difficulty": "基础",
+      "prompt": "实现 deleteFirst，覆盖空链、删除头/尾/单节点和目标不存在。",
+      "answer": "public class LinkedListDeleteFirst {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    static Node deleteFirst(Node head, int target) {\n        if (head == null) return null;\n        if (head.value == target) return head.next;\n        Node current = head;\n        while (current.next != null && current.next.value != target) {\n            current = current.next;\n        }\n        if (current.next != null) current.next = current.next.next;\n        return head;\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        if (deleteFirst(null, 1) != null) throw new AssertionError(\"empty\");\n        Node head = new Node(10, new Node(20, new Node(30, null)));\n        head = deleteFirst(head, 10);\n        if (!traverse(head).equals(\"20 -> 30\")) throw new AssertionError(\"head\");\n        head = deleteFirst(head, 30);\n        if (!traverse(head).equals(\"20\")) throw new AssertionError(\"tail\");\n        head = deleteFirst(head, 99);\n        if (!traverse(head).equals(\"20\")) throw new AssertionError(\"missing\");\n        head = deleteFirst(head, 20);\n        if (head != null) throw new AssertionError(\"single\");\n        System.out.println(\"delete checks: OK\");\n    }\n}\n",
+      "explanation": "先处理空和 head；其余情况保持 current 为前驱并跨过目标节点。",
+      "hint": "循环检查 current.next。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-29 实际阅读的官方资料原创，非官方原题",
+      "language": "java",
+      "starter": "static Node deleteFirst(Node head,int target){ return head; }\n",
+      "tests": [
+        {
+          "input": "deleteFirst(null,1)",
+          "output": "null"
+        },
+        {
+          "input": "10 -> 20 -> 30 删除10",
+          "output": "20 -> 30"
+        },
+        {
+          "input": "20 -> 30 删除30",
+          "output": "20"
+        },
+        {
+          "input": "20 删除99",
+          "output": "20"
+        },
+        {
+          "input": "20 删除20",
+          "output": "null"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "new-knowledge",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-28",
+      "offset": 1,
+      "topic": "单链表尾插与操作成本"
+    },
+    {
+      "sourceDate": "2026-10-22",
+      "offset": 7,
+      "topic": "字符串分类统计"
+    }
+  ]
+}
