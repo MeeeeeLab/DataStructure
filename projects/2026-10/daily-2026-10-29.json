@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-10-29",
+  "track": "java",
+  "title": "单链表删除与边界短练习",
+  "goal": "删除单链表中第一次出现的目标，并正确处理空、头、尾、单节点和未命中。",
+  "prerequisites": [
+    "Node/head/next",
+    "遍历与查找"
+  ],
+  "filename": "LinkedListDeleteFirst.java",
+  "runCommand": "java LinkedListDeleteFirst.java",
+  "starter": "static Node deleteFirst(Node head,int target){ return head; }\n",
+  "solution": "public class LinkedListDeleteFirst {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    static Node deleteFirst(Node head, int target) {\n        if (head == null) return null;\n        if (head.value == target) return head.next;\n        Node current = head;\n        while (current.next != null && current.next.value != target) {\n            current = current.next;\n        }\n        if (current.next != null) current.next = current.next.next;\n        return head;\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        if (deleteFirst(null, 1) != null) throw new AssertionError(\"empty\");\n        Node head = new Node(10, new Node(20, new Node(30, null)));\n        head = deleteFirst(head, 10);\n        if (!traverse(head).equals(\"20 -> 30\")) throw new AssertionError(\"head\");\n        head = deleteFirst(head, 30);\n        if (!traverse(head).equals(\"20\")) throw new AssertionError(\"tail\");\n        head = deleteFirst(head, 99);\n        if (!traverse(head).equals(\"20\")) throw new AssertionError(\"missing\");\n        head = deleteFirst(head, 20);\n        if (head != null) throw new AssertionError(\"single\");\n        System.out.println(\"delete checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "空链直接返回 null，删除 head 返回 head.next。",
+    "其他位置找到前驱后跨过目标。",
+    "最坏时间 O(n)，额外空间 O(1)。"
+  ],
+  "steps": [
+    {
+      "id": "head",
+      "day": "2026-10-29",
+      "title": "空链与头节点",
+      "instruction": "先处理两个特殊边界。",
+      "hint": "避免访问 null。",
+      "knowledge": [
+        "head",
+        "null"
+      ]
+    },
+    {
+      "id": "previous",
+      "day": "2026-10-29",
+      "title": "寻找前驱",
+      "instruction": "检查 current.next 是否为目标。",
+      "hint": "需要修改前驱的 next。",
+      "knowledge": [
+        "前驱",
+        "遍历"
+      ]
+    },
+    {
+      "id": "bypass",
+      "day": "2026-10-29",
+      "title": "跨过节点",
+      "instruction": "连接到目标的下一个节点。",
+      "hint": "未命中不修改。",
+      "knowledge": [
+        "引用",
+        "删除"
+      ]
+    },
+    {
+      "id": "test",
+      "day": "2026-10-29",
+      "title": "边界自检",
+      "instruction": "覆盖空、头、尾、单节点和未命中。",
+      "hint": "每次检查完整链。",
+      "knowledge": [
+        "assert",
+        "O(n)"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "全部边界",
+      "input": "java LinkedListDeleteFirst.java",
+      "output": "delete checks: OK",
+      "purpose": "验证删除契约"
+    }
+  ],
+  "recall": [
+    {
+      "id": "head-delete",
+      "question": "删除 head 后返回什么？",
+      "answer": "旧 head.next。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-10-29 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-10-29 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "attribution": "2026-10-29 实际核对，项目为原创教学练习"
+    }
+  ]
+}
