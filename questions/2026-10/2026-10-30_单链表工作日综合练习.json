@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-30",
+  "topic": "单链表工作日综合练习",
+  "stage": "单链表",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-10/2026-10-30_单链表工作日综合练习.md",
+  "collectedAt": "2026-10-30",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：删除头节点",
+      "difficulty": "基础",
+      "prompt": "链表 10 -> 20 删除第一次出现的 10，方法应返回什么？",
+      "answer": 1,
+      "explanation": "删除 head 后，新的入口是旧 head.next，即 20 节点。",
+      "hint": "调用者需要接收新 head。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-30 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "旧 10 节点",
+        "20 节点",
+        "null",
+        "新建数组"
+      ],
+      "reviewOf": "2026-10-29",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：有效区间边界",
+      "difficulty": "基础",
+      "prompt": "capacity=3、size=4 时，数组有效区间程序应先做什么？",
+      "answer": 2,
+      "explanation": "size 超过容量会导致越界，应在读取或扫描有效项前判为非法模型。",
+      "hint": "先验证 0 <= size <= capacity。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-30 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "扫描 4 项",
+        "把 size 改成 3 且不提示",
+        "报告非法模型",
+        "创建链表"
+      ],
+      "reviewOf": "2026-10-23",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "short",
+      "title": "插入与遍历追踪",
+      "difficulty": "基础",
+      "prompt": "从空链开始依次 append(20)、prepend(10)、append(30)，traverse 输出什么？",
+      "answer": "10 -> 20 -> 30",
+      "explanation": "头插把 10 放到入口，第二次尾插把 30 接到末尾。",
+      "hint": "每一步画出 head 与 next。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-30 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "连续线性操作",
+      "difficulty": "基础",
+      "prompt": "先 contains 做一次最坏 O(n) 查找，再 deleteFirst 做一次最坏 O(n) 删除，总时间复杂度是什么？",
+      "answer": 1,
+      "explanation": "两个操作先后执行，n+n 保留最高阶后仍是 O(n)。",
+      "hint": "先后相加，不是嵌套。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-10-30 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(log n)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "单链表工作日综合实现",
+      "difficulty": "综合",
+      "prompt": "从空链表开始实现头插、无 tail 的尾插、查找、删除第一次出现与遍历，并覆盖空链、单节点、首尾和未命中。",
+      "answer": "public class SinglyLinkedListCheck {\n    static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    static Node prepend(Node head, int value) {\n        return new Node(value, head);\n    }\n\n    static Node append(Node head, int value) {\n        Node node = new Node(value, null);\n        if (head == null) return node;\n        Node current = head;\n        while (current.next != null) current = current.next;\n        current.next = node;\n        return head;\n    }\n\n    static boolean contains(Node head, int target) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.value == target) return true;\n        }\n        return false;\n    }\n\n    static Node deleteFirst(Node head, int target) {\n        if (head == null) return null;\n        if (head.value == target) return head.next;\n        Node current = head;\n        while (current.next != null && current.next.value != target) {\n            current = current.next;\n        }\n        if (current.next != null) current.next = current.next.next;\n        return head;\n    }\n\n    static String traverse(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        Node head = null;\n        if (!traverse(head).equals(\"\")) throw new AssertionError(\"empty\");\n        head = append(head, 20);\n        head = prepend(head, 10);\n        head = append(head, 30);\n        if (!traverse(head).equals(\"10 -> 20 -> 30\")) throw new AssertionError(\"insert\");\n        if (!contains(head, 20) || contains(head, 99)) throw new AssertionError(\"find\");\n        head = deleteFirst(head, 10);\n        head = deleteFirst(head, 30);\n        head = deleteFirst(head, 99);\n        if (!traverse(head).equals(\"20\")) throw new AssertionError(\"delete\");\n        head = deleteFirst(head, 20);\n        if (head != null) throw new AssertionError(\"single\");\n        System.out.println(\"linked-list checks: OK\");\n    }\n}\n",
+      "explanation": "所有方法都只操作 Node 和 next；测试把本周操作串成一个最小可运行流程。",
+      "hint": "每个可能改变 head 的方法都返回 head。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-10-30 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "static Node prepend(Node head,int value){ return head; }\nstatic Node append(Node head,int value){ return head; }\nstatic boolean contains(Node head,int target){ return false; }\nstatic Node deleteFirst(Node head,int target){ return head; }\nstatic String traverse(Node head){ return \"\"; }\n",
+      "tests": [
+        {
+          "input": "empty traverse",
+          "output": ""
+        },
+        {
+          "input": "append 20; prepend 10; append 30",
+          "output": "10 -> 20 -> 30"
+        },
+        {
+          "input": "contains 20; contains 99",
+          "output": "true; false"
+        },
+        {
+          "input": "delete 10, 30, 99",
+          "output": "20"
+        },
+        {
+          "input": "delete only node 20",
+          "output": "null"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "review",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-29",
+      "offset": 1,
+      "topic": "单链表删除与边界"
+    },
+    {
+      "sourceDate": "2026-10-23",
+      "offset": 7,
+      "topic": "数组与字符串工作日验收"
+    }
+  ]
+}
