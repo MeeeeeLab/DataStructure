@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-01",
+  "topic": "周末项目三单链表章节验收",
+  "stage": "单链表",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-01_周末项目三单链表章节验收.md",
+  "collectedAt": "2026-11-01",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：重复学号",
+      "difficulty": "基础",
+      "prompt": "名单已有 S01，再 addLast(\"S01\",\"Again\")，契约应是什么？",
+      "answer": 1,
+      "explanation": "返回 false，原节点与链结构不变。",
+      "hint": "学号唯一。",
+      "sourceIndex": 1,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "覆盖姓名并返回true",
+        "返回false且不修改",
+        "追加重复节点",
+        "清空链表"
+      ],
+      "reviewOf": "2026-10-31",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：数组与链表删除",
+      "difficulty": "基础",
+      "prompt": "数组有效区间头删与单链表已知 head 头删的成本分别是什么？",
+      "answer": 2,
+      "explanation": "数组头删要左移 O(n)；链表头删只令 head=head.next，为 O(1)。",
+      "hint": "是否需要移动后续元素。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "都O(1)",
+        "都O(n)",
+        "数组O(n)，链表O(1)",
+        "数组O(1)，链表O(n)"
+      ],
+      "reviewOf": "2026-10-25",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "按值删除复杂度",
+      "difficulty": "基础",
+      "prompt": "单链表按学号删除，目标未知时最坏时间复杂度是什么？",
+      "answer": 2,
+      "explanation": "必须先遍历寻找目标或前驱。",
+      "hint": "修改引用可以O(1)，查找未必。",
+      "sourceIndex": 1,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "删除结果追踪",
+      "difficulty": "基础",
+      "prompt": "S01:Amy -> S02:Bo 依次删除 S01、S02 后，display 输出什么？",
+      "answer": "",
+      "explanation": "删除 head 后 S02 成为 head，再删除单节点后 head 为 null。",
+      "hint": "最终为空链。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "单链表章节独立验收",
+      "difficulty": "综合",
+      "prompt": "从空文件独立实现学生名单管理器，不看参考答案；通过空、重复、查找未命中、删除 head、删除单节点和空链删除。",
+      "answer": "public class StudentListProject {\n    static class Node {\n        String id;\n        String name;\n        Node next;\n\n        Node(String id, String name) {\n            this.id = id;\n            this.name = name;\n        }\n    }\n\n    private Node head;\n\n    boolean addLast(String id, String name) {\n        if (id == null || name == null || id.isBlank() || name.isBlank()) {\n            throw new IllegalArgumentException(\"id and name are required\");\n        }\n        Node node = new Node(id, name);\n        if (head == null) {\n            head = node;\n            return true;\n        }\n        Node current = head;\n        while (true) {\n            if (current.id.equals(id)) return false;\n            if (current.next == null) break;\n            current = current.next;\n        }\n        current.next = node;\n        return true;\n    }\n\n    String findName(String id) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.id.equals(id)) return current.name;\n        }\n        return null;\n    }\n\n    boolean remove(String id) {\n        if (head == null) return false;\n        if (head.id.equals(id)) {\n            head = head.next;\n            return true;\n        }\n        Node current = head;\n        while (current.next != null && !current.next.id.equals(id)) {\n            current = current.next;\n        }\n        if (current.next == null) return false;\n        current.next = current.next.next;\n        return true;\n    }\n\n    String display() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.id).append(\":\").append(current.name);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        StudentListProject list = new StudentListProject();\n        if (!list.display().equals(\"\")) throw new AssertionError(\"empty\");\n        if (!list.addLast(\"S01\", \"Amy\")) throw new AssertionError(\"first\");\n        if (!list.addLast(\"S02\", \"Bo\")) throw new AssertionError(\"second\");\n        if (list.addLast(\"S01\", \"Again\")) throw new AssertionError(\"duplicate\");\n        if (!\"Bo\".equals(list.findName(\"S02\"))) throw new AssertionError(\"find\");\n        if (list.findName(\"S99\") != null) throw new AssertionError(\"missing\");\n        if (!list.display().equals(\"S01:Amy -> S02:Bo\")) throw new AssertionError(\"display\");\n        if (!list.remove(\"S01\")) throw new AssertionError(\"remove head\");\n        if (!list.remove(\"S02\")) throw new AssertionError(\"remove single\");\n        if (list.remove(\"S99\") || !list.display().equals(\"\")) {\n            throw new AssertionError(\"empty remove\");\n        }\n        System.out.println(\"student-list checks: OK\");\n    }\n}\n",
+      "explanation": "验收要求从 Node/head 开始完成全部基础操作与边界，并解释复杂度。",
+      "hint": "先画引用，再写代码；最后运行全部自检。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "// 从 Node、head 和方法契约开始独立实现。\n",
+      "tests": [
+        {
+          "input": "normal add/find/display",
+          "output": "student-list checks: OK"
+        },
+        {
+          "input": "empty/duplicate/missing/head/single",
+          "output": "student-list checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "chapter-check",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-31",
+      "offset": 1,
+      "topic": "周末项目三单链表学生名单管理器"
+    },
+    {
+      "sourceDate": "2026-10-25",
+      "offset": 7,
+      "topic": "周末项目二数组与字符串章节验收"
+    }
+  ]
+}
