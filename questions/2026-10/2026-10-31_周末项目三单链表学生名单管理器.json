@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-31",
+  "topic": "周末项目三单链表学生名单管理器",
+  "stage": "单链表",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-10/2026-10-31_周末项目三单链表学生名单管理器.md",
+  "collectedAt": "2026-11-01",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：连续线性操作",
+      "difficulty": "基础",
+      "prompt": "先 O(n) 查找，再 O(n) 删除，总复杂度是什么？",
+      "answer": 1,
+      "explanation": "先后相加为2n，Big O 忽略常数，仍是 O(n)。",
+      "hint": "不是嵌套。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(n²)",
+        "O(log n)"
+      ],
+      "reviewOf": "2026-10-30",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：空输入边界",
+      "difficulty": "基础",
+      "prompt": "文本与成绩统计工具接收空数组和空字符串时，合理结果是什么？",
+      "answer": 2,
+      "explanation": "计数与总和应为0，不应越界或制造元素。",
+      "hint": "空输入循环执行0次。",
+      "sourceIndex": 1,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "抛出越界异常",
+        "返回null且退出",
+        "各项统计为0",
+        "自动加入默认值"
+      ],
+      "reviewOf": "2026-10-24",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "空链首次加入",
+      "difficulty": "基础",
+      "prompt": "head 为 null 时 addLast 新节点，应怎样处理？",
+      "answer": 0,
+      "explanation": "新节点直接成为 head。",
+      "hint": "没有旧尾节点可遍历。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "head=node",
+        "丢弃节点",
+        "访问 head.next",
+        "创建数组"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "名单展示",
+      "difficulty": "基础",
+      "prompt": "依次加入 S01:Amy、S02:Bo，display 输出什么？",
+      "answer": "S01:Amy -> S02:Bo",
+      "explanation": "尾插保持加入顺序，StringBuilder 只在节点之间加箭头。",
+      "hint": "从 head 顺序遍历。",
+      "sourceIndex": 2,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "单链表名单第一阶段",
+      "difficulty": "综合",
+      "prompt": "实现唯一学号尾插、查找、删除和展示，覆盖空链、重复、未命中、删除 head 与单节点。",
+      "answer": "public class StudentListProject {\n    static class Node {\n        String id;\n        String name;\n        Node next;\n\n        Node(String id, String name) {\n            this.id = id;\n            this.name = name;\n        }\n    }\n\n    private Node head;\n\n    boolean addLast(String id, String name) {\n        if (id == null || name == null || id.isBlank() || name.isBlank()) {\n            throw new IllegalArgumentException(\"id and name are required\");\n        }\n        Node node = new Node(id, name);\n        if (head == null) {\n            head = node;\n            return true;\n        }\n        Node current = head;\n        while (true) {\n            if (current.id.equals(id)) return false;\n            if (current.next == null) break;\n            current = current.next;\n        }\n        current.next = node;\n        return true;\n    }\n\n    String findName(String id) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.id.equals(id)) return current.name;\n        }\n        return null;\n    }\n\n    boolean remove(String id) {\n        if (head == null) return false;\n        if (head.id.equals(id)) {\n            head = head.next;\n            return true;\n        }\n        Node current = head;\n        while (current.next != null && !current.next.id.equals(id)) {\n            current = current.next;\n        }\n        if (current.next == null) return false;\n        current.next = current.next.next;\n        return true;\n    }\n\n    String display() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.id).append(\":\").append(current.name);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        StudentListProject list = new StudentListProject();\n        if (!list.display().equals(\"\")) throw new AssertionError(\"empty\");\n        if (!list.addLast(\"S01\", \"Amy\")) throw new AssertionError(\"first\");\n        if (!list.addLast(\"S02\", \"Bo\")) throw new AssertionError(\"second\");\n        if (list.addLast(\"S01\", \"Again\")) throw new AssertionError(\"duplicate\");\n        if (!\"Bo\".equals(list.findName(\"S02\"))) throw new AssertionError(\"find\");\n        if (list.findName(\"S99\") != null) throw new AssertionError(\"missing\");\n        if (!list.display().equals(\"S01:Amy -> S02:Bo\")) throw new AssertionError(\"display\");\n        if (!list.remove(\"S01\")) throw new AssertionError(\"remove head\");\n        if (!list.remove(\"S02\")) throw new AssertionError(\"remove single\");\n        if (list.remove(\"S99\") || !list.display().equals(\"\")) {\n            throw new AssertionError(\"empty remove\");\n        }\n        System.out.println(\"student-list checks: OK\");\n    }\n}\n",
+      "explanation": "只使用 Node、head 和 next；一个 main 自检覆盖核心边界。",
+      "hint": "可能改变入口的操作要单独处理 head。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class StudentListProject {\n    static class Node { String id; String name; Node next; }\n    private Node head;\n    boolean addLast(String id,String name){ return false; }\n    String findName(String id){ return null; }\n    boolean remove(String id){ return false; }\n    String display(){ return \"\"; }\n}\n",
+      "tests": [
+        {
+          "input": "java StudentListProject.java",
+          "output": "student-list checks: OK"
+        },
+        {
+          "input": "empty display/remove",
+          "output": "\"\" / false"
+        },
+        {
+          "input": "duplicate S01",
+          "output": "false; list unchanged"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "weekend-project",
+  "reviews": [
+    {
+      "sourceDate": "2026-10-30",
+      "offset": 1,
+      "topic": "单链表工作日综合练习"
+    },
+    {
+      "sourceDate": "2026-10-24",
+      "offset": 7,
+      "topic": "周末项目二文本与成绩统计工具"
+    }
+  ]
+}
