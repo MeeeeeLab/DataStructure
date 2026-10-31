@@ -18,9 +18,9 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-上个周末项目：[文本与成绩统计工具](projects/2026-10/weekend-2026-10-24.md)（10 月 24–25 日同一项目；章节验收资料已发布，不记录个人完成状态）。
+本周末项目：[单链表学生名单管理器](projects/2026-10/weekend-2026-10-31.md)（10 月 31 日至 11 月 1 日使用同一项目 ID；章节验收资料已发布，不记录个人完成状态）。
 
-今日工作日小练习：[单链表工作日综合练习](projects/2026-10/daily-2026-10-30.md)。上一练习：[单链表删除与边界](projects/2026-10/daily-2026-10-29.md)。
+上一工作日练习：[单链表工作日综合练习](projects/2026-10/daily-2026-10-30.md)。
 
 每天生成一份中文 Markdown 笔记和 5 道题。笔记包含通俗解释、Java 示例、复杂度、易错点、练习和验收清单；每日 5 题会优先容纳到期的 D+1、D+7、D+30 复习，避免额外无限加量。
 
@@ -55,6 +55,8 @@
 | 2026-10-28 | [单链表尾插与操作成本](notes/2026-10/2026-10-28_单链表尾插与操作成本.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-28_单链表尾插与操作成本.json) |
 | 2026-10-29 | [单链表删除与边界](notes/2026-10/2026-10-29_单链表删除与边界.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-29_单链表删除与边界.json) |
 | 2026-10-30 | [单链表工作日综合练习](notes/2026-10/2026-10-30_单链表工作日综合练习.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-30_单链表工作日综合练习.json) |
+| 2026-10-31 | [周末项目三：单链表学生名单管理器](notes/2026-10/2026-10-31_周末项目三单链表学生名单管理器.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-31_周末项目三单链表学生名单管理器.json) |
+| 2026-11-01 | [周末项目三：单链表章节验收](notes/2026-11/2026-11-01_周末项目三单链表章节验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-01_周末项目三单链表章节验收.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
