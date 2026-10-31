@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "projectId": "weekend-2026-10-31",
+  "track": "java",
+  "title": "单链表学生名单管理器",
+  "goal": "周六实现名单核心操作，周日继续同一项目完成边界、复杂度和单链表章节独立验收。",
+  "prerequisites": [
+    "Node/head/next",
+    "遍历与查找",
+    "头尾插入",
+    "删除与边界"
+  ],
+  "filename": "StudentListProject.java",
+  "runCommand": "java StudentListProject.java",
+  "starter": "public class StudentListProject {\n    static class Node { String id; String name; Node next; }\n    private Node head;\n    boolean addLast(String id,String name){ return false; }\n    String findName(String id){ return null; }\n    boolean remove(String id){ return false; }\n    String display(){ return \"\"; }\n}\n",
+  "solution": "public class StudentListProject {\n    static class Node {\n        String id;\n        String name;\n        Node next;\n\n        Node(String id, String name) {\n            this.id = id;\n            this.name = name;\n        }\n    }\n\n    private Node head;\n\n    boolean addLast(String id, String name) {\n        if (id == null || name == null || id.isBlank() || name.isBlank()) {\n            throw new IllegalArgumentException(\"id and name are required\");\n        }\n        Node node = new Node(id, name);\n        if (head == null) {\n            head = node;\n            return true;\n        }\n        Node current = head;\n        while (true) {\n            if (current.id.equals(id)) return false;\n            if (current.next == null) break;\n            current = current.next;\n        }\n        current.next = node;\n        return true;\n    }\n\n    String findName(String id) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.id.equals(id)) return current.name;\n        }\n        return null;\n    }\n\n    boolean remove(String id) {\n        if (head == null) return false;\n        if (head.id.equals(id)) {\n            head = head.next;\n            return true;\n        }\n        Node current = head;\n        while (current.next != null && !current.next.id.equals(id)) {\n            current = current.next;\n        }\n        if (current.next == null) return false;\n        current.next = current.next.next;\n        return true;\n    }\n\n    String display() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (result.length() > 0) result.append(\" -> \");\n            result.append(current.id).append(\":\").append(current.name);\n        }\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        StudentListProject list = new StudentListProject();\n        if (!list.display().equals(\"\")) throw new AssertionError(\"empty\");\n        if (!list.addLast(\"S01\", \"Amy\")) throw new AssertionError(\"first\");\n        if (!list.addLast(\"S02\", \"Bo\")) throw new AssertionError(\"second\");\n        if (list.addLast(\"S01\", \"Again\")) throw new AssertionError(\"duplicate\");\n        if (!\"Bo\".equals(list.findName(\"S02\"))) throw new AssertionError(\"find\");\n        if (list.findName(\"S99\") != null) throw new AssertionError(\"missing\");\n        if (!list.display().equals(\"S01:Amy -> S02:Bo\")) throw new AssertionError(\"display\");\n        if (!list.remove(\"S01\")) throw new AssertionError(\"remove head\");\n        if (!list.remove(\"S02\")) throw new AssertionError(\"remove single\");\n        if (list.remove(\"S99\") || !list.display().equals(\"\")) {\n            throw new AssertionError(\"empty remove\");\n        }\n        System.out.println(\"student-list checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "Node 保存学号、姓名和 next；head 是唯一入口。",
+    "尾插、查找、删除和展示最坏均需一次线性遍历。",
+    "周日不换 ID，只继续增加边界验收和复杂度解释。"
+  ],
+  "steps": [
+    {
+      "id": "node-empty",
+      "day": "2026-10-31",
+      "title": "节点与空链",
+      "instruction": "建立 Node、head 和空链展示。",
+      "hint": "head 初始为 null。",
+      "knowledge": [
+        "Node",
+        "head"
+      ]
+    },
+    {
+      "id": "add-find",
+      "day": "2026-10-31",
+      "title": "尾插与查找",
+      "instruction": "加入唯一学号并按学号查找。",
+      "hint": "遍历时同时检查重复。",
+      "knowledge": [
+        "尾插",
+        "查找"
+      ]
+    },
+    {
+      "id": "remove-display",
+      "day": "2026-10-31",
+      "title": "删除与展示",
+      "instruction": "处理 head、其他位置和未命中。",
+      "hint": "修改前驱的 next。",
+      "knowledge": [
+        "删除",
+        "StringBuilder"
+      ]
+    },
+    {
+      "id": "boundaries",
+      "day": "2026-11-01",
+      "title": "边界测试",
+      "instruction": "覆盖空、重复、未命中、单节点和首尾。",
+      "hint": "每次检查完整链。",
+      "knowledge": [
+        "边界",
+        "测试"
+      ]
+    },
+    {
+      "id": "chapter-check",
+      "day": "2026-11-01",
+      "title": "章节独立验收",
+      "instruction": "从空文件重写并说明复杂度。",
+      "hint": "不看答案先列契约。",
+      "knowledge": [
+        "独立实现",
+        "复杂度"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "完整自检",
+      "input": "java StudentListProject.java",
+      "output": "student-list checks: OK",
+      "purpose": "验证核心操作与全部关键边界"
+    },
+    {
+      "id": "t2",
+      "label": "空链与重复",
+      "input": "empty display/remove; duplicate S01",
+      "output": "\"\"; false; false",
+      "purpose": "验证失败不改状态"
+    }
+  ],
+  "recall": [
+    {
+      "id": "head-delete",
+      "question": "删除 head 时引用怎样变化？",
+      "answer": "令 head 指向旧 head.next。"
+    },
+    {
+      "id": "remove-cost",
+      "question": "为什么按值删除最坏不是 O(1)？",
+      "answer": "修改引用虽是 O(1)，但寻找目标或前驱要 O(n)。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-01 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-01 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "attribution": "2026-11-01 实际核对，项目为原创教学练习"
+    }
+  ]
+}
