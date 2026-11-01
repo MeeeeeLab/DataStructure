@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-02",
+  "track": "java",
+  "title": "双链表双向遍历短练习",
+  "goal": "用最小 Java 程序建立 prev/next 双向连接并验证正反向遍历。",
+  "prerequisites": [
+    "单链表 Node/head/next",
+    "循环遍历",
+    "StringBuilder"
+  ],
+  "filename": "DoublyLinkedListBasics.java",
+  "runCommand": "java DoublyLinkedListBasics.java",
+  "starter": "static class Node {\n    int value;\n    Node prev;\n    Node next;\n}\n\nstatic Node append(Node head, int value) { return head; }\n",
+  "solution": "public class DoublyLinkedListBasics {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static Node append(Node head, int value) {\n        Node node = new Node(value);\n        if (head == null) {\n            return node;\n        }\n        Node tail = last(head);\n        tail.next = node;\n        node.prev = tail;\n        return head;\n    }\n\n    static Node last(Node head) {\n        if (head == null) {\n            return null;\n        }\n        Node current = head;\n        while (current.next != null) {\n            current = current.next;\n        }\n        return current;\n    }\n\n    static String forward(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) {\n                result.append(\" -> \");\n            }\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static String backward(Node tail) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) {\n                result.append(\" -> \");\n            }\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static boolean linksAreSymmetric(Node head) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.next != null && current.next.prev != current) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) {\n            throw new AssertionError(message);\n        }\n    }\n\n    public static void main(String[] args) {\n        check(forward(null).equals(\"\"), \"empty forward traversal\");\n        check(backward(null).equals(\"\"), \"empty backward traversal\");\n\n        Node head = null;\n        head = append(head, 10);\n        head = append(head, 20);\n        head = append(head, 30);\n        check(forward(head).equals(\"10 -> 20 -> 30\"), \"forward traversal\");\n        check(backward(last(head)).equals(\"30 -> 20 -> 10\"), \"backward traversal\");\n        check(linksAreSymmetric(head), \"prev and next must agree\");\n\n        Node one = append(null, 7);\n        check(forward(one).equals(\"7\"), \"single-node forward traversal\");\n        check(backward(last(one)).equals(\"7\"), \"single-node backward traversal\");\n\n        System.out.println(\"doubly-linked checks: OK\");\n    }\n}",
+  "solutionExplanation": [
+    "尾插时同时设置旧尾 next 与新节点 prev。",
+    "正向从 head 沿 next，反向从 tail 沿 prev。",
+    "工作日只做 20–25 分钟短练，不提前加入删除或复杂结构。"
+  ],
+  "steps": [
+    {
+      "id": "node",
+      "day": "2026-11-02",
+      "title": "定义节点",
+      "instruction": "写 value、prev、next。",
+      "hint": "头的 prev 与尾的 next 为 null。",
+      "knowledge": [
+        "Node",
+        "prev",
+        "next"
+      ]
+    },
+    {
+      "id": "connect",
+      "day": "2026-11-02",
+      "title": "成对连接",
+      "instruction": "实现 append，并同时维护两个方向。",
+      "hint": "tail.next=node；node.prev=tail。",
+      "knowledge": [
+        "连接不变量"
+      ]
+    },
+    {
+      "id": "traverse",
+      "day": "2026-11-02",
+      "title": "双向遍历",
+      "instruction": "分别实现 forward 与 backward。",
+      "hint": "反向遍历从 tail 开始。",
+      "knowledge": [
+        "正向遍历",
+        "反向遍历"
+      ]
+    },
+    {
+      "id": "check",
+      "day": "2026-11-02",
+      "title": "边界自检",
+      "instruction": "覆盖空、单节点和三节点。",
+      "hint": "再验证 current.next.prev == current。",
+      "knowledge": [
+        "边界",
+        "一致性"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "双向遍历",
+      "input": "10 <-> 20 <-> 30",
+      "output": "doubly-linked checks: OK",
+      "purpose": "验证顺序与反序"
+    },
+    {
+      "id": "t2",
+      "label": "边界",
+      "input": "empty/single/link symmetry",
+      "output": "doubly-linked checks: OK",
+      "purpose": "验证边界与连接"
+    }
+  ],
+  "recall": [
+    {
+      "id": "link-invariant",
+      "question": "连接 x 与 y 时为什么要同时写 x.next=y 和 y.prev=x？",
+      "answer": "双链表的两个方向必须一致，否则反向遍历无法从 y 回到 x。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-02 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-02 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "attribution": "2026-11-02 实际核对，项目为原创教学练习"
+    }
+  ]
+}
