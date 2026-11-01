@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "topic": "双链表节点与双向连接",
+  "stage": "双链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-11/2026-11-02_双链表节点与双向连接.md",
+  "collectedAt": "2026-11-02",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：单链表头删",
+      "difficulty": "基础",
+      "prompt": "非空单链表删除头节点后，新的 head 应是什么？",
+      "answer": 1,
+      "explanation": "头删把入口移动到原 head.next。",
+      "hint": "不需要移动其余节点。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "原 head",
+        "原 head.next",
+        "null（无论链长）",
+        "原尾节点"
+      ],
+      "reviewOf": "2026-11-01",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表遍历",
+      "difficulty": "基础",
+      "prompt": "单链表从 head 完整遍历时，循环变量通常怎样前进？",
+      "answer": 2,
+      "explanation": "每一步沿 current.next 前进，直到 null。",
+      "hint": "复习 10 月 26 日的 Node 与 next。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "current--",
+        "current=head",
+        "current=current.next",
+        "current=current.prev"
+      ],
+      "reviewOf": "2026-10-26",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "双向连接不变量",
+      "difficulty": "基础",
+      "prompt": "若 x.next == y，哪条关系也应成立？",
+      "answer": 1,
+      "explanation": "相邻节点的两个方向必须互相指回。",
+      "hint": "从 y 向前走应回到 x。",
+      "sourceIndex": 1,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "x.prev == y",
+        "y.prev == x",
+        "y.next == x",
+        "x.prev == null"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "反向遍历输出",
+      "difficulty": "基础",
+      "prompt": "双链表 10 <-> 20 <-> 30 从 tail 沿 prev 遍历，输出什么？",
+      "answer": "30 -> 20 -> 10",
+      "explanation": "从尾节点开始，每次沿 prev 访问前驱。",
+      "hint": "起点是 30。",
+      "sourceIndex": 2,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "双链表双向遍历",
+      "difficulty": "综合",
+      "prompt": "实现最小双链表节点、尾插、正反向遍历和连接一致性检查，并覆盖空链与单节点。",
+      "answer": "public class DoublyLinkedListBasics {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    static Node append(Node head, int value) {\n        Node node = new Node(value);\n        if (head == null) {\n            return node;\n        }\n        Node tail = last(head);\n        tail.next = node;\n        node.prev = tail;\n        return head;\n    }\n\n    static Node last(Node head) {\n        if (head == null) {\n            return null;\n        }\n        Node current = head;\n        while (current.next != null) {\n            current = current.next;\n        }\n        return current;\n    }\n\n    static String forward(Node head) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) {\n                result.append(\" -> \");\n            }\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static String backward(Node tail) {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) {\n                result.append(\" -> \");\n            }\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static boolean linksAreSymmetric(Node head) {\n        for (Node current = head; current != null; current = current.next) {\n            if (current.next != null && current.next.prev != current) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) {\n            throw new AssertionError(message);\n        }\n    }\n\n    public static void main(String[] args) {\n        check(forward(null).equals(\"\"), \"empty forward traversal\");\n        check(backward(null).equals(\"\"), \"empty backward traversal\");\n\n        Node head = null;\n        head = append(head, 10);\n        head = append(head, 20);\n        head = append(head, 30);\n        check(forward(head).equals(\"10 -> 20 -> 30\"), \"forward traversal\");\n        check(backward(last(head)).equals(\"30 -> 20 -> 10\"), \"backward traversal\");\n        check(linksAreSymmetric(head), \"prev and next must agree\");\n\n        Node one = append(null, 7);\n        check(forward(one).equals(\"7\"), \"single-node forward traversal\");\n        check(backward(last(one)).equals(\"7\"), \"single-node backward traversal\");\n\n        System.out.println(\"doubly-linked checks: OK\");\n    }\n}",
+      "explanation": "尾插必须同时设置旧尾 next 与新节点 prev；两个方向的遍历分别以 null 为终点。",
+      "hint": "先写 Node，再成对连接引用。",
+      "sourceIndex": 0,
+      "attribution": "依据当日实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "static class Node {\n    int value;\n    Node prev;\n    Node next;\n}\n",
+      "tests": [
+        {
+          "input": "empty/single/10-20-30",
+          "output": "doubly-linked checks: OK"
+        },
+        {
+          "input": "forward/backward/link symmetry",
+          "output": "doubly-linked checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-01",
+      "offset": 1,
+      "topic": "周末项目三单链表章节验收"
+    },
+    {
+      "sourceDate": "2026-10-26",
+      "offset": 7,
+      "topic": "单链表节点与遍历"
+    }
+  ]
+}
