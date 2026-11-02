@@ -20,7 +20,7 @@
 
 上个周末项目：[单链表学生名单管理器](projects/2026-10/weekend-2026-10-31.md)（10 月 31 日至 11 月 1 日使用同一项目 ID；历史资料与记录全部保留）。
 
-今日工作日小练习：[双链表双向遍历短练习](projects/2026-11/daily-2026-11-02.md)（20–25 分钟，不叠加大型项目）。
+今日工作日小练习：[双链表头尾插入短练习](projects/2026-11/daily-2026-11-03.md)（20–25 分钟，不叠加大型项目）。
 
 每天生成一份中文 Markdown 笔记和 5 道题。笔记包含通俗解释、Java 示例、复杂度、易错点、练习和验收清单；每日 5 题会优先容纳到期的 D+1、D+7、D+30 复习，避免额外无限加量。
 
@@ -58,6 +58,7 @@
 | 2026-10-31 | [周末项目三：单链表学生名单管理器](notes/2026-10/2026-10-31_周末项目三单链表学生名单管理器.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-10/2026-10-31_周末项目三单链表学生名单管理器.json) |
 | 2026-11-01 | [周末项目三：单链表章节验收](notes/2026-11/2026-11-01_周末项目三单链表章节验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-01_周末项目三单链表章节验收.json) |
 | 2026-11-02 | [双链表节点与双向连接](notes/2026-11/2026-11-02_双链表节点与双向连接.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-02_双链表节点与双向连接.json) |
+| 2026-11-03 | [双链表头尾插入](notes/2026-11/2026-11-03_双链表头尾插入.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-03_双链表头尾插入.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
