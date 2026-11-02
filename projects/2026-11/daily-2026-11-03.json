@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-03",
+  "track": "java",
+  "title": "双链表头尾插入短练习",
+  "goal": "保存 head/tail，用最小 Java 实现完成 O(1) 头插、尾插及双向一致性检查。",
+  "prerequisites": [
+    "双链表 Node/prev/next",
+    "双向遍历",
+    "空链边界"
+  ],
+  "filename": "DoublyLinkedEnds.java",
+  "runCommand": "java DoublyLinkedEnds.java",
+  "starter": "public class DoublyLinkedEnds {\n    static class Node { int value; Node prev, next; }\n    private Node head;\n    private Node tail;\n\n    void addFirst(int value) { }\n    void addLast(int value) { }\n}\n",
+  "solution": "public class DoublyLinkedEnds {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addFirst(int value) {\n        Node node = new Node(value);\n        if (head == null) {\n            head = tail = node;\n            return;\n        }\n        node.next = head;\n        head.prev = node;\n        head = node;\n    }\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n            return;\n        }\n        tail.next = node;\n        node.prev = tail;\n        tail = node;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    boolean linksAreValid() {\n        if ((head == null) != (tail == null)) return false;\n        if (head != null && head.prev != null) return false;\n        if (tail != null && tail.next != null) return false;\n        for (Node current = head; current != null; current = current.next) {\n            if (current.next != null && current.next.prev != current) return false;\n        }\n        return true;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedEnds list = new DoublyLinkedEnds();\n        check(list.forward().equals(\"\") && list.backward().equals(\"\"), \"empty\");\n        check(list.linksAreValid(), \"empty links\");\n\n        list.addFirst(20);\n        check(list.forward().equals(\"20\") && list.backward().equals(\"20\"), \"single\");\n        list.addFirst(10);\n        list.addLast(30);\n        check(list.forward().equals(\"10 -> 20 -> 30\"), \"forward\");\n        check(list.backward().equals(\"30 -> 20 -> 10\"), \"backward\");\n        check(list.linksAreValid(), \"links\");\n\n        System.out.println(\"end-insert checks: OK\");\n    }\n}",
+  "solutionExplanation": [
+    "保存 head 与 tail 后，两端插入都无需遍历。",
+    "空链中新节点同时成为 head 与 tail。",
+    "非空插入必须成对维护 prev/next；今天不提前加入删除。"
+  ],
+  "steps": [
+    {
+      "id": "ends",
+      "day": "2026-11-03",
+      "title": "保存首尾",
+      "instruction": "定义 head 与 tail，并写空链检查。",
+      "hint": "空链时两者都为 null。",
+      "knowledge": [
+        "head",
+        "tail"
+      ]
+    },
+    {
+      "id": "first",
+      "day": "2026-11-03",
+      "title": "实现头插",
+      "instruction": "连接新节点与旧 head，再更新 head。",
+      "hint": "别漏掉旧 head.prev。",
+      "knowledge": [
+        "addFirst",
+        "prev/next"
+      ]
+    },
+    {
+      "id": "last",
+      "day": "2026-11-03",
+      "title": "实现尾插",
+      "instruction": "连接旧 tail 与新节点，再更新 tail。",
+      "hint": "别漏掉 tail.next。",
+      "knowledge": [
+        "addLast",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "check",
+      "day": "2026-11-03",
+      "title": "验证不变量",
+      "instruction": "覆盖空、单节点和混合插入。",
+      "hint": "检查两个方向及首尾外侧 null。",
+      "knowledge": [
+        "边界",
+        "不变量"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "混合插入",
+      "input": "addFirst 20/10, addLast 30",
+      "output": "end-insert checks: OK",
+      "purpose": "验证顺序与反序"
+    },
+    {
+      "id": "t2",
+      "label": "边界",
+      "input": "empty/single/head.prev/tail.next",
+      "output": "end-insert checks: OK",
+      "purpose": "验证首尾不变量"
+    }
+  ],
+  "recall": [
+    {
+      "id": "empty",
+      "question": "空链第一次插入时为何要同时设置 head 与 tail？",
+      "answer": "唯一节点同时是链表的第一个和最后一个节点。"
+    },
+    {
+      "id": "complexity",
+      "question": "保存 tail 后 addLast 为什么是 O(1)？",
+      "answer": "可直接访问旧尾并修改固定数量的引用，无需遍历。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-03 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "attribution": "2026-11-03 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "attribution": "2026-11-03 实际核对，项目为原创教学练习"
+    }
+  ]
+}
