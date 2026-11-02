@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "topic": "双链表头尾插入",
+  "stage": "双链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-11/2026-11-03_双链表头尾插入.md",
+  "collectedAt": "2026-11-03",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：StringBuilder",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：双向连接",
+      "difficulty": "基础",
+      "prompt": "已有尾节点 tail，连接新节点 node 时，除 tail.next=node 外还必须做什么？",
+      "answer": 2,
+      "explanation": "新节点必须用 prev 指回旧尾，两个方向才一致。",
+      "hint": "从 node 向前应回到 tail。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-03 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "node.next=tail",
+        "tail.prev=node",
+        "node.prev=tail",
+        "head=node"
+      ],
+      "reviewOf": "2026-11-02",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表头插",
+      "difficulty": "基础",
+      "prompt": "单链表把 node 插到 head 前，核心操作是什么？",
+      "answer": 1,
+      "explanation": "先令 node.next 指向旧 head，再返回或更新新 head。",
+      "hint": "复习 10 月 27 日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-03 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "head.next=node",
+        "node.next=head；head=node",
+        "遍历到尾部",
+        "node.prev=head"
+      ],
+      "reviewOf": "2026-10-27",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "空链插入",
+      "difficulty": "基础",
+      "prompt": "空双链表第一次插入节点 node 后，哪项正确？",
+      "answer": 3,
+      "explanation": "唯一节点同时是 head 与 tail，两个外向引用都为 null。",
+      "hint": "链中只有一个节点。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-03 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只有 head=node",
+        "只有 tail=node",
+        "head 和 tail 仍为 null",
+        "head=tail=node"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "混合插入输出",
+      "difficulty": "基础",
+      "prompt": "空链依次 addFirst(20)、addFirst(10)、addLast(30)，正向遍历输出什么？",
+      "answer": "10 -> 20 -> 30",
+      "explanation": "第二次头插把10放到最前，尾插把30放到最后。",
+      "hint": "逐步更新首尾。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-03 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "双链表头尾插入自检",
+      "difficulty": "综合",
+      "prompt": "实现保存 head/tail 的双链表，支持 O(1) 头插、尾插和双向遍历，并检查空链与单节点。",
+      "answer": "public class DoublyLinkedEnds {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addFirst(int value) {\n        Node node = new Node(value);\n        if (head == null) {\n            head = tail = node;\n            return;\n        }\n        node.next = head;\n        head.prev = node;\n        head = node;\n    }\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n            return;\n        }\n        tail.next = node;\n        node.prev = tail;\n        tail = node;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    boolean linksAreValid() {\n        if ((head == null) != (tail == null)) return false;\n        if (head != null && head.prev != null) return false;\n        if (tail != null && tail.next != null) return false;\n        for (Node current = head; current != null; current = current.next) {\n            if (current.next != null && current.next.prev != current) return false;\n        }\n        return true;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedEnds list = new DoublyLinkedEnds();\n        check(list.forward().equals(\"\") && list.backward().equals(\"\"), \"empty\");\n        check(list.linksAreValid(), \"empty links\");\n\n        list.addFirst(20);\n        check(list.forward().equals(\"20\") && list.backward().equals(\"20\"), \"single\");\n        list.addFirst(10);\n        list.addLast(30);\n        check(list.forward().equals(\"10 -> 20 -> 30\"), \"forward\");\n        check(list.backward().equals(\"30 -> 20 -> 10\"), \"backward\");\n        check(list.linksAreValid(), \"links\");\n\n        System.out.println(\"end-insert checks: OK\");\n    }\n}",
+      "explanation": "保存首尾引用后无需遍历；空链同步设置 head/tail，非空时成对维护 prev/next。",
+      "hint": "先单独处理空链，再写非空的三个赋值。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-03 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class DoublyLinkedEnds {\n    static class Node { int value; Node prev, next; }\n    private Node head;\n    private Node tail;\n}\n",
+      "tests": [
+        {
+          "input": "empty/single",
+          "output": "end-insert checks: OK"
+        },
+        {
+          "input": "addFirst(20), addFirst(10), addLast(30)",
+          "output": "end-insert checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-02",
+      "offset": 1,
+      "topic": "双链表节点与双向连接"
+    },
+    {
+      "sourceDate": "2026-10-27",
+      "offset": 7,
+      "topic": "单链表头插与查找"
+    }
+  ]
+}
