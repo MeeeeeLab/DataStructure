@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-05",
+  "track": "java",
+  "title": "双链表删除边界短练习",
+  "goal": "用统一的前后判断删除首个目标，并正确处理头、尾、单节点和未命中。",
+  "prerequisites": [
+    "双链表插入",
+    "head/tail",
+    "prev/next"
+  ],
+  "filename": "DoublyLinkedDelete.java",
+  "runCommand": "java DoublyLinkedDelete.java",
+  "starter": "boolean removeFirst(int target){ return false; }\n",
+  "solution": "public class DoublyLinkedDelete {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n        } else {\n            tail.next = node;\n            node.prev = tail;\n            tail = node;\n        }\n    }\n\n    boolean removeFirst(int target) {\n        Node current = head;\n        while (current != null && current.value != target) current = current.next;\n        if (current == null) return false;\n\n        if (current.prev == null) {\n            head = current.next;\n        } else {\n            current.prev.next = current.next;\n        }\n        if (current.next == null) {\n            tail = current.prev;\n        } else {\n            current.next.prev = current.prev;\n        }\n        return true;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedDelete list = new DoublyLinkedDelete();\n        check(!list.removeFirst(1), \"empty\");\n        list.addLast(10);\n        list.addLast(20);\n        list.addLast(30);\n        check(list.removeFirst(20), \"middle\");\n        check(list.forward().equals(\"10 -> 30\"), \"middle result\");\n        check(list.removeFirst(10), \"head\");\n        check(list.removeFirst(30), \"single tail\");\n        check(list.forward().equals(\"\") && list.backward().equals(\"\"), \"empty again\");\n        check(!list.removeFirst(99), \"missing\");\n        System.out.println(\"delete checks: OK\");\n    }\n}",
+  "solutionExplanation": [
+    "先查找首个目标，未命中不修改。",
+    "根据 prev 是否为空更新 head 或前驱。",
+    "根据 next 是否为空更新 tail 或后继。"
+  ],
+  "steps": [
+    {
+      "id": "find",
+      "day": "2026-11-05",
+      "title": "查找目标",
+      "instruction": "沿 next 找首个 target。",
+      "hint": "空链和未命中返回 false。",
+      "knowledge": [
+        "查找",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "previous",
+      "day": "2026-11-05",
+      "title": "连接前侧",
+      "instruction": "处理 head 或前驱 next。",
+      "hint": "current.prev==null 表示删除头。",
+      "knowledge": [
+        "head",
+        "prev"
+      ]
+    },
+    {
+      "id": "next",
+      "day": "2026-11-05",
+      "title": "连接后侧",
+      "instruction": "处理 tail 或后继 prev。",
+      "hint": "current.next==null 表示删除尾。",
+      "knowledge": [
+        "tail",
+        "next"
+      ]
+    },
+    {
+      "id": "check",
+      "day": "2026-11-05",
+      "title": "边界自检",
+      "instruction": "覆盖空、中间、头、单节点和未命中。",
+      "hint": "最后正反遍历都为空。",
+      "knowledge": [
+        "边界",
+        "自检"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "连续删除",
+      "input": "10,20,30 -> remove 20,10,30",
+      "output": "delete checks: OK",
+      "purpose": "验证中间头尾"
+    },
+    {
+      "id": "t2",
+      "label": "空与未命中",
+      "input": "empty/99",
+      "output": "delete checks: OK",
+      "purpose": "验证不修改"
+    }
+  ],
+  "recall": [
+    {
+      "id": "single",
+      "question": "单节点删除为何会同时更新 head 和 tail？",
+      "answer": "该节点的 prev 与 next 都为空，两侧判断分别把 head 与 tail 设为空。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-05 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-05 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ListIterator",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ListIterator.html",
+      "attribution": "2026-11-05 实际核对，项目为原创教学练习"
+    }
+  ]
+}
