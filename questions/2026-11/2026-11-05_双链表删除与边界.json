@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-05",
+  "topic": "双链表删除与边界",
+  "stage": "双链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-11/2026-11-05_双链表删除与边界.md",
+  "collectedAt": "2026-11-05",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ListIterator",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ListIterator.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：插入保存后继",
+      "difficulty": "基础",
+      "prompt": "中间插入前保存 after=current.next 的原因是什么？",
+      "answer": 1,
+      "explanation": "覆盖 current.next 前必须保留原后继。",
+      "hint": "复习11月4日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-05 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "减少空间",
+        "避免丢失原后继",
+        "自动更新tail",
+        "删除目标"
+      ],
+      "reviewOf": "2026-11-04",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表删除",
+      "difficulty": "基础",
+      "prompt": "单链表删除非头节点时，通常为什么需要前驱？",
+      "answer": 2,
+      "explanation": "要把前驱 next 改为被删节点的 next。",
+      "hint": "复习10月29日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-05 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "计算长度",
+        "反向遍历",
+        "修改前驱的 next",
+        "更新数组索引"
+      ],
+      "reviewOf": "2026-10-29",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "单节点删除",
+      "difficulty": "基础",
+      "prompt": "双链表只有一个节点且被删除后，正确状态是什么？",
+      "answer": 3,
+      "explanation": "唯一节点同时是头尾，删除后两者都应为空。",
+      "hint": "不能留下失效引用。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-05 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "仅head为null",
+        "仅tail为null",
+        "head仍指旧节点",
+        "head和tail都为null"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "删除结果",
+      "difficulty": "基础",
+      "prompt": "10 <-> 20 <-> 30 依次删除20、10、30，最终 forward() 精确输出什么？",
+      "answer": "",
+      "explanation": "删除中间、头和最后节点后链表为空。",
+      "hint": "空遍历返回空字符串。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-05 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "双链表删除自检",
+      "difficulty": "综合",
+      "prompt": "实现删除首个目标，覆盖空链、中间、头、单节点/尾和未命中。",
+      "answer": "public class DoublyLinkedDelete {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n        } else {\n            tail.next = node;\n            node.prev = tail;\n            tail = node;\n        }\n    }\n\n    boolean removeFirst(int target) {\n        Node current = head;\n        while (current != null && current.value != target) current = current.next;\n        if (current == null) return false;\n\n        if (current.prev == null) {\n            head = current.next;\n        } else {\n            current.prev.next = current.next;\n        }\n        if (current.next == null) {\n            tail = current.prev;\n        } else {\n            current.next.prev = current.prev;\n        }\n        return true;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedDelete list = new DoublyLinkedDelete();\n        check(!list.removeFirst(1), \"empty\");\n        list.addLast(10);\n        list.addLast(20);\n        list.addLast(30);\n        check(list.removeFirst(20), \"middle\");\n        check(list.forward().equals(\"10 -> 30\"), \"middle result\");\n        check(list.removeFirst(10), \"head\");\n        check(list.removeFirst(30), \"single tail\");\n        check(list.forward().equals(\"\") && list.backward().equals(\"\"), \"empty again\");\n        check(!list.removeFirst(99), \"missing\");\n        System.out.println(\"delete checks: OK\");\n    }\n}",
+      "explanation": "根据 prev/next 是否为空分别更新 head、tail 或相邻节点。",
+      "hint": "前后两个方向各做一次边界判断。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-05 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "boolean removeFirst(int target){ return false; }\n",
+      "tests": [
+        {
+          "input": "10,20,30 remove 20,10,30",
+          "output": "delete checks: OK"
+        },
+        {
+          "input": "empty/missing",
+          "output": "delete checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-04",
+      "offset": 1,
+      "topic": "双链表中间插入"
+    },
+    {
+      "sourceDate": "2026-10-29",
+      "offset": 7,
+      "topic": "单链表删除与边界"
+    }
+  ]
+}
