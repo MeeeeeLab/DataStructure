@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-04",
+  "track": "java",
+  "title": "双链表中间插入短练习",
+  "goal": "在找到目标节点后正确维护四条相邻引用，并处理尾后插入。",
+  "prerequisites": [
+    "prev/next",
+    "head/tail",
+    "双向遍历"
+  ],
+  "filename": "DoublyLinkedInsertAfter.java",
+  "runCommand": "java DoublyLinkedInsertAfter.java",
+  "starter": "boolean insertAfter(int target,int value){ return false; }\n",
+  "solution": "public class DoublyLinkedInsertAfter {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n        } else {\n            tail.next = node;\n            node.prev = tail;\n            tail = node;\n        }\n    }\n\n    boolean insertAfter(int target, int value) {\n        Node current = head;\n        while (current != null && current.value != target) current = current.next;\n        if (current == null) return false;\n\n        Node node = new Node(value);\n        Node after = current.next;\n        current.next = node;\n        node.prev = current;\n        node.next = after;\n        if (after == null) {\n            tail = node;\n        } else {\n            after.prev = node;\n        }\n        return true;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedInsertAfter list = new DoublyLinkedInsertAfter();\n        check(!list.insertAfter(1, 2), \"empty\");\n        list.addLast(10);\n        list.addLast(30);\n        check(list.insertAfter(10, 20), \"middle insert\");\n        check(list.insertAfter(30, 40), \"tail insert\");\n        check(!list.insertAfter(99, 50), \"missing target\");\n        check(list.forward().equals(\"10 -> 20 -> 30 -> 40\"), \"forward\");\n        check(list.backward().equals(\"40 -> 30 -> 20 -> 10\"), \"backward\");\n        System.out.println(\"middle-insert checks: OK\");\n    }\n}",
+  "solutionExplanation": [
+    "先保存原后继，避免引用丢失。",
+    "非尾部插入维护四条相邻引用。",
+    "尾后插入更新 tail；搜索最坏 O(n)。"
+  ],
+  "steps": [
+    {
+      "id": "find",
+      "day": "2026-11-04",
+      "title": "查找目标",
+      "instruction": "沿 next 查找首个 target。",
+      "hint": "未命中返回 false。",
+      "knowledge": [
+        "遍历",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "relink",
+      "day": "2026-11-04",
+      "title": "重连引用",
+      "instruction": "保存 after 后连接 current、node、after。",
+      "hint": "两个方向都要更新。",
+      "knowledge": [
+        "prev/next",
+        "插入"
+      ]
+    },
+    {
+      "id": "tail",
+      "day": "2026-11-04",
+      "title": "处理尾部",
+      "instruction": "after 为 null 时更新 tail。",
+      "hint": "新节点成为尾。",
+      "knowledge": [
+        "tail",
+        "边界"
+      ]
+    },
+    {
+      "id": "check",
+      "day": "2026-11-04",
+      "title": "双向自检",
+      "instruction": "覆盖空、中间、尾部和未命中。",
+      "hint": "正反输出都检查。",
+      "knowledge": [
+        "边界",
+        "自检"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "中间与尾部",
+      "input": "10,30 + 20,40",
+      "output": "middle-insert checks: OK",
+      "purpose": "验证引用"
+    },
+    {
+      "id": "t2",
+      "label": "空与未命中",
+      "input": "empty/99",
+      "output": "middle-insert checks: OK",
+      "purpose": "验证不改链"
+    }
+  ],
+  "recall": [
+    {
+      "id": "cost",
+      "question": "按值插入为何整体仍是 O(n)？",
+      "answer": "连接虽是 O(1)，但查找目标最坏要遍历 n 个节点。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-04 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-04 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ListIterator",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ListIterator.html",
+      "attribution": "2026-11-04 实际核对，项目为原创教学练习"
+    }
+  ]
+}
