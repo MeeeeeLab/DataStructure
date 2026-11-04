@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-04",
+  "topic": "双链表中间插入",
+  "stage": "双链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-11/2026-11-04_双链表中间插入.md",
+  "collectedAt": "2026-11-04",
+  "sources": [
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ListIterator",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ListIterator.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：空链首尾",
+      "difficulty": "基础",
+      "prompt": "空双链表第一次插入 node 后应怎样设置？",
+      "answer": 2,
+      "explanation": "唯一节点同时是 head 与 tail。",
+      "hint": "复习11月3日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-04 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只设head",
+        "只设tail",
+        "head=tail=node",
+        "二者仍为null"
+      ],
+      "reviewOf": "2026-11-03",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：尾插成本",
+      "difficulty": "基础",
+      "prompt": "单链表未保存 tail 时尾插为何最坏 O(n)？",
+      "answer": 1,
+      "explanation": "必须沿 next 找到末尾。",
+      "hint": "复习10月28日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-04 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "要复制全部值",
+        "要遍历到尾节点",
+        "要排序",
+        "要递归"
+      ],
+      "reviewOf": "2026-10-28",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "保存后继",
+      "difficulty": "基础",
+      "prompt": "在 current 后插入前，为什么先保存 after=current.next？",
+      "answer": 3,
+      "explanation": "否则覆盖 current.next 后可能丢失原后继。",
+      "hint": "引用被改写后还能找到谁？",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-04 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "为了排序",
+        "为了减少节点数",
+        "为了删除 current",
+        "为了保留原后继引用"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "中间插入输出",
+      "difficulty": "基础",
+      "prompt": "10 <-> 30，在10后插入20，再在30后插入40，正向输出什么？",
+      "answer": "10 -> 20 -> 30 -> 40",
+      "explanation": "20进入中间，40成为新尾。",
+      "hint": "按插入后的位置写。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-04 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "中间插入自检",
+      "difficulty": "综合",
+      "prompt": "实现按值找到首个目标并在其后插入，覆盖空链、中间、尾部和未命中。",
+      "answer": "public class DoublyLinkedInsertAfter {\n    static class Node {\n        int value;\n        Node prev;\n        Node next;\n\n        Node(int value) {\n            this.value = value;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n\n    void addLast(int value) {\n        Node node = new Node(value);\n        if (tail == null) {\n            head = tail = node;\n        } else {\n            tail.next = node;\n            node.prev = tail;\n            tail = node;\n        }\n    }\n\n    boolean insertAfter(int target, int value) {\n        Node current = head;\n        while (current != null && current.value != target) current = current.next;\n        if (current == null) return false;\n\n        Node node = new Node(value);\n        Node after = current.next;\n        current.next = node;\n        node.prev = current;\n        node.next = after;\n        if (after == null) {\n            tail = node;\n        } else {\n            after.prev = node;\n        }\n        return true;\n    }\n\n    String forward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = head; current != null; current = current.next) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    String backward() {\n        StringBuilder result = new StringBuilder();\n        for (Node current = tail; current != null; current = current.prev) {\n            if (!result.isEmpty()) result.append(\" -> \");\n            result.append(current.value);\n        }\n        return result.toString();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        DoublyLinkedInsertAfter list = new DoublyLinkedInsertAfter();\n        check(!list.insertAfter(1, 2), \"empty\");\n        list.addLast(10);\n        list.addLast(30);\n        check(list.insertAfter(10, 20), \"middle insert\");\n        check(list.insertAfter(30, 40), \"tail insert\");\n        check(!list.insertAfter(99, 50), \"missing target\");\n        check(list.forward().equals(\"10 -> 20 -> 30 -> 40\"), \"forward\");\n        check(list.backward().equals(\"40 -> 30 -> 20 -> 10\"), \"backward\");\n        System.out.println(\"middle-insert checks: OK\");\n    }\n}",
+      "explanation": "查找 O(n)，找到后固定数量引用修改为 O(1)。",
+      "hint": "先保存 after，再成对维护 next/prev。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-04 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "boolean insertAfter(int target,int value){ return false; }\n",
+      "tests": [
+        {
+          "input": "10,30; insertAfter 10->20; 30->40",
+          "output": "middle-insert checks: OK"
+        },
+        {
+          "input": "empty/missing",
+          "output": "middle-insert checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-03",
+      "offset": 1,
+      "topic": "双链表头尾插入"
+    },
+    {
+      "sourceDate": "2026-10-28",
+      "offset": 7,
+      "topic": "单链表尾插与操作成本"
+    }
+  ]
+}
