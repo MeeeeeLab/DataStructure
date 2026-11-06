@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "projectId": "weekend-2026-11-07",
+  "track": "java",
+  "title": "浏览历史记录器",
+  "goal": "周六用双链表节点完成访问、后退、前进及首尾边界；周日继续同一项目并完成链表章节验收。",
+  "prerequisites": [
+    "双链表节点",
+    "插入删除",
+    "首尾边界"
+  ],
+  "filename": "BrowserHistoryProject.java",
+  "runCommand": "java BrowserHistoryProject.java",
+  "starter": "// 按步骤补全节点、操作和自检\n",
+  "solution": "public class BrowserHistoryProject {\n    static class Node { String page; Node prev, next; Node(String page) { this.page = page; } }\n    private Node current;\n\n    String currentPage() { return current == null ? null : current.page; }\n\n    void visit(String page) {\n        if (page == null || page.isBlank()) throw new IllegalArgumentException(\"page is required\");\n        Node node = new Node(page.strip());\n        if (current != null) { current.next = node; node.prev = current; }\n        current = node;\n    }\n\n    String back() { if (current != null && current.prev != null) current = current.prev; return currentPage(); }\n    String forward() { if (current != null && current.next != null) current = current.next; return currentPage(); }\n    static void check(boolean ok, String message) { if (!ok) throw new AssertionError(message); }\n\n    public static void main(String[] args) {\n        BrowserHistoryProject history = new BrowserHistoryProject();\n        check(history.currentPage() == null && history.back() == null && history.forward() == null, \"empty\");\n        history.visit(\"A\"); history.visit(\"B\"); history.visit(\"C\");\n        check(history.back().equals(\"B\") && history.back().equals(\"A\") && history.back().equals(\"A\"), \"back boundary\");\n        check(history.forward().equals(\"B\"), \"forward\");\n        history.visit(\"D\");\n        check(history.currentPage().equals(\"D\") && history.forward().equals(\"D\"), \"discard forward history\");\n        try { history.visit(\"  \"); } catch (IllegalArgumentException expected) { System.out.println(\"history checks: OK\"); return; }\n        throw new AssertionError(\"blank page accepted\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只使用标准库和最小数据模型。",
+    "先处理正常流程，再覆盖空、重复或首尾边界。",
+    "运行一个可重复的 assert/check 自检。"
+  ],
+  "steps": [
+    {
+      "id": "node-current",
+      "day": "2026-11-07",
+      "title": "节点与当前位置",
+      "instruction": "定义page、prev、next和current。",
+      "hint": "空历史current为null。",
+      "knowledge": [
+        "双链表节点",
+        "current"
+      ]
+    },
+    {
+      "id": "visit",
+      "day": "2026-11-07",
+      "title": "访问新页面",
+      "instruction": "连接新节点并丢弃旧前进链。",
+      "hint": "设置current.next和node.prev。",
+      "knowledge": [
+        "插入",
+        "分支历史"
+      ]
+    },
+    {
+      "id": "move",
+      "day": "2026-11-07",
+      "title": "前后移动",
+      "instruction": "只在相邻节点存在时移动。",
+      "hint": "边界处保持current。",
+      "knowledge": [
+        "prev",
+        "next",
+        "首尾边界"
+      ]
+    },
+    {
+      "id": "saturday-checks",
+      "day": "2026-11-07",
+      "title": "周六自检",
+      "instruction": "覆盖空、首尾、分支和空白页面。",
+      "hint": "所有核心操作O(1)。",
+      "knowledge": [
+        "边界测试",
+        "复杂度"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正常浏览",
+      "input": "A,B,C/back/forward",
+      "output": "history checks: OK",
+      "purpose": "验证核心移动"
+    },
+    {
+      "id": "t2",
+      "label": "边界与分支",
+      "input": "empty/boundary/visit after back/blank",
+      "output": "history checks: OK",
+      "purpose": "验证首尾与断开前进历史"
+    }
+  ],
+  "recall": [
+    {
+      "id": "branch",
+      "question": "后退后访问新页面为何要断开原next？",
+      "answer": "新页面成为当前位置后的唯一前进历史，旧分支不再可达。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    }
+  ]
+}
