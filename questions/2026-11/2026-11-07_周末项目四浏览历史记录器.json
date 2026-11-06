@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-07",
+  "topic": "周末项目四浏览历史记录器",
+  "stage": "双链表周末项目",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-07_周末项目四浏览历史记录器.md",
+  "collectedAt": "2026-11-07",
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：结构选择",
+      "difficulty": "基础",
+      "prompt": "浏览历史需要从当前位置直接前后移动，最合适的已学结构是什么？",
+      "answer": 2,
+      "explanation": "双链表同时保存 prev 与 next。",
+      "hint": "复习11月6日比较练习。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只有head的单链表",
+        "数组且每次搬移",
+        "双链表",
+        "HashMap"
+      ],
+      "reviewOf": "2026-11-06",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表遍历",
+      "difficulty": "基础",
+      "prompt": "单链表从 head 查找最后一个节点，需要沿什么字段前进？",
+      "answer": 1,
+      "explanation": "单链表通过 next 正向遍历。",
+      "hint": "复习10月31日项目。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "prev",
+        "next",
+        "parent",
+        "index"
+      ],
+      "reviewOf": "2026-10-31",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "后退后新访问",
+      "difficulty": "基础",
+      "prompt": "历史 A→B→C，后退到B后访问D，正确的可前进状态是什么？",
+      "answer": 3,
+      "explanation": "新访问从当前位置分支，旧的C链应断开。",
+      "hint": "浏览器不会在D后再前进到C。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "D后可前进到C",
+        "B后仍有C与D两条next",
+        "current回到A",
+        "D为最新页，不能再前进"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "移动追踪",
+      "difficulty": "基础",
+      "prompt": "依次访问A、B、C，后退两次再前进一次，当前页面精确是什么？",
+      "answer": "B",
+      "explanation": "C后退到B，再到A，再前进到B。",
+      "hint": "逐步移动current。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "浏览历史核心功能",
+      "difficulty": "综合",
+      "prompt": "实现 visit、back、forward，覆盖空、首尾、后退后新访问和空白页面。",
+      "answer": "public class BrowserHistoryProject {\n    static class Node { String page; Node prev, next; Node(String page) { this.page = page; } }\n    private Node current;\n\n    String currentPage() { return current == null ? null : current.page; }\n\n    void visit(String page) {\n        if (page == null || page.isBlank()) throw new IllegalArgumentException(\"page is required\");\n        Node node = new Node(page.strip());\n        if (current != null) { current.next = node; node.prev = current; }\n        current = node;\n    }\n\n    String back() { if (current != null && current.prev != null) current = current.prev; return currentPage(); }\n    String forward() { if (current != null && current.next != null) current = current.next; return currentPage(); }\n    static void check(boolean ok, String message) { if (!ok) throw new AssertionError(message); }\n\n    public static void main(String[] args) {\n        BrowserHistoryProject history = new BrowserHistoryProject();\n        check(history.currentPage() == null && history.back() == null && history.forward() == null, \"empty\");\n        history.visit(\"A\"); history.visit(\"B\"); history.visit(\"C\");\n        check(history.back().equals(\"B\") && history.back().equals(\"A\") && history.back().equals(\"A\"), \"back boundary\");\n        check(history.forward().equals(\"B\"), \"forward\");\n        history.visit(\"D\");\n        check(history.currentPage().equals(\"D\") && history.forward().equals(\"D\"), \"discard forward history\");\n        try { history.visit(\"  \"); } catch (IllegalArgumentException expected) { System.out.println(\"history checks: OK\"); return; }\n        throw new AssertionError(\"blank page accepted\");\n    }\n}\n",
+      "explanation": "每个操作只访问相邻节点，核心时间均为O(1)。",
+      "hint": "visit时连接current.next与node.prev。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class BrowserHistoryProject {\n    static class Node { String page; Node prev, next; }\n    // TODO: visit/back/forward\n}\n",
+      "tests": [
+        {
+          "input": "A,B,C; back; back; forward",
+          "output": "history checks: OK"
+        },
+        {
+          "input": "empty, boundary, branch, blank",
+          "output": "history checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "weekend-project",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-06",
+      "offset": 1,
+      "topic": "双链表与单链表比较练习"
+    },
+    {
+      "sourceDate": "2026-10-31",
+      "offset": 7,
+      "topic": "周末项目三单链表学生名单管理器"
+    }
+  ]
+}
