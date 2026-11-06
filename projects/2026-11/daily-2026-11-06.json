@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-06",
+  "track": "java",
+  "title": "单链表与双链表比较短练习",
+  "goal": "用同一组节点比较正向、反向遍历和已知节点删除。",
+  "prerequisites": [
+    "单链表",
+    "双链表",
+    "prev/next"
+  ],
+  "filename": "LinkedListComparison.java",
+  "runCommand": "java LinkedListComparison.java",
+  "starter": "// 按步骤补全节点、操作和自检\n",
+  "solution": "public class LinkedListComparison {\n    static class SNode { int value; SNode next; SNode(int value) { this.value = value; } }\n    static class DNode { int value; DNode prev, next; DNode(int value) { this.value = value; } }\n\n    static String singlyForward(SNode head) {\n        StringBuilder out = new StringBuilder();\n        for (SNode n = head; n != null; n = n.next) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static String doublyForward(DNode head) {\n        StringBuilder out = new StringBuilder();\n        for (DNode n = head; n != null; n = n.next) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static String doublyBackward(DNode tail) {\n        StringBuilder out = new StringBuilder();\n        for (DNode n = tail; n != null; n = n.prev) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static void unlinkKnown(DNode node) {\n        if (node.prev != null) node.prev.next = node.next;\n        if (node.next != null) node.next.prev = node.prev;\n    }\n\n    static void check(boolean ok, String message) { if (!ok) throw new AssertionError(message); }\n\n    public static void main(String[] args) {\n        check(singlyForward(null).equals(\"\") && doublyForward(null).equals(\"\"), \"empty\");\n        SNode s10 = new SNode(10), s20 = new SNode(20), s30 = new SNode(30);\n        s10.next = s20; s20.next = s30;\n        DNode d10 = new DNode(10), d20 = new DNode(20), d30 = new DNode(30);\n        d10.next = d20; d20.prev = d10; d20.next = d30; d30.prev = d20;\n        check(singlyForward(s10).equals(\"10 -> 20 -> 30\"), \"single forward\");\n        check(doublyForward(d10).equals(\"10 -> 20 -> 30\"), \"double forward\");\n        check(doublyBackward(d30).equals(\"30 -> 20 -> 10\"), \"double backward\");\n        unlinkKnown(d20);\n        check(doublyForward(d10).equals(\"10 -> 30\") && doublyBackward(d30).equals(\"30 -> 10\"), \"unlink\");\n        System.out.println(\"comparison checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只使用标准库和最小数据模型。",
+    "先处理正常流程，再覆盖空、重复或首尾边界。",
+    "运行一个可重复的 assert/check 自检。"
+  ],
+  "steps": [
+    {
+      "id": "build",
+      "day": "2026-11-06",
+      "title": "建立两种节点",
+      "instruction": "用同样的10、20、30连接。",
+      "hint": "单链表只有next。",
+      "knowledge": [
+        "SNode",
+        "DNode"
+      ]
+    },
+    {
+      "id": "compare",
+      "day": "2026-11-06",
+      "title": "比较遍历",
+      "instruction": "核对单向正序与双向正反序。",
+      "hint": "从tail沿prev。",
+      "knowledge": [
+        "遍历",
+        "prev/next"
+      ]
+    },
+    {
+      "id": "unlink",
+      "day": "2026-11-06",
+      "title": "删除已知节点",
+      "instruction": "让d20前后邻居互连。",
+      "hint": "更新两条引用。",
+      "knowledge": [
+        "删除",
+        "O(1)"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正反遍历",
+      "input": "10,20,30",
+      "output": "comparison checks: OK",
+      "purpose": "比较结构"
+    },
+    {
+      "id": "t2",
+      "label": "空链与删除",
+      "input": "empty/unlink20",
+      "output": "comparison checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "choice",
+      "question": "为何浏览历史更适合双链表？",
+      "answer": "当前位置能沿prev或next直接前后移动。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "attribution": "2026-11-07 实际核对，项目为原创教学练习"
+    }
+  ]
+}
