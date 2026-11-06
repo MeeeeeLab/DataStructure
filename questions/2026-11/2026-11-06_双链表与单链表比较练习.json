@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "topic": "双链表与单链表比较练习",
+  "stage": "双链表",
+  "estimatedMinutes": 25,
+  "notePath": "notes/2026-11/2026-11-06_双链表与单链表比较练习.md",
+  "collectedAt": "2026-11-07",
+  "sources": [
+    {
+      "title": "Java SE 25：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：List",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Princeton Algorithms：DoublyLinkedList.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html",
+      "kind": "Princeton 官方课程代码"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：删除两侧重连",
+      "difficulty": "基础",
+      "prompt": "删除已知双链表中间节点 current 时，必须更新哪两处？",
+      "answer": 1,
+      "explanation": "前驱的 next 与后继的 prev 都要绕过 current。",
+      "hint": "复习11月5日。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只更新current",
+        "current.prev.next与current.next.prev",
+        "只更新head",
+        "只更新tail"
+      ],
+      "reviewOf": "2026-11-05",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表操作成本",
+      "difficulty": "基础",
+      "prompt": "只有 head 的单链表按值查找，最坏时间复杂度是什么？",
+      "answer": 2,
+      "explanation": "最坏要遍历全部节点。",
+      "hint": "复习10月30日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "reviewOf": "2026-10-30",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "反向遍历",
+      "difficulty": "基础",
+      "prompt": "哪个结构能从尾节点直接沿引用反向遍历？",
+      "answer": 1,
+      "explanation": "双链表节点保存 prev。",
+      "hint": "看节点字段。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只有next的单链表",
+        "有prev/next的双链表",
+        "普通数组必然不能",
+        "空链表"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "双向输出",
+      "difficulty": "基础",
+      "prompt": "10 <-> 20 <-> 30 从 tail 沿 prev 遍历，精确输出是什么？",
+      "answer": "30 -> 20 -> 10",
+      "explanation": "从30开始依次访问20和10。",
+      "hint": "方向是tail到head。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "单/双链表比较自检",
+      "difficulty": "综合",
+      "prompt": "建立同样的10、20、30，比较遍历并删除已知双链表中间节点。",
+      "answer": "public class LinkedListComparison {\n    static class SNode { int value; SNode next; SNode(int value) { this.value = value; } }\n    static class DNode { int value; DNode prev, next; DNode(int value) { this.value = value; } }\n\n    static String singlyForward(SNode head) {\n        StringBuilder out = new StringBuilder();\n        for (SNode n = head; n != null; n = n.next) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static String doublyForward(DNode head) {\n        StringBuilder out = new StringBuilder();\n        for (DNode n = head; n != null; n = n.next) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static String doublyBackward(DNode tail) {\n        StringBuilder out = new StringBuilder();\n        for (DNode n = tail; n != null; n = n.prev) { if (!out.isEmpty()) out.append(\" -> \"); out.append(n.value); }\n        return out.toString();\n    }\n\n    static void unlinkKnown(DNode node) {\n        if (node.prev != null) node.prev.next = node.next;\n        if (node.next != null) node.next.prev = node.prev;\n    }\n\n    static void check(boolean ok, String message) { if (!ok) throw new AssertionError(message); }\n\n    public static void main(String[] args) {\n        check(singlyForward(null).equals(\"\") && doublyForward(null).equals(\"\"), \"empty\");\n        SNode s10 = new SNode(10), s20 = new SNode(20), s30 = new SNode(30);\n        s10.next = s20; s20.next = s30;\n        DNode d10 = new DNode(10), d20 = new DNode(20), d30 = new DNode(30);\n        d10.next = d20; d20.prev = d10; d20.next = d30; d30.prev = d20;\n        check(singlyForward(s10).equals(\"10 -> 20 -> 30\"), \"single forward\");\n        check(doublyForward(d10).equals(\"10 -> 20 -> 30\"), \"double forward\");\n        check(doublyBackward(d30).equals(\"30 -> 20 -> 10\"), \"double backward\");\n        unlinkKnown(d20);\n        check(doublyForward(d10).equals(\"10 -> 30\") && doublyBackward(d30).equals(\"30 -> 10\"), \"unlink\");\n        System.out.println(\"comparison checks: OK\");\n    }\n}\n",
+      "explanation": "双链表用额外引用换取直接反向移动和已知节点重连。",
+      "hint": "分别写正向和反向遍历。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-07 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class LinkedListComparison {\n    // TODO: SNode, DNode and checks\n}\n",
+      "tests": [
+        {
+          "input": "10,20,30",
+          "output": "comparison checks: OK"
+        },
+        {
+          "input": "empty and unlink 20",
+          "output": "comparison checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-05",
+      "offset": 1,
+      "topic": "双链表删除与边界"
+    },
+    {
+      "sourceDate": "2026-10-30",
+      "offset": 7,
+      "topic": "单链表工作日综合练习"
+    }
+  ]
+}
