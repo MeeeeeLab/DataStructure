@@ -18,9 +18,9 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-上个周末项目：[单链表学生名单管理器](projects/2026-10/weekend-2026-10-31.md)（10 月 31 日至 11 月 1 日使用同一项目 ID；历史资料与记录全部保留）。
+本周末项目：[浏览历史记录器](projects/2026-11/weekend-2026-11-07.md)（11 月 7–8 日使用同一项目 ID；周六核心功能已发布，不记录个人完成状态）。
 
-今日工作日小练习：[双链表删除边界短练习](projects/2026-11/daily-2026-11-05.md)（20–25 分钟，不叠加大型项目）。
+上一工作日小练习：[单链表与双链表比较](projects/2026-11/daily-2026-11-06.md)（20–25 分钟；历史资料与项目 ID 保留）。
 
 每天生成一份中文 Markdown 笔记和 5 道题。笔记包含通俗解释、Java 示例、复杂度、易错点、练习和验收清单；每日 5 题会优先容纳到期的 D+1、D+7、D+30 复习，避免额外无限加量。
 
@@ -61,6 +61,8 @@
 | 2026-11-03 | [双链表头尾插入](notes/2026-11/2026-11-03_双链表头尾插入.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-03_双链表头尾插入.json) |
 | 2026-11-04 | [双链表中间插入](notes/2026-11/2026-11-04_双链表中间插入.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-04_双链表中间插入.json) |
 | 2026-11-05 | [双链表删除与边界](notes/2026-11/2026-11-05_双链表删除与边界.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-05_双链表删除与边界.json) |
+| 2026-11-06 | [双链表与单链表比较练习](notes/2026-11/2026-11-06_双链表与单链表比较练习.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-06_双链表与单链表比较练习.json) |
+| 2026-11-07 | [周末项目四：浏览历史记录器](notes/2026-11/2026-11-07_周末项目四浏览历史记录器.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-07_周末项目四浏览历史记录器.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
