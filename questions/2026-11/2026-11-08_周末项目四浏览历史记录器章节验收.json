@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-08",
+  "topic": "周末项目四浏览历史记录器章节验收",
+  "stage": "双链表周末项目·章节验收与间隔复习",
+  "estimatedMinutes": 45,
+  "notePath": "notes/2026-11/2026-11-08_周末项目四浏览历史记录器章节验收.md",
+  "collectedAt": "2026-11-08",
+  "language": "Java",
+  "mode": "chapter-check",
+  "sources": [
+    {
+      "title": "Java SE 25 官方 API：LinkedList",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedList.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java 语言规范 SE 25：Arrays",
+      "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-10.html",
+      "kind": "Java 官方语言规范"
+    },
+    {
+      "title": "Oracle Java Tutorial：Arrays",
+      "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html",
+      "kind": "Oracle 官方教程"
+    }
+  ],
+  "reviews": [
+    {
+      "sourceDate": "2026-11-07",
+      "offset": 1,
+      "topic": "周末项目四浏览历史记录器"
+    },
+    {
+      "sourceDate": "2026-11-01",
+      "offset": 7,
+      "topic": "周末项目三单链表章节验收"
+    },
+    {
+      "sourceDate": "2026-10-09",
+      "offset": 30,
+      "topic": "数据结构与数组入门"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：后退后访问新页面",
+      "difficulty": "基础",
+      "prompt": "历史为 A→B→C，后退到 B 后访问 D。正确的前进链应是什么？",
+      "options": [
+        "A→B→C→D",
+        "A→B→D",
+        "A→C→D",
+        "D→C→B"
+      ],
+      "answer": 1,
+      "explanation": "访问 D 时必须把 B.next 改为 D，旧的 C 分支不再从 head 可达。",
+      "hint": "回忆周六项目的分支历史。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-08 实际阅读的官方资料原创，非官方原题",
+      "reviewOf": "2026-11-07",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：单链表按值删除成本",
+      "difficulty": "基础",
+      "prompt": "单链表没有额外索引，按学号查找目标并删除，最坏时间复杂度是什么？",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "answer": 2,
+      "explanation": "通常要从 head 顺序查找目标或其前驱，最坏需要检查 n 个节点。",
+      "hint": "区分“已经拿到前驱引用”和“还要先按值查找”。",
+      "sourceIndex": 0,
+      "attribution": "依据既有章节验收和官方链表资料原创变式，非官方原题",
+      "reviewOf": "2026-11-01",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "mcq",
+      "title": "D+30：数组有效下标",
+      "difficulty": "入门",
+      "prompt": "Java 中 int[] a = new int[0]。下面哪项正确？",
+      "options": [
+        "a[0] 是默认值 0",
+        "有效下标为 -1",
+        "a.length 为 0，且没有有效元素下标",
+        "最后一个有效下标是 0"
+      ],
+      "answer": 2,
+      "explanation": "长度为 n 的数组有效下标是 0 到 n-1；n 为 0 时不存在有效下标。",
+      "hint": "长度是元素数量，不是末项下标。",
+      "sourceIndex": 1,
+      "attribution": "依据 Java 语言规范第 10 章原创复习题，非官方原题",
+      "reviewOf": "2026-10-09",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "移动过程追踪",
+      "difficulty": "基础",
+      "prompt": "依次访问 A、B、C，后退两次，再前进一次。当前页面精确是什么？",
+      "answer": "B",
+      "explanation": "C→B→A，再前进到 B。",
+      "hint": "每次移动只看一个相邻节点。",
+      "sourceIndex": 0,
+      "attribution": "依据官方双链表 API 概念编写的原创题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "双链表浏览历史独立实现",
+      "difficulty": "综合",
+      "prompt": "从空文件独立实现 BrowserHistoryProject：Node 保存 page/prev/next；维护 head、tail、current；实现 visit、back、forward、正反向遍历。必须覆盖空、单节点、首尾边界以及后退后访问新页面丢弃旧分支。保存为 BrowserHistoryProject.java，本地运行并核对输出。",
+      "starter": "public class BrowserHistoryProject {\n    static class Node { String page; Node prev, next; }\n    private Node head, tail, current;\n    // TODO: visit / back / forward / forwardPages / backwardPages\n}\n",
+      "answer": "public class BrowserHistoryProject {\n    static class Node {\n        String page;\n        Node prev;\n        Node next;\n        Node(String page) { this.page = page; }\n    }\n\n    private Node head;\n    private Node tail;\n    private Node current;\n\n    String currentPage() {\n        return current == null ? null : current.page;\n    }\n\n    void visit(String page) {\n        if (page == null || page.isBlank()) {\n            throw new IllegalArgumentException(\"page is required\");\n        }\n        Node node = new Node(page.strip());\n        if (current == null) {\n            head = tail = current = node;\n            return;\n        }\n        current.next = null;\n        tail = current;\n        node.prev = current;\n        current.next = node;\n        current = tail = node;\n    }\n\n    String back() {\n        if (current != null && current.prev != null) current = current.prev;\n        return currentPage();\n    }\n\n    String forward() {\n        if (current != null && current.next != null) current = current.next;\n        return currentPage();\n    }\n\n    String forwardPages() {\n        StringBuilder out = new StringBuilder();\n        for (Node node = head; node != null; node = node.next) {\n            if (!out.isEmpty()) out.append(\" -> \");\n            out.append(node.page);\n        }\n        return out.toString();\n    }\n\n    String backwardPages() {\n        StringBuilder out = new StringBuilder();\n        for (Node node = tail; node != null; node = node.prev) {\n            if (!out.isEmpty()) out.append(\" -> \");\n            out.append(node.page);\n        }\n        return out.toString();\n    }\n\n    static void check(boolean ok, String message) {\n        if (!ok) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        BrowserHistoryProject history = new BrowserHistoryProject();\n        check(history.currentPage() == null, \"empty current\");\n        check(history.back() == null && history.forward() == null, \"empty movement\");\n        check(history.forwardPages().isEmpty() && history.backwardPages().isEmpty(), \"empty traversal\");\n\n        history.visit(\"A\");\n        history.visit(\"B\");\n        history.visit(\"C\");\n        check(history.forwardPages().equals(\"A -> B -> C\"), \"forward traversal\");\n        check(history.backwardPages().equals(\"C -> B -> A\"), \"backward traversal\");\n\n        check(history.back().equals(\"B\"), \"back once\");\n        check(history.back().equals(\"A\"), \"back twice\");\n        check(history.back().equals(\"A\"), \"head boundary\");\n        check(history.forward().equals(\"B\"), \"forward once\");\n\n        history.visit(\"D\");\n        check(history.currentPage().equals(\"D\"), \"new current\");\n        check(history.forward().equals(\"D\"), \"tail boundary\");\n        check(history.forwardPages().equals(\"A -> B -> D\"), \"discard old branch\");\n        check(history.backwardPages().equals(\"D -> B -> A\"), \"back links after branch\");\n\n        BrowserHistoryProject single = new BrowserHistoryProject();\n        single.visit(\"only\");\n        check(single.forwardPages().equals(\"only\") && single.backwardPages().equals(\"only\"), \"single node\");\n\n        System.out.println(\"forward: \" + history.forwardPages());\n        System.out.println(\"backward: \" + history.backwardPages());\n        try {\n            history.visit(\"  \");\n        } catch (IllegalArgumentException expected) {\n            System.out.println(\"history chapter checks: OK\");\n            return;\n        }\n        throw new AssertionError(\"blank page accepted\");\n    }\n}",
+      "explanation": "双链表的每次局部移动只访问相邻节点；完整遍历仍需 O(n)。",
+      "hint": "新访问时先断开 current.next，再把新节点接到 current 后面。",
+      "sourceIndex": 0,
+      "attribution": "依据 Java 官方 API 与语言规范编写的原创章节验收任务",
+      "language": "java",
+      "tests": [
+        {
+          "input": "empty; visit A,B,C; back,back,forward; visit D",
+          "output": "forward: A -> B -> D\nbackward: D -> B -> A\nhistory chapter checks: OK"
+        },
+        {
+          "input": "empty history; single node; boundary movement; blank page",
+          "output": "forward: A -> B -> D\nbackward: D -> B -> A\nhistory chapter checks: OK"
+        }
+      ]
+    }
+  ]
+}
