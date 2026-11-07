@@ -63,6 +63,7 @@
 | 2026-11-05 | [双链表删除与边界](notes/2026-11/2026-11-05_双链表删除与边界.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-05_双链表删除与边界.json) |
 | 2026-11-06 | [双链表与单链表比较练习](notes/2026-11/2026-11-06_双链表与单链表比较练习.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-06_双链表与单链表比较练习.json) |
 | 2026-11-07 | [周末项目四：浏览历史记录器](notes/2026-11/2026-11-07_周末项目四浏览历史记录器.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-07_周末项目四浏览历史记录器.json) |
+| 2026-11-08 | [周末项目四：浏览历史记录器章节验收](notes/2026-11/2026-11-08_周末项目四浏览历史记录器章节验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-08_周末项目四浏览历史记录器章节验收.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
