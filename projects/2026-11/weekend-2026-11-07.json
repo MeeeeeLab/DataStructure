@@ -131,7 +131,7 @@
       "id": "t3",
       "label": "单节点",
       "input": "new history; visit only; traverse both ways",
-      "output": "history chapter checks: OK",
+      "output": "forward: A -> B -> D\nbackward: D -> B -> A\nhistory chapter checks: OK",
       "purpose": "验证 head 与 tail 指向同一节点"
     }
   ],
