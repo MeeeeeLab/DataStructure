@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-09",
+  "topic": "栈的LIFO与基本操作",
+  "stage": "栈",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-09_栈的LIFO与基本操作.md",
+  "collectedAt": "2026-11-09",
+  "sources": [
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：Stack",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Stack.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：浏览历史不变量",
+      "difficulty": "基础",
+      "prompt": "浏览历史在 B 后访问 D 时，为何要断开 B 原来指向 C 的 next？",
+      "answer": 2,
+      "explanation": "新访问形成新的前进历史，旧分支C不应再可达。",
+      "hint": "复习11月8日章节验收。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-09 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "减少B的值",
+        "让A成为tail",
+        "丢弃旧前进分支",
+        "把D放在head前"
+      ],
+      "reviewOf": "2026-11-08",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：双向连接",
+      "difficulty": "基础",
+      "prompt": "A <-> B <-> C 中，B 的 prev 和 next 分别指向谁？",
+      "answer": 1,
+      "explanation": "B的前驱是A，后继是C。",
+      "hint": "复习11月2日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-09 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "C和A",
+        "A和C",
+        "A和A",
+        "C和C"
+      ],
+      "reviewOf": "2026-11-02",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：数组遍历",
+      "difficulty": "基础",
+      "prompt": "数组 [70,80,90] 线性遍历求和后，精确结果是多少？",
+      "answer": "240",
+      "explanation": "依次累加三个元素得到240，时间复杂度O(n)。",
+      "hint": "复习10月10日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-09 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-10",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "LIFO 顺序",
+      "difficulty": "基础",
+      "prompt": "依次 push(A)、push(B)、push(C)，第一次 pop 返回什么？",
+      "answer": 3,
+      "explanation": "最后压入的C位于栈顶并最先弹出。",
+      "hint": "后进先出。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-09 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "null",
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "动作撤销栈",
+      "difficulty": "综合",
+      "prompt": "用 Deque/ArrayDeque 实现记录、查看和撤销，覆盖空栈与空白动作。",
+      "answer": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class ActionHistory {\n    private final Deque<String> actions = new ArrayDeque<>();\n\n    void record(String action) {\n        if (action == null || action.isBlank()) {\n            throw new IllegalArgumentException(\"action is required\");\n        }\n        actions.push(action.strip());\n    }\n\n    String undo() {\n        return actions.poll();\n    }\n\n    String latest() {\n        return actions.peek();\n    }\n\n    int size() {\n        return actions.size();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        ActionHistory history = new ActionHistory();\n        check(history.undo() == null && history.latest() == null, \"empty\");\n        history.record(\"type A\");\n        history.record(\"type B\");\n        history.record(\"delete B\");\n        check(history.latest().equals(\"delete B\") && history.size() == 3, \"peek\");\n        check(history.undo().equals(\"delete B\"), \"first undo\");\n        check(history.undo().equals(\"type B\"), \"second undo\");\n        check(history.undo().equals(\"type A\"), \"third undo\");\n        check(history.undo() == null && history.size() == 0, \"empty again\");\n        try {\n            history.record(\"  \");\n        } catch (IllegalArgumentException expected) {\n            System.out.println(\"stack checks: OK\");\n            return;\n        }\n        throw new AssertionError(\"blank action accepted\");\n    }\n}\n",
+      "explanation": "push把最新动作放在栈顶，poll安全移除栈顶，peek只查看。",
+      "hint": "官方建议用Deque替代旧Stack。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-09 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class ActionHistory {\n    private final Deque<String> actions = new ArrayDeque<>();\n    // TODO: record, undo, latest\n}\n",
+      "tests": [
+        {
+          "input": "type A,type B,delete B",
+          "output": "stack checks: OK"
+        },
+        {
+          "input": "empty and blank",
+          "output": "stack checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-08",
+      "offset": 1,
+      "topic": "周末项目四浏览历史记录器章节验收"
+    },
+    {
+      "sourceDate": "2026-11-02",
+      "offset": 7,
+      "topic": "双链表节点与双向连接"
+    },
+    {
+      "sourceDate": "2026-10-10",
+      "offset": 30,
+      "topic": "数组遍历与成绩统计"
+    }
+  ]
+}
