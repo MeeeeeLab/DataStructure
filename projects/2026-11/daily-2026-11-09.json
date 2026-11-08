@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-09",
+  "track": "java",
+  "title": "动作撤销栈短练习",
+  "goal": "用 LIFO 栈记录动作，让最后发生的动作最先撤销，并处理空栈。",
+  "prerequisites": [
+    "数组与链表基础",
+    "Java类与方法",
+    "异常"
+  ],
+  "filename": "ActionHistory.java",
+  "runCommand": "java ActionHistory.java",
+  "starter": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class ActionHistory {\n    private final Deque<String> actions = new ArrayDeque<>();\n    // TODO: record, undo, latest\n}\n",
+  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class ActionHistory {\n    private final Deque<String> actions = new ArrayDeque<>();\n\n    void record(String action) {\n        if (action == null || action.isBlank()) {\n            throw new IllegalArgumentException(\"action is required\");\n        }\n        actions.push(action.strip());\n    }\n\n    String undo() {\n        return actions.poll();\n    }\n\n    String latest() {\n        return actions.peek();\n    }\n\n    int size() {\n        return actions.size();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        ActionHistory history = new ActionHistory();\n        check(history.undo() == null && history.latest() == null, \"empty\");\n        history.record(\"type A\");\n        history.record(\"type B\");\n        history.record(\"delete B\");\n        check(history.latest().equals(\"delete B\") && history.size() == 3, \"peek\");\n        check(history.undo().equals(\"delete B\"), \"first undo\");\n        check(history.undo().equals(\"type B\"), \"second undo\");\n        check(history.undo().equals(\"type A\"), \"third undo\");\n        check(history.undo() == null && history.size() == 0, \"empty again\");\n        try {\n            history.record(\"  \");\n        } catch (IllegalArgumentException expected) {\n            System.out.println(\"stack checks: OK\");\n            return;\n        }\n        throw new AssertionError(\"blank action accepted\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只使用标准库和一个清楚的数据模型。",
+    "先统一正常路径，再覆盖失败后状态不被破坏。",
+    "保留一个可重复运行的最小自检。"
+  ],
+  "steps": [
+    {
+      "id": "record",
+      "day": "2026-11-09",
+      "title": "记录动作",
+      "instruction": "验证非空后push到栈顶。",
+      "hint": "最新动作必须最先撤销。",
+      "knowledge": [
+        "push",
+        "栈顶"
+      ]
+    },
+    {
+      "id": "undo",
+      "day": "2026-11-09",
+      "title": "撤销动作",
+      "instruction": "用poll安全移除栈顶。",
+      "hint": "空栈返回null。",
+      "knowledge": [
+        "poll",
+        "LIFO"
+      ]
+    },
+    {
+      "id": "peek",
+      "day": "2026-11-09",
+      "title": "查看最新动作",
+      "instruction": "用peek读取但不删除。",
+      "hint": "数量不能变化。",
+      "knowledge": [
+        "peek",
+        "边界"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "三次撤销",
+      "input": "type A,type B,delete B",
+      "output": "stack checks: OK",
+      "purpose": "验证LIFO"
+    },
+    {
+      "id": "t2",
+      "label": "空栈与空白动作",
+      "input": "empty/blank",
+      "output": "stack checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "lifo",
+      "question": "为什么delete B最先被撤销？",
+      "answer": "它最后入栈，位于栈顶，符合LIFO。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-09 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-09 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Stack",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Stack.html",
+      "attribution": "2026-11-09 实际核对，项目为原创教学练习"
+    }
+  ]
+}
