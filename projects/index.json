@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-08",
+  "updatedAt": "2026-11-09",
   "projects": [
     {
       "id": "weekend-2026-10-10",
@@ -91,8 +91,9 @@
         "浅拷贝"
       ],
       "javaConcepts": [
-        "有效长度",
-        "数组插入与删除"
+        "Big O",
+        "O(n)",
+        "O(n²)"
       ],
       "minutes": 55,
       "javaMinutes": 20,
@@ -100,7 +101,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-14.json",
       "guidePath": "projects/2026-10/daily-2026-10-14.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-14.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-15",
@@ -115,8 +116,9 @@
         "范围校验"
       ],
       "javaConcepts": [
-        "ArrayList",
-        "add/get/remove"
+        "连续循环",
+        "嵌套循环",
+        "O(log n)"
       ],
       "minutes": 55,
       "javaMinutes": 20,
@@ -124,7 +126,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-15.json",
       "guidePath": "projects/2026-10/daily-2026-10-15.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-15.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-16",
@@ -140,8 +142,9 @@
         "csv.DictWriter"
       ],
       "javaConcepts": [
-        "动态数组",
-        "扩容与复制"
+        "数组扩容",
+        "Arrays.copyOf",
+        "O(n) 复制"
       ],
       "minutes": 60,
       "javaMinutes": 20,
@@ -149,7 +152,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-16.json",
       "guidePath": "projects/2026-10/daily-2026-10-16.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-16.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "weekend-2026-10-17",
@@ -157,26 +160,24 @@
       "endDate": "2026-10-18",
       "kind": "weekend",
       "title": "我的 CSV 成绩账本",
-      "description": "把本周函数、字典、校验和文件串成可反复打开的程序。周六整合，周日拆模块与调试。",
+      "description": "周六完成校验与 CSV 存档，周日继续统计、边界测试和模块化复盘。",
       "concepts": [
-        "函数",
-        "字典",
-        "异常",
         "CSV",
-        "模块与调试"
+        "函数拆分",
+        "输入校验"
       ],
       "javaConcepts": [
-        "数组与顺序表",
-        "边界检查",
-        "可选：撤销与栈"
+        "数组有效长度",
+        "插入删除移动",
+        "操作成本"
       ],
-      "minutes": 180,
-      "javaMinutes": 40,
+      "minutes": 165,
+      "javaMinutes": 100,
       "pythonPath": "projects/2026-10/weekend-2026-10-17.json",
       "javaPath": "projects/2026-10/weekend-2026-10-17.json",
       "guidePath": "projects/2026-10/weekend-2026-10-17.md",
       "javaGuidePath": "projects/2026-10/weekend-2026-10-17.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-19",
@@ -192,8 +193,9 @@
         "diff/log"
       ],
       "javaConcepts": [
-        "栈",
-        "括号匹配"
+        "有效长度",
+        "数组插入",
+        "移动成本"
       ],
       "minutes": 50,
       "javaMinutes": 20,
@@ -201,7 +203,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-19.json",
       "guidePath": "projects/2026-10/daily-2026-10-19.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-19.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-20",
@@ -217,8 +219,9 @@
         ".gitignore"
       ],
       "javaConcepts": [
-        "队列",
-        "先进先出"
+        "有效区间查找",
+        "数组删除左移",
+        "失败不改状态"
       ],
       "minutes": 50,
       "javaMinutes": 20,
@@ -226,7 +229,7 @@
       "javaPath": "projects/2026-10/daily-2026-10-20.json",
       "guidePath": "projects/2026-10/daily-2026-10-20.md",
       "javaGuidePath": "projects/2026-10/daily-2026-10-20.md",
-      "ready": false
+      "ready": true
     },
     {
       "id": "daily-2026-10-21",
@@ -310,19 +313,17 @@
       "startDate": "2026-10-24",
       "endDate": "2026-10-25",
       "kind": "weekend",
-      "title": "文本与成绩统计工具",
-      "description": "周六完成数组与文本统计，周日继续同一 Java 项目完成组合报告与章节验收。",
+      "title": "可查可排的成绩档案",
+      "description": "周六完成查找与排名，周日继续同一项目做独立验收、复杂度解释与 Git 状态检查。",
       "concepts": [
-        "Git",
-        "查找",
-        "排序",
-        "复杂度",
+        "线性查找",
+        "sorted 与 key",
+        "稳定排序",
         "边界测试"
       ],
       "javaConcepts": [
         "数组有效区间",
-        "字符串遍历",
-        "Character 分类",
+        "字符串分类统计",
         "边界测试"
       ],
       "minutes": 180,
@@ -627,7 +628,7 @@
       "endDate": "2026-11-08",
       "kind": "weekend",
       "title": "面向对象成绩册重构",
-      "description": "周六完成浏览历史访问与前后移动；周日继续同一项目，补head/tail不变量、双向遍历和双链表章节独立验收。",
+      "description": "Python 周末完成面向对象成绩册查询、修改、删除与报告；Java 周末完成浏览历史记录器和双链表章节验收。",
       "concepts": [
         "类与对象",
         "classmethod",
@@ -646,6 +647,34 @@
       "javaPath": "projects/2026-11/weekend-2026-11-07.json",
       "guidePath": "projects/2026-11/weekend-2026-11-07.md",
       "javaGuidePath": "projects/2026-11/weekend-2026-11-07.md",
+      "ready": true
+    },
+    {
+      "id": "daily-2026-11-09",
+      "startDate": "2026-11-09",
+      "endDate": "2026-11-09",
+      "kind": "daily",
+      "title": "受控修改学生成绩",
+      "description": "Python 用 property 统一成绩校验；Java 用 Deque 完成 LIFO 动作撤销短练习。",
+      "concepts": [
+        "property",
+        "getter",
+        "setter",
+        "对象状态校验"
+      ],
+      "javaConcepts": [
+        "栈",
+        "LIFO",
+        "push",
+        "pop/poll",
+        "peek"
+      ],
+      "minutes": 50,
+      "javaMinutes": 25,
+      "pythonPath": "projects/2026-11/daily-2026-11-09.json",
+      "javaPath": "projects/2026-11/daily-2026-11-09.json",
+      "guidePath": "projects/2026-11/daily-2026-11-09.md",
+      "javaGuidePath": "projects/2026-11/daily-2026-11-09.md",
       "ready": true
     }
   ]
