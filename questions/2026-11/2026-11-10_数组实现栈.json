@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-10",
+  "topic": "数组实现栈",
+  "stage": "栈",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-10_数组实现栈.md",
+  "collectedAt": "2026-11-11",
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayStack.java",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayStack.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Princeton：Stacks and Queues",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：LIFO追踪",
+      "difficulty": "基础",
+      "prompt": "依次push(A)、push(B)，再peek，返回什么且size如何变化？",
+      "answer": 1,
+      "explanation": "peek查看B但不删除，size仍为2。",
+      "hint": "复习11月9日。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "A且size=1",
+        "B且size=2",
+        "B且size=1",
+        "A且size=2"
+      ],
+      "reviewOf": "2026-11-09",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：空链表首次插入",
+      "difficulty": "基础",
+      "prompt": "空双链表第一次插入节点后，head与tail应怎样？",
+      "answer": 2,
+      "explanation": "唯一节点同时是头尾。",
+      "hint": "复习11月3日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "都为null",
+        "只head指向节点",
+        "都指向同一节点",
+        "分别指向两个节点"
+      ],
+      "reviewOf": "2026-11-03",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：数组引用",
+      "difficulty": "基础",
+      "prompt": "int[] b=a 后修改 b[0]=9，若 a 原为[1,2]，a[0]精确值是多少？",
+      "answer": "9",
+      "explanation": "a和b引用同一个数组对象。",
+      "hint": "复习10月11日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-11",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "数组栈栈顶下标",
+      "difficulty": "基础",
+      "prompt": "非空数组栈有size个元素时，栈顶下标是什么？",
+      "answer": 3,
+      "explanation": "有效下标为0到size-1。",
+      "hint": "size也是下一个可写位置。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "size+1",
+        "0",
+        "data.length",
+        "size-1"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "固定容量数组栈",
+      "difficulty": "综合",
+      "prompt": "实现push/pop/peek，覆盖满栈溢出和空栈下溢。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class ArrayIntStack {\n    private final int[] data;\n    private int size;\n\n    ArrayIntStack(int capacity) {\n        if (capacity <= 0) throw new IllegalArgumentException(\"capacity must be positive\");\n        data = new int[capacity];\n    }\n\n    void push(int value) {\n        if (size == data.length) throw new IllegalStateException(\"stack is full\");\n        data[size++] = value;\n    }\n\n    int pop() {\n        if (size == 0) throw new NoSuchElementException(\"stack is empty\");\n        return data[--size];\n    }\n\n    int peek() {\n        if (size == 0) throw new NoSuchElementException(\"stack is empty\");\n        return data[size - 1];\n    }\n\n    int size() {\n        return size;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        ArrayIntStack stack = new ArrayIntStack(3);\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        check(stack.peek() == 30 && stack.size() == 3, \"peek\");\n        try {\n            stack.push(40);\n            throw new AssertionError(\"overflow accepted\");\n        } catch (IllegalStateException expected) {\n            // expected\n        }\n        check(stack.pop() == 30 && stack.pop() == 20 && stack.pop() == 10, \"LIFO\");\n        try {\n            stack.pop();\n            throw new AssertionError(\"underflow accepted\");\n        } catch (NoSuchElementException expected) {\n            System.out.println(\"array-stack checks: OK\");\n        }\n    }\n}\n",
+      "explanation": "size控制有效区间，所有访问前先检查边界。",
+      "hint": "push写data[size++]，pop读data[--size]。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class ArrayIntStack {\n    private final int[] data;\n    private int size;\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "push 10,20,30 then pop",
+          "output": "array-stack checks: OK"
+        },
+        {
+          "input": "overflow and underflow",
+          "output": "array-stack checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-09",
+      "offset": 1,
+      "topic": "栈的LIFO与基本操作"
+    },
+    {
+      "sourceDate": "2026-11-03",
+      "offset": 7,
+      "topic": "双链表头尾插入"
+    },
+    {
+      "sourceDate": "2026-10-11",
+      "offset": 30,
+      "topic": "数组引用与复制"
+    }
+  ]
+}
