@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "topic": "链表实现栈",
+  "stage": "栈",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-11_链表实现栈.md",
+  "collectedAt": "2026-11-11",
+  "sources": [
+    {
+      "title": "Princeton：LinkedStack.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/LinkedStack.java.html",
+      "kind": "Princeton 官方课程代码"
+    },
+    {
+      "title": "Princeton：Stack linked-list implementation",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Stack.html",
+      "kind": "Princeton 官方课程 API"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：数组栈pop",
+      "difficulty": "基础",
+      "prompt": "数组栈执行pop时，哪条顺序正确？",
+      "answer": 1,
+      "explanation": "先确认非空，再减少size并读取原栈顶。",
+      "hint": "复习11月10日。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "先清空数组",
+        "先检查非空，再读data[--size]",
+        "直接读data[size]",
+        "先把size设为0"
+      ],
+      "reviewOf": "2026-11-10",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "mcq",
+      "title": "D+7：保存后继",
+      "difficulty": "基础",
+      "prompt": "双链表中间插入前保存after=current.next的原因是什么？",
+      "answer": 3,
+      "explanation": "修改current.next前要保留原后继。",
+      "hint": "复习11月4日。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "计算长度",
+        "更新head",
+        "删除current",
+        "避免丢失原后继"
+      ],
+      "reviewOf": "2026-11-04",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：二维数组访问",
+      "difficulty": "基础",
+      "prompt": "int[][] a={{1,2},{3,4}}，a[1][0]精确值是多少？",
+      "answer": "3",
+      "explanation": "先取第1行，再取该行第0列。",
+      "hint": "复习10月12日。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-12",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "链表栈push",
+      "difficulty": "基础",
+      "prompt": "top是链表头时，push(value)的正确连接是什么？",
+      "answer": 2,
+      "explanation": "新节点next指向旧top，再由top指向新节点。",
+      "hint": "头插就是入栈。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "遍历到尾部",
+        "删除旧top",
+        "new Node(value,top)并更新top",
+        "让top.next为null"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "链表栈",
+      "difficulty": "综合",
+      "prompt": "用单链表头实现push/pop/peek，覆盖空栈与size同步。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class LinkedIntStack {\n    private static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    private Node top;\n    private int size;\n\n    void push(int value) {\n        top = new Node(value, top);\n        size++;\n    }\n\n    int pop() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        int value = top.value;\n        top = top.next;\n        size--;\n        return value;\n    }\n\n    int peek() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        return top.value;\n    }\n\n    int size() {\n        return size;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        LinkedIntStack stack = new LinkedIntStack();\n        check(stack.size() == 0, \"initial size\");\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        check(stack.peek() == 30 && stack.size() == 3, \"peek\");\n        check(stack.pop() == 30 && stack.pop() == 20 && stack.pop() == 10, \"LIFO\");\n        check(stack.size() == 0, \"empty size\");\n        try {\n            stack.peek();\n            throw new AssertionError(\"empty peek accepted\");\n        } catch (NoSuchElementException expected) {\n            System.out.println(\"linked-stack checks: OK\");\n        }\n    }\n}\n",
+      "explanation": "top直接表示栈顶，头插和头删均为O(1)。",
+      "hint": "pop先保存value，再top=top.next。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-11 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class LinkedIntStack {\n    private Node top;\n    private int size;\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "push 10,20,30 then pop",
+          "output": "linked-stack checks: OK"
+        },
+        {
+          "input": "empty peek",
+          "output": "linked-stack checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-10",
+      "offset": 1,
+      "topic": "数组实现栈"
+    },
+    {
+      "sourceDate": "2026-11-04",
+      "offset": 7,
+      "topic": "双链表中间插入"
+    },
+    {
+      "sourceDate": "2026-10-12",
+      "offset": 30,
+      "topic": "二维数组与行列索引"
+    }
+  ]
+}
