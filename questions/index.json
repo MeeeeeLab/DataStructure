@@ -192,6 +192,18 @@
       "topic": "栈的LIFO与基本操作",
       "path": "questions/2026-11/2026-11-09_栈的LIFO与基本操作.json",
       "count": 5
+    },
+    {
+      "date": "2026-11-10",
+      "topic": "数组实现栈",
+      "path": "questions/2026-11/2026-11-10_数组实现栈.json",
+      "count": 5
+    },
+    {
+      "date": "2026-11-11",
+      "topic": "链表实现栈",
+      "path": "questions/2026-11/2026-11-11_链表实现栈.json",
+      "count": 5
     }
   ]
 }
