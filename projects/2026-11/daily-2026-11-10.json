@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-10",
+  "track": "java",
+  "title": "固定容量数组栈短练习",
+  "goal": "用数组与size实现栈，明确处理满栈和空栈。",
+  "prerequisites": [
+    "数组有效区间",
+    "栈LIFO",
+    "Java异常"
+  ],
+  "filename": "ArrayIntStack.java",
+  "runCommand": "java ArrayIntStack.java",
+  "starter": "public class ArrayIntStack {\n    private final int[] data;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class ArrayIntStack {\n    private final int[] data;\n    private int size;\n\n    ArrayIntStack(int capacity) {\n        if (capacity <= 0) throw new IllegalArgumentException(\"capacity must be positive\");\n        data = new int[capacity];\n    }\n\n    void push(int value) {\n        if (size == data.length) throw new IllegalStateException(\"stack is full\");\n        data[size++] = value;\n    }\n\n    int pop() {\n        if (size == 0) throw new NoSuchElementException(\"stack is empty\");\n        return data[--size];\n    }\n\n    int peek() {\n        if (size == 0) throw new NoSuchElementException(\"stack is empty\");\n        return data[size - 1];\n    }\n\n    int size() {\n        return size;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        ArrayIntStack stack = new ArrayIntStack(3);\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        check(stack.peek() == 30 && stack.size() == 3, \"peek\");\n        try {\n            stack.push(40);\n            throw new AssertionError(\"overflow accepted\");\n        } catch (IllegalStateException expected) {\n            // expected\n        }\n        check(stack.pop() == 30 && stack.pop() == 20 && stack.pop() == 10, \"LIFO\");\n        try {\n            stack.pop();\n            throw new AssertionError(\"underflow accepted\");\n        } catch (NoSuchElementException expected) {\n            System.out.println(\"array-stack checks: OK\");\n        }\n    }\n}\n",
+  "solutionExplanation": [
+    "只实现当天需要的最小模型。",
+    "所有索引或引用访问前先处理边界。",
+    "保留一个可重复运行的正常与边界自检。"
+  ],
+  "steps": [
+    {
+      "id": "state",
+      "day": "2026-11-10",
+      "title": "定义数组与size",
+      "instruction": "size表示数量和下个写入位置。",
+      "hint": "栈顶是size-1。",
+      "knowledge": [
+        "数组",
+        "有效区间"
+      ]
+    },
+    {
+      "id": "operations",
+      "day": "2026-11-10",
+      "title": "实现三个操作",
+      "instruction": "写push/pop/peek。",
+      "hint": "先检查边界。",
+      "knowledge": [
+        "LIFO",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "checks",
+      "day": "2026-11-10",
+      "title": "检查溢出下溢",
+      "instruction": "覆盖满栈与空栈异常。",
+      "hint": "不要依赖数组越界异常。",
+      "knowledge": [
+        "边界",
+        "异常"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "LIFO",
+      "input": "10,20,30",
+      "output": "array-stack checks: OK",
+      "purpose": "验证核心操作"
+    },
+    {
+      "id": "t2",
+      "label": "满栈与空栈",
+      "input": "overflow/underflow",
+      "output": "array-stack checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "index",
+      "question": "为何栈顶是data[size-1]？",
+      "answer": "size个元素占用下标0到size-1，size是下一个空位。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayStack.java",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayStack.java.html",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton：Stacks and Queues",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    }
+  ]
+}
