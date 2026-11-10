@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-11",
+  "track": "java",
+  "title": "链表栈短练习",
+  "goal": "复用单链表头插与头删实现无固定容量的栈。",
+  "prerequisites": [
+    "单链表节点",
+    "栈LIFO",
+    "Java异常"
+  ],
+  "filename": "LinkedIntStack.java",
+  "runCommand": "java LinkedIntStack.java",
+  "starter": "public class LinkedIntStack {\n    private Node top;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class LinkedIntStack {\n    private static class Node {\n        int value;\n        Node next;\n\n        Node(int value, Node next) {\n            this.value = value;\n            this.next = next;\n        }\n    }\n\n    private Node top;\n    private int size;\n\n    void push(int value) {\n        top = new Node(value, top);\n        size++;\n    }\n\n    int pop() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        int value = top.value;\n        top = top.next;\n        size--;\n        return value;\n    }\n\n    int peek() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        return top.value;\n    }\n\n    int size() {\n        return size;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        LinkedIntStack stack = new LinkedIntStack();\n        check(stack.size() == 0, \"initial size\");\n        stack.push(10);\n        stack.push(20);\n        stack.push(30);\n        check(stack.peek() == 30 && stack.size() == 3, \"peek\");\n        check(stack.pop() == 30 && stack.pop() == 20 && stack.pop() == 10, \"LIFO\");\n        check(stack.size() == 0, \"empty size\");\n        try {\n            stack.peek();\n            throw new AssertionError(\"empty peek accepted\");\n        } catch (NoSuchElementException expected) {\n            System.out.println(\"linked-stack checks: OK\");\n        }\n    }\n}\n",
+  "solutionExplanation": [
+    "只实现当天需要的最小模型。",
+    "所有索引或引用访问前先处理边界。",
+    "保留一个可重复运行的正常与边界自检。"
+  ],
+  "steps": [
+    {
+      "id": "node",
+      "day": "2026-11-11",
+      "title": "定义节点与top",
+      "instruction": "top指向单链表头。",
+      "hint": "空栈top为null。",
+      "knowledge": [
+        "Node",
+        "top"
+      ]
+    },
+    {
+      "id": "operations",
+      "day": "2026-11-11",
+      "title": "实现头部操作",
+      "instruction": "push头插，pop头删，peek读取。",
+      "hint": "都无需遍历。",
+      "knowledge": [
+        "链表",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "checks",
+      "day": "2026-11-11",
+      "title": "检查size与空栈",
+      "instruction": "每次操作保持数量同步。",
+      "hint": "空栈先抛异常。",
+      "knowledge": [
+        "不变量",
+        "边界"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "LIFO",
+      "input": "10,20,30",
+      "output": "linked-stack checks: OK",
+      "purpose": "验证头部操作"
+    },
+    {
+      "id": "t2",
+      "label": "空栈",
+      "input": "empty peek",
+      "output": "linked-stack checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "top",
+      "question": "为什么选择链表头而不是尾作为top？",
+      "answer": "单链表头插和头删都只修改常数个引用，均为O(1)。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：LinkedStack.java",
+      "url": "https://algs4.cs.princeton.edu/13stacks/LinkedStack.java.html",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton：Stack linked-list implementation",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Stack.html",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-11 实际核对，项目为原创教学练习"
+    }
+  ]
+}
