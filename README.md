@@ -18,9 +18,9 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-今日工作日小练习：[链表栈](projects/2026-11/daily-2026-11-11.md)（20–25 分钟；复用单链表头部操作）。
+今日章节验收：[栈章节独立实现验收](projects/2026-11/daily-2026-11-13.md)（25–30 分钟；自写链表栈并应用于括号匹配）。
 
-上一工作日小练习：[固定容量数组栈](projects/2026-11/daily-2026-11-10.md)（20–25 分钟；历史资料与项目 ID 保留）。
+上一工作日小练习：[括号匹配检查器](projects/2026-11/daily-2026-11-12.md)（20–25 分钟；历史资料与项目 ID 保留）。
 
 上个周末项目：[浏览历史记录器](projects/2026-11/weekend-2026-11-07.md)（11 月 7–8 日使用同一项目 ID；历史资料与记录保留）。
 
@@ -69,6 +69,8 @@
 | 2026-11-09 | [栈的 LIFO 与基本操作](notes/2026-11/2026-11-09_栈的LIFO与基本操作.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-09_栈的LIFO与基本操作.json) |
 | 2026-11-10 | [数组实现栈](notes/2026-11/2026-11-10_数组实现栈.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-10_数组实现栈.json) |
 | 2026-11-11 | [链表实现栈](notes/2026-11/2026-11-11_链表实现栈.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-11_链表实现栈.json) |
+| 2026-11-12 | [栈应用：括号匹配](notes/2026-11/2026-11-12_栈应用括号匹配.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-12_栈应用括号匹配.json) |
+| 2026-11-13 | [栈章节综合验收](notes/2026-11/2026-11-13_栈章节综合验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-13_栈章节综合验收.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
