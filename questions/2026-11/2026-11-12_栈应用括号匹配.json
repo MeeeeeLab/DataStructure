@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "topic": "栈应用括号匹配",
+  "stage": "栈",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-12_栈应用括号匹配.md",
+  "collectedAt": "2026-11-13",
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：链表栈push",
+      "difficulty": "基础",
+      "prompt": "链表栈top指向头节点时，push(X)后新节点的next应指向什么？",
+      "answer": 1,
+      "explanation": "新节点next指向旧top，然后top更新为新节点。",
+      "hint": "复习2026-11-11。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-11",
+      "reviewOffset": 1,
+      "options": [
+        "null",
+        "旧top",
+        "链表尾",
+        "自己"
+      ]
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：删除唯一节点",
+      "difficulty": "基础",
+      "prompt": "双链表只有一个节点，删除它后head和tail的精确状态是什么？",
+      "answer": "head=null,tail=null",
+      "explanation": "删除唯一节点后两端都必须清空。",
+      "hint": "复习2026-11-05。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-05",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：顺序查找成本",
+      "difficulty": "基础",
+      "prompt": "最坏情况下在长度n的数组中顺序查找不存在元素，需要检查多少个位置？",
+      "answer": "n",
+      "explanation": "不存在时必须检查全部n个位置，时间复杂度O(n)。",
+      "hint": "复习2026-10-13。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-13",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "遇到右括号",
+      "difficulty": "基础",
+      "prompt": "扫描到右括号时，哪种情况必须立即判定不匹配？",
+      "answer": 2,
+      "explanation": "没有可配对的左括号，或栈顶类型不对应，都不能继续。",
+      "hint": "右括号要消费最近的左括号。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "栈中有任意元素",
+        "文本含普通字符",
+        "栈空或栈顶类型不匹配",
+        "字符串长度为偶数"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "括号匹配检查器",
+      "difficulty": "综合",
+      "prompt": "用Deque<Character>实现三类括号匹配，覆盖空串、普通字符、交叉括号、残余左括号和提前右括号。",
+      "answer": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class BracketMatcher {\n    static boolean isBalanced(String text) {\n        Deque<Character> openings = new ArrayDeque<>();\n        for (char ch : text.toCharArray()) {\n            if (ch == '(' || ch == '[' || ch == '{') {\n                openings.push(ch);\n            } else if (ch == ')' || ch == ']' || ch == '}') {\n                if (openings.isEmpty() || !matches(openings.pop(), ch)) return false;\n            }\n        }\n        return openings.isEmpty();\n    }\n\n    private static boolean matches(char left, char right) {\n        return left == '(' && right == ')' || left == '[' && right == ']'\n                || left == '{' && right == '}';\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        check(isBalanced(\"[()]{}{[()()]()}\"), \"nested\");\n        check(isBalanced(\"\"), \"empty\");\n        check(isBalanced(\"a+(b*c)\"), \"ordinary characters\");\n        check(!isBalanced(\"[(])\"), \"crossed\");\n        check(!isBalanced(\"(()\"), \"leftover opening\");\n        check(!isBalanced(\")\"), \"early closing\");\n        System.out.println(\"bracket checks: OK\");\n    }\n}\n",
+      "explanation": "左括号入栈，右括号与最近的左括号配对，结束时栈必须为空。",
+      "hint": "先判断isEmpty再pop。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "static boolean isBalanced(String text) {\n    Deque<Character> stack = new ArrayDeque<>();\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "[()]{}{[()()]()}, empty, a+(b*c)",
+          "output": "bracket checks: OK"
+        },
+        {
+          "input": "[(]), ((), )",
+          "output": "bracket checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-11",
+      "offset": 1,
+      "topic": "链表实现栈"
+    },
+    {
+      "sourceDate": "2026-11-05",
+      "offset": 7,
+      "topic": "双链表删除与边界"
+    },
+    {
+      "sourceDate": "2026-10-13",
+      "offset": 30,
+      "topic": "顺序查找与复杂度直觉"
+    }
+  ]
+}
