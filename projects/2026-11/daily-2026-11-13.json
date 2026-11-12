@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-13",
+  "track": "java",
+  "title": "栈章节独立实现验收",
+  "goal": "独立实现链表栈并用它完成括号匹配。",
+  "prerequisites": [
+    "栈LIFO",
+    "Java类",
+    "异常与边界"
+  ],
+  "filename": "StackChapterCheck.java",
+  "runCommand": "java StackChapterCheck.java",
+  "starter": "public class StackChapterCheck {\n    private Node top;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class StackChapterCheck {\n    private static class Node {\n        char value;\n        Node next;\n        Node(char value, Node next) { this.value = value; this.next = next; }\n    }\n\n    private Node top;\n    private int size;\n\n    void push(char value) { top = new Node(value, top); size++; }\n\n    char pop() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        char value = top.value;\n        top = top.next;\n        size--;\n        return value;\n    }\n\n    char peek() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        return top.value;\n    }\n\n    boolean isEmpty() { return top == null; }\n    int size() { return size; }\n\n    static boolean isBalanced(String text) {\n        StackChapterCheck stack = new StackChapterCheck();\n        for (char ch : text.toCharArray()) {\n            if (ch == '(' || ch == '[' || ch == '{') stack.push(ch);\n            else if (ch == ')' || ch == ']' || ch == '}') {\n                if (stack.isEmpty()) return false;\n                char left = stack.pop();\n                if (!(left == '(' && ch == ')' || left == '[' && ch == ']'\n                        || left == '{' && ch == '}')) return false;\n            }\n        }\n        return stack.isEmpty();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        StackChapterCheck stack = new StackChapterCheck();\n        stack.push('A'); stack.push('B');\n        check(stack.peek() == 'B' && stack.size() == 2, \"peek/size\");\n        check(stack.pop() == 'B' && stack.pop() == 'A' && stack.isEmpty(), \"LIFO\");\n        try {\n            stack.pop();\n            throw new AssertionError(\"underflow accepted\");\n        } catch (NoSuchElementException expected) { }\n        check(isBalanced(\"{[()]}\"), \"balanced\");\n        check(!isBalanced(\"{[(])}\"), \"mismatch\");\n        check(isBalanced(\"\"), \"empty input\");\n        System.out.println(\"stack-chapter checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只实现当天目标所需的最小模型。",
+    "正常流程与至少一个边界流程使用断言验证。",
+    "公开内容只提供学习材料，不记录个人完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "adt",
+      "day": "2026-11-13",
+      "title": "实现栈ADT",
+      "instruction": "完成push/pop/peek/size。",
+      "hint": "链表头作为top。",
+      "knowledge": [
+        "链表栈",
+        "LIFO"
+      ]
+    },
+    {
+      "id": "client",
+      "day": "2026-11-13",
+      "title": "应用自写栈",
+      "instruction": "完成isBalanced。",
+      "hint": "客户端只用栈操作。",
+      "knowledge": [
+        "抽象",
+        "括号匹配"
+      ]
+    },
+    {
+      "id": "acceptance",
+      "day": "2026-11-13",
+      "title": "独立验收",
+      "instruction": "验证LIFO、空栈与错误嵌套。",
+      "hint": "先测ADT再测应用。",
+      "knowledge": [
+        "验收",
+        "边界"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "栈操作",
+      "input": "push A,B; pop; empty pop",
+      "output": "stack-chapter checks: OK",
+      "purpose": "验证ADT不变量"
+    },
+    {
+      "id": "t2",
+      "label": "应用边界",
+      "input": "{[()]}, {[(])}, empty",
+      "output": "stack-chapter checks: OK",
+      "purpose": "验证综合应用"
+    }
+  ],
+  "recall": [
+    {
+      "id": "invariant",
+      "question": "链表栈的核心不变量是什么？",
+      "answer": "top指向栈顶，size等于从top可达的节点数。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    }
+  ]
+}
