@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "topic": "栈章节综合验收",
+  "stage": "栈章节验收",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-13_栈章节综合验收.md",
+  "collectedAt": "2026-11-13",
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "mcq",
+      "title": "D+1：扫描结束条件",
+      "difficulty": "基础",
+      "prompt": "括号匹配扫描结束后，为什么还必须检查栈为空？",
+      "answer": 2,
+      "explanation": "栈非空表示仍有未配对的左括号。",
+      "hint": "复习2026-11-12。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-12",
+      "reviewOffset": 1,
+      "options": [
+        "为了排序",
+        "为了扩容",
+        "检测残余左括号",
+        "检测普通字符"
+      ]
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：链表选择",
+      "difficulty": "基础",
+      "prompt": "只需要O(1)头部插入删除且不按下标访问时，单链表还是双链表更精简？",
+      "answer": "单链表",
+      "explanation": "单链表只需next引用，头部操作已满足需求。",
+      "hint": "复习2026-11-06。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-06",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：增长速度",
+      "difficulty": "基础",
+      "prompt": "当n翻倍时，n²大约变为原来的多少倍？",
+      "answer": "4",
+      "explanation": "(2n)²=4n²。",
+      "hint": "复习2026-10-14。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-14",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "栈实现不变量",
+      "difficulty": "基础",
+      "prompt": "链表栈非空时，哪个关系必须始终成立？",
+      "answer": 1,
+      "explanation": "top指向当前栈顶，size记录从top可达的节点数。",
+      "hint": "结构与计数必须同步。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "top一定为null",
+        "top非null且size>0",
+        "tail必须存在",
+        "pop不改变size"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "独立实现与应用验收",
+      "difficulty": "综合",
+      "prompt": "不使用现成栈，独立实现链表栈push/pop/peek/size，再用它完成括号匹配；覆盖LIFO、空栈、空串和错误嵌套。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class StackChapterCheck {\n    private static class Node {\n        char value;\n        Node next;\n        Node(char value, Node next) { this.value = value; this.next = next; }\n    }\n\n    private Node top;\n    private int size;\n\n    void push(char value) { top = new Node(value, top); size++; }\n\n    char pop() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        char value = top.value;\n        top = top.next;\n        size--;\n        return value;\n    }\n\n    char peek() {\n        if (top == null) throw new NoSuchElementException(\"stack is empty\");\n        return top.value;\n    }\n\n    boolean isEmpty() { return top == null; }\n    int size() { return size; }\n\n    static boolean isBalanced(String text) {\n        StackChapterCheck stack = new StackChapterCheck();\n        for (char ch : text.toCharArray()) {\n            if (ch == '(' || ch == '[' || ch == '{') stack.push(ch);\n            else if (ch == ')' || ch == ']' || ch == '}') {\n                if (stack.isEmpty()) return false;\n                char left = stack.pop();\n                if (!(left == '(' && ch == ')' || left == '[' && ch == ']'\n                        || left == '{' && ch == '}')) return false;\n            }\n        }\n        return stack.isEmpty();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        StackChapterCheck stack = new StackChapterCheck();\n        stack.push('A'); stack.push('B');\n        check(stack.peek() == 'B' && stack.size() == 2, \"peek/size\");\n        check(stack.pop() == 'B' && stack.pop() == 'A' && stack.isEmpty(), \"LIFO\");\n        try {\n            stack.pop();\n            throw new AssertionError(\"underflow accepted\");\n        } catch (NoSuchElementException expected) { }\n        check(isBalanced(\"{[()]}\"), \"balanced\");\n        check(!isBalanced(\"{[(])}\"), \"mismatch\");\n        check(isBalanced(\"\"), \"empty input\");\n        System.out.println(\"stack-chapter checks: OK\");\n    }\n}\n",
+      "explanation": "验收同时检查ADT基本操作、边界不变量和实际应用。",
+      "hint": "先让栈基本操作全部通过，再写isBalanced客户端。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-13 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class StackChapterCheck {\n    private Node top;\n    private int size;\n    // TODO: stack operations and isBalanced\n}\n",
+      "tests": [
+        {
+          "input": "push A,B; pop twice; empty pop",
+          "output": "stack-chapter checks: OK"
+        },
+        {
+          "input": "{[()]}, {[(])}, empty",
+          "output": "stack-chapter checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "chapter-check",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-12",
+      "offset": 1,
+      "topic": "栈应用括号匹配"
+    },
+    {
+      "sourceDate": "2026-11-06",
+      "offset": 7,
+      "topic": "双链表与单链表比较练习"
+    },
+    {
+      "sourceDate": "2026-10-14",
+      "offset": 30,
+      "topic": "Big O 与增长速度"
+    }
+  ]
+}
