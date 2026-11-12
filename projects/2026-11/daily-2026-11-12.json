@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-12",
+  "track": "java",
+  "title": "括号匹配短练习",
+  "goal": "用Deque栈验证三类括号的嵌套顺序。",
+  "prerequisites": [
+    "栈LIFO",
+    "Java类",
+    "异常与边界"
+  ],
+  "filename": "BracketMatcher.java",
+  "runCommand": "java BracketMatcher.java",
+  "starter": "public class BracketMatcher {\n    static boolean isBalanced(String text) {\n        return false;\n    }\n}\n",
+  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class BracketMatcher {\n    static boolean isBalanced(String text) {\n        Deque<Character> openings = new ArrayDeque<>();\n        for (char ch : text.toCharArray()) {\n            if (ch == '(' || ch == '[' || ch == '{') {\n                openings.push(ch);\n            } else if (ch == ')' || ch == ']' || ch == '}') {\n                if (openings.isEmpty() || !matches(openings.pop(), ch)) return false;\n            }\n        }\n        return openings.isEmpty();\n    }\n\n    private static boolean matches(char left, char right) {\n        return left == '(' && right == ')' || left == '[' && right == ']'\n                || left == '{' && right == '}';\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        check(isBalanced(\"[()]{}{[()()]()}\"), \"nested\");\n        check(isBalanced(\"\"), \"empty\");\n        check(isBalanced(\"a+(b*c)\"), \"ordinary characters\");\n        check(!isBalanced(\"[(])\"), \"crossed\");\n        check(!isBalanced(\"(()\"), \"leftover opening\");\n        check(!isBalanced(\")\"), \"early closing\");\n        System.out.println(\"bracket checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只实现当天目标所需的最小模型。",
+    "正常流程与至少一个边界流程使用断言验证。",
+    "公开内容只提供学习材料，不记录个人完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "scan",
+      "day": "2026-11-12",
+      "title": "扫描字符",
+      "instruction": "左括号push。",
+      "hint": "普通字符忽略。",
+      "knowledge": [
+        "遍历",
+        "push"
+      ]
+    },
+    {
+      "id": "match",
+      "day": "2026-11-12",
+      "title": "匹配右括号",
+      "instruction": "先判空再pop比较。",
+      "hint": "最近左括号优先。",
+      "knowledge": [
+        "LIFO",
+        "pop"
+      ]
+    },
+    {
+      "id": "edges",
+      "day": "2026-11-12",
+      "title": "测试边界",
+      "instruction": "覆盖空串和错误嵌套。",
+      "hint": "结束还要判空。",
+      "knowledge": [
+        "边界",
+        "不变量"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正确嵌套",
+      "input": "[()]{}{[()()]()}",
+      "output": "bracket checks: OK",
+      "purpose": "验证LIFO匹配"
+    },
+    {
+      "id": "t2",
+      "label": "错误与空串",
+      "input": "[(]), ((), ), empty",
+      "output": "bracket checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "why",
+      "question": "为什么结束时还要判空？",
+      "answer": "可能仍有未配对的左括号。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-13 实际核对，项目为原创教学练习"
+    }
+  ]
+}
