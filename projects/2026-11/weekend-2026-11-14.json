@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "projectId": "weekend-2026-11-14",
+  "track": "java",
+  "title": "撤销操作模拟器",
+  "goal": "用栈保存修改前状态，实现可验证的多步撤销。",
+  "prerequisites": [
+    "栈LIFO",
+    "Deque",
+    "StringBuilder",
+    "边界测试"
+  ],
+  "filename": "UndoActionSimulator.java",
+  "runCommand": "java UndoActionSimulator.java",
+  "starter": "public class UndoActionSimulator {\n    private final StringBuilder text = new StringBuilder();\n    private final Deque<String> previousStates = new ArrayDeque<>();\n    // TODO\n}\n",
+  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class UndoActionSimulator {\n    private final StringBuilder text = new StringBuilder();\n    private final Deque<String> previousStates = new ArrayDeque<>();\n\n    void type(String value) {\n        if (value == null || value.isEmpty()) return;\n        previousStates.push(text.toString());\n        text.append(value);\n    }\n\n    boolean deleteLast() {\n        if (text.isEmpty()) return false;\n        previousStates.push(text.toString());\n        text.deleteCharAt(text.length() - 1);\n        return true;\n    }\n\n    boolean undo() {\n        if (previousStates.isEmpty()) return false;\n        text.setLength(0);\n        text.append(previousStates.pop());\n        return true;\n    }\n\n    String text() {\n        return text.toString();\n    }\n\n    int undoCount() {\n        return previousStates.size();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        UndoActionSimulator editor = new UndoActionSimulator();\n        check(!editor.undo() && !editor.deleteLast(), \"empty operations\");\n        editor.type(\"A\");\n        editor.type(\"B\");\n        check(editor.text().equals(\"AB\") && editor.undoCount() == 2, \"type\");\n        check(editor.deleteLast() && editor.text().equals(\"A\"), \"delete\");\n        check(editor.undo() && editor.text().equals(\"AB\"), \"undo delete\");\n        check(editor.undo() && editor.text().equals(\"A\"), \"undo type B\");\n        check(editor.undo() && editor.text().isEmpty(), \"undo type A\");\n        check(!editor.undo(), \"history exhausted\");\n        System.out.println(\"undo-simulator Saturday checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "周六建立核心数据流并通过正常与边界自检。",
+    "周日继续同一项目，完成失败保护、复杂度说明与独立验收。",
+    "公开仓库只保存教学材料，不保存个人草稿或完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "state-stack",
+      "day": "2026-11-14",
+      "title": "建立状态栈",
+      "instruction": "用Deque保存修改前文本。",
+      "hint": "栈顶是最近状态。",
+      "knowledge": [
+        "Deque",
+        "LIFO"
+      ]
+    },
+    {
+      "id": "mutations",
+      "day": "2026-11-14",
+      "title": "实现输入与删除",
+      "instruction": "成功修改前先push。",
+      "hint": "空操作不压栈。",
+      "knowledge": [
+        "push",
+        "边界"
+      ]
+    },
+    {
+      "id": "undo-core",
+      "day": "2026-11-14",
+      "title": "实现撤销",
+      "instruction": "pop并恢复最近状态。",
+      "hint": "先判空。",
+      "knowledge": [
+        "pop",
+        "恢复"
+      ]
+    },
+    {
+      "id": "saturday-checks",
+      "day": "2026-11-14",
+      "title": "周六自检",
+      "instruction": "测试空操作和连续撤销。",
+      "hint": "追踪undoCount。",
+      "knowledge": [
+        "测试",
+        "不变量"
+      ]
+    },
+    {
+      "id": "trace-history",
+      "day": "2026-11-15",
+      "title": "多步历史追踪",
+      "instruction": "手工画栈并核对输出。",
+      "hint": "从栈顶向下看。",
+      "knowledge": [
+        "追踪",
+        "LIFO"
+      ]
+    },
+    {
+      "id": "complexity-review",
+      "day": "2026-11-15",
+      "title": "复杂度复盘",
+      "instruction": "说明快照复制的真实成本。",
+      "hint": "字符串长度是n。",
+      "knowledge": [
+        "时间复杂度",
+        "空间复杂度"
+      ]
+    },
+    {
+      "id": "sunday-acceptance",
+      "day": "2026-11-15",
+      "title": "独立实现验收",
+      "instruction": "不看参考实现完成并测试。",
+      "hint": "空、单步、多步。",
+      "knowledge": [
+        "章节验收"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "连续修改撤销",
+      "input": "type A,B; delete; undo x3",
+      "output": "undo-simulator Saturday checks: OK",
+      "purpose": "验证LIFO"
+    },
+    {
+      "id": "t2",
+      "label": "空操作",
+      "input": "empty undo/delete",
+      "output": "undo-simulator Saturday checks: OK",
+      "purpose": "验证边界"
+    },
+    {
+      "id": "t3",
+      "label": "历史耗尽",
+      "input": "undo after all snapshots consumed",
+      "output": "undo-simulator Saturday checks: OK",
+      "purpose": "验证稳定失败"
+    }
+  ],
+  "recall": [
+    {
+      "id": "lifo",
+      "question": "为什么最近修改必须最先撤销？",
+      "answer": "撤销要回到紧邻当前状态的上一个状态，符合LIFO。"
+    },
+    {
+      "id": "cost",
+      "question": "快照方案的修改为何不是O(1)？",
+      "answer": "保存旧文本需要复制长度为n的字符串，最坏O(n)。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-14 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-14 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-14 实际核对，项目为原创教学练习"
+    }
+  ]
+}
