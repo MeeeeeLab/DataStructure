@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-16",
+  "track": "java",
+  "title": "排队叫号基础",
+  "goal": "用ArrayDeque实现尾入头出的FIFO服务队列。",
+  "prerequisites": [
+    "Deque",
+    "栈LIFO",
+    "空值边界"
+  ],
+  "filename": "ServiceQueue.java",
+  "runCommand": "java ServiceQueue.java",
+  "starter": "public class ServiceQueue {\n    private final Deque<String> people = new ArrayDeque<>();\n    // TODO\n}\n",
+  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class ServiceQueue {\n    private final Deque<String> people = new ArrayDeque<>();\n\n    boolean join(String name) {\n        if (name == null || name.isBlank()) return false;\n        people.offerLast(name.strip());\n        return true;\n    }\n\n    String serve() {\n        return people.pollFirst();\n    }\n\n    String next() {\n        return people.peekFirst();\n    }\n\n    int size() {\n        return people.size();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        ServiceQueue queue = new ServiceQueue();\n        check(queue.serve() == null && queue.next() == null, \"empty queue\");\n        check(!queue.join(\"  \") && !queue.join(null), \"invalid name\");\n        check(queue.join(\"Amy\") && queue.join(\"Bo\") && queue.join(\"Cat\"), \"join\");\n        check(queue.next().equals(\"Amy\") && queue.size() == 3, \"peek\");\n        check(queue.serve().equals(\"Amy\"), \"serve Amy\");\n        check(queue.serve().equals(\"Bo\") && queue.serve().equals(\"Cat\"), \"FIFO\");\n        check(queue.size() == 0 && queue.serve() == null, \"drained queue\");\n        System.out.println(\"service-queue checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "只实现当天主题需要的最小模型。",
+    "正常流程与空或非法边界均使用断言验证。",
+    "公开内容不记录个人完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "enqueue",
+      "day": "2026-11-16",
+      "title": "队尾加入",
+      "instruction": "合法姓名offerLast。",
+      "hint": "拒绝空白。",
+      "knowledge": [
+        "FIFO",
+        "offerLast"
+      ]
+    },
+    {
+      "id": "dequeue",
+      "day": "2026-11-16",
+      "title": "队头服务",
+      "instruction": "pollFirst移除最早成员。",
+      "hint": "空队列返回null。",
+      "knowledge": [
+        "pollFirst",
+        "边界"
+      ]
+    },
+    {
+      "id": "peek-check",
+      "day": "2026-11-16",
+      "title": "查看与自检",
+      "instruction": "peekFirst不删除并追踪size。",
+      "hint": "三人顺序。",
+      "knowledge": [
+        "peekFirst",
+        "测试"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "三人FIFO",
+      "input": "Amy,Bo,Cat",
+      "output": "service-queue checks: OK",
+      "purpose": "验证先进先出"
+    },
+    {
+      "id": "t2",
+      "label": "空与非法",
+      "input": "empty, blank, null, drained",
+      "output": "service-queue checks: OK",
+      "purpose": "验证边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "fifo",
+      "question": "为什么入队写尾部、出队读头部？",
+      "answer": "这样最早进入的元素始终位于头部并最先离开。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-16 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-16 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-16 实际核对，项目为原创教学练习"
+    }
+  ]
+}
