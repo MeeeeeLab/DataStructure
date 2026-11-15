@@ -13,10 +13,10 @@
   "filename": "UndoActionSimulator.java",
   "runCommand": "java UndoActionSimulator.java",
   "starter": "public class UndoActionSimulator {\n    private final StringBuilder text = new StringBuilder();\n    private final Deque<String> previousStates = new ArrayDeque<>();\n    // TODO\n}\n",
-  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class UndoActionSimulator {\n    private final StringBuilder text = new StringBuilder();\n    private final Deque<String> previousStates = new ArrayDeque<>();\n\n    void type(String value) {\n        if (value == null || value.isEmpty()) return;\n        previousStates.push(text.toString());\n        text.append(value);\n    }\n\n    boolean deleteLast() {\n        if (text.isEmpty()) return false;\n        previousStates.push(text.toString());\n        text.deleteCharAt(text.length() - 1);\n        return true;\n    }\n\n    boolean undo() {\n        if (previousStates.isEmpty()) return false;\n        text.setLength(0);\n        text.append(previousStates.pop());\n        return true;\n    }\n\n    String text() {\n        return text.toString();\n    }\n\n    int undoCount() {\n        return previousStates.size();\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        UndoActionSimulator editor = new UndoActionSimulator();\n        check(!editor.undo() && !editor.deleteLast(), \"empty operations\");\n        editor.type(\"A\");\n        editor.type(\"B\");\n        check(editor.text().equals(\"AB\") && editor.undoCount() == 2, \"type\");\n        check(editor.deleteLast() && editor.text().equals(\"A\"), \"delete\");\n        check(editor.undo() && editor.text().equals(\"AB\"), \"undo delete\");\n        check(editor.undo() && editor.text().equals(\"A\"), \"undo type B\");\n        check(editor.undo() && editor.text().isEmpty(), \"undo type A\");\n        check(!editor.undo(), \"history exhausted\");\n        System.out.println(\"undo-simulator Saturday checks: OK\");\n    }\n}\n",
+  "solution": "import java.util.ArrayDeque;\nimport java.util.Deque;\n\npublic class UndoActionSimulator {\n    private final StringBuilder text = new StringBuilder();\n    private final Deque<String> previousStates = new ArrayDeque<>();\n\n    void type(String value) {\n        if (value == null || value.isEmpty()) return;\n        previousStates.push(text.toString());\n        text.append(value);\n    }\n\n    boolean deleteLast() {\n        if (text.isEmpty()) return false;\n        previousStates.push(text.toString());\n        text.deleteCharAt(text.length() - 1);\n        return true;\n    }\n\n    boolean undo() {\n        if (previousStates.isEmpty()) return false;\n        text.setLength(0);\n        text.append(previousStates.pop());\n        return true;\n    }\n\n    String text() {\n        return text.toString();\n    }\n\n    int undoCount() {\n        return previousStates.size();\n    }\n\n    int undoAll() {\n        int count = 0;\n        while (undo()) count++;\n        return count;\n    }\n\n    static void check(boolean condition, String message) {\n        if (!condition) throw new AssertionError(message);\n    }\n\n    public static void main(String[] args) {\n        UndoActionSimulator editor = new UndoActionSimulator();\n        check(!editor.undo() && !editor.deleteLast(), \"empty operations\");\n        editor.type(\"A\");\n        editor.type(\"B\");\n        check(editor.text().equals(\"AB\") && editor.undoCount() == 2, \"type\");\n        check(editor.deleteLast() && editor.text().equals(\"A\"), \"delete\");\n        check(editor.undo() && editor.text().equals(\"AB\"), \"undo delete\");\n        check(editor.undo() && editor.text().equals(\"A\"), \"undo type B\");\n        check(editor.undo() && editor.text().isEmpty(), \"undo type A\");\n        check(!editor.undo(), \"history exhausted\");\n        editor.type(\"X\");\n        editor.type(\"Y\");\n        editor.deleteLast();\n        check(editor.undoAll() == 3 && editor.text().isEmpty(), \"undo all\");\n        check(editor.undoCount() == 0, \"history empty after undo all\");\n        System.out.println(\"undo-simulator Sunday checks: OK\");\n    }\n}\n",
   "solutionExplanation": [
     "周六建立核心数据流并通过正常与边界自检。",
-    "周日继续同一项目，完成失败保护、复杂度说明与独立验收。",
+    "周日保持全部既有步骤 ID，补充失败保护、多步追踪、复杂度说明与独立验收。",
     "公开仓库只保存教学材料，不保存个人草稿或完成状态。"
   ],
   "steps": [
@@ -102,22 +102,22 @@
       "id": "t1",
       "label": "连续修改撤销",
       "input": "type A,B; delete; undo x3",
-      "output": "undo-simulator Saturday checks: OK",
-      "purpose": "验证LIFO"
+      "output": "undo-simulator Sunday checks: OK",
+      "purpose": "验证LIFO与多步撤销"
     },
     {
       "id": "t2",
       "label": "空操作",
       "input": "empty undo/delete",
-      "output": "undo-simulator Saturday checks: OK",
-      "purpose": "验证边界"
+      "output": "undo-simulator Sunday checks: OK",
+      "purpose": "验证空操作"
     },
     {
       "id": "t3",
       "label": "历史耗尽",
       "input": "undo after all snapshots consumed",
-      "output": "undo-simulator Saturday checks: OK",
-      "purpose": "验证稳定失败"
+      "output": "undo-simulator Sunday checks: OK",
+      "purpose": "验证历史耗尽和undoAll"
     }
   ],
   "recall": [
