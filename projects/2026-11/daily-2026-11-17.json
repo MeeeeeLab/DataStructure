@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-17",
+  "track": "java",
+  "title": "固定容量数组队列",
+  "goal": "只用数组实现FIFO队列，并观察移除队头的线性移动成本。",
+  "prerequisites": [
+    "数组",
+    "队列FIFO",
+    "时间复杂度"
+  ],
+  "filename": "ArrayServiceQueue.java",
+  "runCommand": "java -ea ArrayServiceQueue.java",
+  "starter": "public class ArrayServiceQueue {\n    private final String[] data;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class ArrayServiceQueue {\n    private final String[] data;\n    private int size;\n\n    public ArrayServiceQueue(int capacity) {\n        if (capacity <= 0) throw new IllegalArgumentException(\"capacity must be positive\");\n        data = new String[capacity];\n    }\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) throw new IllegalArgumentException(\"ticket cannot be blank\");\n        if (size == data.length) throw new IllegalStateException(\"queue is full\");\n        data[size++] = ticket;\n    }\n\n    public String dequeue() {\n        if (size == 0) throw new NoSuchElementException(\"queue is empty\");\n        String first = data[0];\n        for (int i = 1; i < size; i++) data[i - 1] = data[i];\n        data[--size] = null;\n        return first;\n    }\n\n    public String peek() {\n        if (size == 0) throw new NoSuchElementException(\"queue is empty\");\n        return data[0];\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        ArrayServiceQueue queue = new ArrayServiceQueue(2);\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A01\");\n        queue.enqueue(\"A02\");\n        assert queue.size() == 2;\n        assert queue.peek().equals(\"A01\");\n        expect(IllegalStateException.class, () -> queue.enqueue(\"A03\"));\n        assert queue.dequeue().equals(\"A01\");\n        assert queue.dequeue().equals(\"A02\");\n        assert queue.size() == 0;\n        expect(NoSuchElementException.class, queue::peek);\n        expect(IllegalArgumentException.class, () -> new ArrayServiceQueue(0));\n        System.out.println(\"array-queue checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "enqueue写入data[size]，满队列明确拒绝。",
+    "dequeue保存队头后左移其余元素，并清空末尾槽，最坏O(n)。",
+    "正常、空、非法、满队列与耗尽边界均由断言验证，公开内容不记录个人完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "enqueue",
+      "day": "2026-11-17",
+      "title": "数组尾部入队",
+      "instruction": "把新票号写到size位置。",
+      "hint": "先检查满队列。",
+      "knowledge": [
+        "数组",
+        "FIFO"
+      ]
+    },
+    {
+      "id": "dequeue",
+      "day": "2026-11-17",
+      "title": "移除并左移",
+      "instruction": "保存data[0]并把剩余元素左移。",
+      "hint": "末尾置null。",
+      "knowledge": [
+        "元素移动",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "boundaries",
+      "day": "2026-11-17",
+      "title": "边界与自检",
+      "instruction": "覆盖空、非法、满队列和耗尽。",
+      "hint": "使用明确异常。",
+      "knowledge": [
+        "边界测试",
+        "异常"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "两元素FIFO",
+      "input": "capacity=2; A01,A02",
+      "output": "array-queue checks: OK",
+      "purpose": "验证顺序与peek"
+    },
+    {
+      "id": "t2",
+      "label": "容量与空边界",
+      "input": "empty, blank, full, drained, capacity=0",
+      "output": "array-queue checks: OK",
+      "purpose": "验证异常分支"
+    }
+  ],
+  "recall": [
+    {
+      "id": "cost",
+      "question": "为什么这个版本dequeue是O(n)？",
+      "answer": "删除data[0]后需要把其余最多n-1个元素逐个左移。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayQueue",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayQueue.java.html",
+      "attribution": "2026-11-17 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 21：NoSuchElementException",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NoSuchElementException.html",
+      "attribution": "2026-11-17 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-17 实际核对，项目为原创教学练习"
+    }
+  ]
+}
