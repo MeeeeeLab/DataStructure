@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-17",
+  "topic": "数组实现队列与移动成本",
+  "stage": "队列",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-17_数组实现队列与移动成本.md",
+  "collectedAt": "2026-11-17",
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayQueue",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayQueue.java.html",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 21：NoSuchElementException",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NoSuchElementException.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：队列顺序",
+      "difficulty": "基础",
+      "prompt": "按A、B、C顺序入队后，第一次出队返回什么？",
+      "answer": "A",
+      "explanation": "队列遵循FIFO，最早入队的A先离开。",
+      "hint": "复习2026-11-16。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-17 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-16",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：数组栈栈顶",
+      "difficulty": "基础",
+      "prompt": "数组栈size为3时，栈顶元素的下标是多少？",
+      "answer": "2",
+      "explanation": "有效元素下标为0到size-1，因此栈顶是2。",
+      "hint": "复习2026-11-10。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-17 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-10",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：数组项目验收",
+      "difficulty": "基础",
+      "prompt": "对长度n的数组只做一次从头到尾遍历，时间复杂度是什么？",
+      "answer": "O(n)",
+      "explanation": "每个元素最多处理一次，操作次数随n线性增长。",
+      "hint": "复习2026-10-18。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-17 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-18",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "移动成本",
+      "difficulty": "基础",
+      "prompt": "固定数组队列每次dequeue后把剩余元素整体左移，最坏时间复杂度是什么？",
+      "answer": 2,
+      "explanation": "队列有n个元素时，删除队头最多移动n-1个元素。",
+      "hint": "数一数循环次数。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-17 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "固定容量数组队列",
+      "difficulty": "综合",
+      "prompt": "只用Java数组实现固定容量字符串FIFO队列，覆盖空队列、非法票号、满队列、两元素顺序和单元素边界，并说明操作复杂度。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class ArrayServiceQueue {\n    private final String[] data;\n    private int size;\n\n    public ArrayServiceQueue(int capacity) {\n        if (capacity <= 0) throw new IllegalArgumentException(\"capacity must be positive\");\n        data = new String[capacity];\n    }\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) throw new IllegalArgumentException(\"ticket cannot be blank\");\n        if (size == data.length) throw new IllegalStateException(\"queue is full\");\n        data[size++] = ticket;\n    }\n\n    public String dequeue() {\n        if (size == 0) throw new NoSuchElementException(\"queue is empty\");\n        String first = data[0];\n        for (int i = 1; i < size; i++) data[i - 1] = data[i];\n        data[--size] = null;\n        return first;\n    }\n\n    public String peek() {\n        if (size == 0) throw new NoSuchElementException(\"queue is empty\");\n        return data[0];\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        ArrayServiceQueue queue = new ArrayServiceQueue(2);\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A01\");\n        queue.enqueue(\"A02\");\n        assert queue.size() == 2;\n        assert queue.peek().equals(\"A01\");\n        expect(IllegalStateException.class, () -> queue.enqueue(\"A03\"));\n        assert queue.dequeue().equals(\"A01\");\n        assert queue.dequeue().equals(\"A02\");\n        assert queue.size() == 0;\n        expect(NoSuchElementException.class, queue::peek);\n        expect(IllegalArgumentException.class, () -> new ArrayServiceQueue(0));\n        System.out.println(\"array-queue checks: OK\");\n    }\n}\n",
+      "explanation": "入队写size位置为O(1)；出队后整体左移为O(n)；peek为O(1)，空间为O(capacity)。",
+      "hint": "移出后把最后一个已用槽设为null。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-17 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class ArrayServiceQueue {\n    private final String[] data;\n    private int size;\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "capacity=2; A01,A02",
+          "output": "array-queue checks: OK"
+        },
+        {
+          "input": "empty, blank, full, drained, capacity=0",
+          "output": "array-queue checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-16",
+      "offset": 1,
+      "topic": "队列FIFO与基本操作"
+    },
+    {
+      "sourceDate": "2026-11-10",
+      "offset": 7,
+      "topic": "数组实现栈"
+    },
+    {
+      "sourceDate": "2026-10-18",
+      "offset": 30,
+      "topic": "周末项目一边界测试与复杂度验收"
+    }
+  ]
+}
