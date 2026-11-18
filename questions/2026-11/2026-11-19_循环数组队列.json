@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-19",
+  "topic": "循环数组队列",
+  "stage": "队列",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-19_循环数组队列.md",
+  "collectedAt": "2026-11-19",
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayQueue",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayQueue.java.html",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d7",
+      "type": "short",
+      "title": "D+7：括号匹配",
+      "difficulty": "基础",
+      "prompt": "扫描右括号')'时，如果栈已经为空，应立即判定什么结果？",
+      "answer": "括号不匹配（false）",
+      "explanation": "右括号没有对应的未闭合左括号，必须立即失败。",
+      "hint": "复习2026-11-12。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-19 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-12",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q2-review-d30",
+      "type": "short",
+      "title": "D+30：有效区间删除",
+      "difficulty": "基础",
+      "prompt": "数组有效元素个数为size，删除下标index后，需要把哪个区间依次左移一格？",
+      "answer": "从index+1到size-1的元素",
+      "explanation": "这些元素填补删除产生的空位；随后size减1。",
+      "hint": "复习2026-10-20。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-19 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-20",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "队尾下标",
+      "difficulty": "基础",
+      "prompt": "容量为5、head=4、size=2时，新元素应写入哪个下标？",
+      "answer": 1,
+      "explanation": "tail=(head+size)%capacity=(4+2)%5=1。",
+      "hint": "回绕要取模。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-19 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "0",
+        "1",
+        "4",
+        "6"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "操作复杂度",
+      "difficulty": "基础",
+      "prompt": "固定容量循环数组队列的enqueue和dequeue最坏时间复杂度分别是什么？",
+      "answer": 0,
+      "explanation": "它们只计算下标并读写固定数量的槽，不移动所有元素。",
+      "hint": "与11月17日左移版本比较。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-19 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "O(1)与O(1)",
+        "O(1)与O(n)",
+        "O(n)与O(1)",
+        "O(n)与O(n)"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "循环排队队列",
+      "difficulty": "综合",
+      "prompt": "只用Java数组实现固定容量循环FIFO队列，覆盖回绕、满队列、空队列、非法票号、容量1和非法容量。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class CircularServiceQueue {\n    private final String[] data;\n    private int head;\n    private int size;\n\n    public CircularServiceQueue(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        data = new String[capacity];\n    }\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) {\n            throw new IllegalArgumentException(\"ticket cannot be blank\");\n        }\n        if (size == data.length) {\n            throw new IllegalStateException(\"queue is full\");\n        }\n        int tail = (head + size) % data.length;\n        data[tail] = ticket;\n        size++;\n    }\n\n    public String dequeue() {\n        if (size == 0) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        String ticket = data[head];\n        data[head] = null;\n        head = (head + 1) % data.length;\n        size--;\n        return ticket;\n    }\n\n    public String peek() {\n        if (size == 0) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        return data[head];\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        CircularServiceQueue queue = new CircularServiceQueue(3);\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A\");\n        queue.enqueue(\"B\");\n        queue.enqueue(\"C\");\n        expect(IllegalStateException.class, () -> queue.enqueue(\"D\"));\n        assert queue.dequeue().equals(\"A\");\n        queue.enqueue(\"D\");\n        assert queue.peek().equals(\"B\");\n        assert queue.dequeue().equals(\"B\");\n        assert queue.dequeue().equals(\"C\");\n        assert queue.dequeue().equals(\"D\");\n        assert queue.size() == 0;\n\n        CircularServiceQueue one = new CircularServiceQueue(1);\n        one.enqueue(\"X\");\n        assert one.dequeue().equals(\"X\");\n        one.enqueue(\"Y\");\n        assert one.dequeue().equals(\"Y\");\n        expect(IllegalArgumentException.class, () -> new CircularServiceQueue(0));\n        System.out.println(\"circular-queue checks: OK\");\n    }\n}\n",
+      "explanation": "tail由(head+size)%capacity计算；出队只清空head并把head循环后移，因此主要操作为O(1)。",
+      "hint": "用size区分空队列和满队列。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-19 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class CircularServiceQueue {\n    private final String[] data;\n    private int head;\n    private int size;\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "capacity=3; A,B,C; dequeue A; enqueue D",
+          "output": "circular-queue checks: OK"
+        },
+        {
+          "input": "empty, blank, full, capacity=1, capacity=0",
+          "output": "circular-queue checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-12",
+      "offset": 7,
+      "topic": "栈应用括号匹配"
+    },
+    {
+      "sourceDate": "2026-10-20",
+      "offset": 30,
+      "topic": "数组删除与有效区间查找"
+    }
+  ]
+}
