@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-19",
+  "track": "java",
+  "title": "循环排队队列",
+  "goal": "用head、size和取模实现不搬移元素的固定容量FIFO队列。",
+  "prerequisites": [
+    "数组队列",
+    "FIFO",
+    "取模运算"
+  ],
+  "filename": "CircularServiceQueue.java",
+  "runCommand": "java -ea CircularServiceQueue.java",
+  "starter": "public class CircularServiceQueue {\n    private final String[] data;\n    private int head;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class CircularServiceQueue {\n    private final String[] data;\n    private int head;\n    private int size;\n\n    public CircularServiceQueue(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        data = new String[capacity];\n    }\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) {\n            throw new IllegalArgumentException(\"ticket cannot be blank\");\n        }\n        if (size == data.length) {\n            throw new IllegalStateException(\"queue is full\");\n        }\n        int tail = (head + size) % data.length;\n        data[tail] = ticket;\n        size++;\n    }\n\n    public String dequeue() {\n        if (size == 0) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        String ticket = data[head];\n        data[head] = null;\n        head = (head + 1) % data.length;\n        size--;\n        return ticket;\n    }\n\n    public String peek() {\n        if (size == 0) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        return data[head];\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        CircularServiceQueue queue = new CircularServiceQueue(3);\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A\");\n        queue.enqueue(\"B\");\n        queue.enqueue(\"C\");\n        expect(IllegalStateException.class, () -> queue.enqueue(\"D\"));\n        assert queue.dequeue().equals(\"A\");\n        queue.enqueue(\"D\");\n        assert queue.peek().equals(\"B\");\n        assert queue.dequeue().equals(\"B\");\n        assert queue.dequeue().equals(\"C\");\n        assert queue.dequeue().equals(\"D\");\n        assert queue.size() == 0;\n\n        CircularServiceQueue one = new CircularServiceQueue(1);\n        one.enqueue(\"X\");\n        assert one.dequeue().equals(\"X\");\n        one.enqueue(\"Y\");\n        assert one.dequeue().equals(\"Y\");\n        expect(IllegalArgumentException.class, () -> new CircularServiceQueue(0));\n        System.out.println(\"circular-queue checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "tail使用(head+size)%capacity定位下一空槽。",
+    "dequeue只清空head并循环后移，避免整体左移。",
+    "回绕、满空、容量1和非法输入均用断言验证，公开内容不记录个人完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "state",
+      "day": "2026-11-19",
+      "title": "定义状态",
+      "instruction": "用head和size区分队头、空与满。",
+      "hint": "不额外保存tail。",
+      "knowledge": [
+        "循环数组",
+        "不变量"
+      ]
+    },
+    {
+      "id": "wrap",
+      "day": "2026-11-19",
+      "title": "取模回绕",
+      "instruction": "计算tail并让head循环后移。",
+      "hint": "使用%data.length。",
+      "knowledge": [
+        "取模",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "boundaries",
+      "day": "2026-11-19",
+      "title": "边界自检",
+      "instruction": "覆盖回绕、满空和容量1。",
+      "hint": "先删除A再加入D。",
+      "knowledge": [
+        "边界测试",
+        "FIFO"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "回绕FIFO",
+      "input": "capacity=3; A,B,C; dequeue A; enqueue D",
+      "output": "circular-queue checks: OK",
+      "purpose": "验证回绕顺序"
+    },
+    {
+      "id": "t2",
+      "label": "容量边界",
+      "input": "empty, blank, full, capacity=1, capacity=0",
+      "output": "circular-queue checks: OK",
+      "purpose": "验证异常契约"
+    }
+  ],
+  "recall": [
+    {
+      "id": "tail",
+      "question": "为什么tail可以由head和size计算？",
+      "answer": "队列占用从head起连续size个循环槽，下一空槽就是(head+size)%capacity。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：ResizingArrayQueue",
+      "url": "https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/ResizingArrayQueue.java.html",
+      "attribution": "2026-11-19 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：ArrayDeque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayDeque.html",
+      "attribution": "2026-11-19 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Deque",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Deque.html",
+      "attribution": "2026-11-19 实际核对，项目为原创教学练习"
+    }
+  ]
+}
