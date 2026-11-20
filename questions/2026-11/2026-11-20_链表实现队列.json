@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-20",
+  "topic": "链表实现队列",
+  "stage": "队列",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-20_链表实现队列.md",
+  "collectedAt": "2026-11-20",
+  "sources": [
+    {
+      "title": "Princeton：LinkedQueue",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/LinkedQueue.html",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 25：Queue",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Queue.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "kind": "Princeton 官方课程"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：循环队列回绕",
+      "difficulty": "基础",
+      "prompt": "容量为3、head=2、size=2时，新元素的tail下标是多少？",
+      "answer": "1",
+      "explanation": "tail=(head+size)%capacity=(2+2)%3=1。",
+      "hint": "复习2026-11-19。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-20 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-19",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：栈章节验收",
+      "difficulty": "基础",
+      "prompt": "用栈检查括号时，扫描结束后还必须满足什么条件才能返回true？",
+      "answer": "栈为空",
+      "explanation": "栈中仍有左括号表示它们没有匹配的右括号。",
+      "hint": "复习2026-11-13。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-20 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-13",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：字符串字符遍历",
+      "difficulty": "基础",
+      "prompt": "Java字符串s从左到右遍历所有字符时，循环下标的有效范围是什么？",
+      "answer": "0到s.length()-1",
+      "explanation": "字符串下标从0开始，最后一个字符下标是length()-1。",
+      "hint": "复习2026-10-21。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-20 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-21",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "空队列恢复",
+      "difficulty": "基础",
+      "prompt": "链表队列删除最后一个节点后，除了head变为null，还必须做什么？",
+      "answer": 2,
+      "explanation": "队列为空时head和tail都应为null，保持不变量并让后续入队正确。",
+      "hint": "单元素时首尾指向同一节点。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-20 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "size加1",
+        "创建哨兵节点",
+        "把tail设为null",
+        "把旧节点重新接回"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "链式排队队列",
+      "difficulty": "综合",
+      "prompt": "用Java单链表的head、tail和size实现FIFO队列，覆盖空队列、空白票号、单元素清空后重新入队及三元素顺序。",
+      "answer": "import java.util.NoSuchElementException;\n\npublic class LinkedServiceQueue {\n    private static class Node {\n        String ticket;\n        Node next;\n\n        Node(String ticket) {\n            this.ticket = ticket;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n    private int size;\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) {\n            throw new IllegalArgumentException(\"ticket cannot be blank\");\n        }\n        Node added = new Node(ticket);\n        if (tail == null) {\n            head = added;\n        } else {\n            tail.next = added;\n        }\n        tail = added;\n        size++;\n    }\n\n    public String dequeue() {\n        if (head == null) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        String ticket = head.ticket;\n        head = head.next;\n        size--;\n        if (head == null) {\n            tail = null;\n        }\n        return ticket;\n    }\n\n    public String peek() {\n        if (head == null) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        return head.ticket;\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        LinkedServiceQueue queue = new LinkedServiceQueue();\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A\");\n        assert queue.peek().equals(\"A\");\n        assert queue.dequeue().equals(\"A\");\n        assert queue.size() == 0;\n\n        queue.enqueue(\"B\");\n        queue.enqueue(\"C\");\n        queue.enqueue(\"D\");\n        assert queue.dequeue().equals(\"B\");\n        assert queue.dequeue().equals(\"C\");\n        assert queue.dequeue().equals(\"D\");\n        expect(NoSuchElementException.class, queue::peek);\n        System.out.println(\"linked-queue checks: OK\");\n    }\n}\n",
+      "explanation": "入队接到tail并更新tail，出队移动head；首尾指针让主要操作保持O(1)。",
+      "hint": "删除最后一个节点后同步清空tail。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-20 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class LinkedServiceQueue {\n    private static class Node {\n        String ticket;\n        Node next;\n    }\n    private Node head;\n    private Node tail;\n    private int size;\n    // TODO\n}\n",
+      "tests": [
+        {
+          "input": "single A, then B,C,D",
+          "output": "linked-queue checks: OK"
+        },
+        {
+          "input": "empty, blank, drained, enqueue after empty",
+          "output": "linked-queue checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-19",
+      "offset": 1,
+      "topic": "循环数组队列"
+    },
+    {
+      "sourceDate": "2026-11-13",
+      "offset": 7,
+      "topic": "栈章节综合验收"
+    },
+    {
+      "sourceDate": "2026-10-21",
+      "offset": 30,
+      "topic": "字符串长度与字符遍历"
+    }
+  ]
+}
