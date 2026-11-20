@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-20",
+  "track": "java",
+  "title": "链式排队队列",
+  "goal": "用单链表的head与tail实现O(1)入队和出队。",
+  "prerequisites": [
+    "单链表",
+    "队列FIFO",
+    "空结构边界"
+  ],
+  "filename": "LinkedServiceQueue.java",
+  "runCommand": "java -ea LinkedServiceQueue.java",
+  "starter": "public class LinkedServiceQueue {\n    private static class Node {\n        String ticket;\n        Node next;\n    }\n    private Node head;\n    private Node tail;\n    private int size;\n    // TODO\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class LinkedServiceQueue {\n    private static class Node {\n        String ticket;\n        Node next;\n\n        Node(String ticket) {\n            this.ticket = ticket;\n        }\n    }\n\n    private Node head;\n    private Node tail;\n    private int size;\n\n    public void enqueue(String ticket) {\n        if (ticket == null || ticket.isBlank()) {\n            throw new IllegalArgumentException(\"ticket cannot be blank\");\n        }\n        Node added = new Node(ticket);\n        if (tail == null) {\n            head = added;\n        } else {\n            tail.next = added;\n        }\n        tail = added;\n        size++;\n    }\n\n    public String dequeue() {\n        if (head == null) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        String ticket = head.ticket;\n        head = head.next;\n        size--;\n        if (head == null) {\n            tail = null;\n        }\n        return ticket;\n    }\n\n    public String peek() {\n        if (head == null) {\n            throw new NoSuchElementException(\"queue is empty\");\n        }\n        return head.ticket;\n    }\n\n    public int size() {\n        return size;\n    }\n\n    private static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        LinkedServiceQueue queue = new LinkedServiceQueue();\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A\");\n        assert queue.peek().equals(\"A\");\n        assert queue.dequeue().equals(\"A\");\n        assert queue.size() == 0;\n\n        queue.enqueue(\"B\");\n        queue.enqueue(\"C\");\n        queue.enqueue(\"D\");\n        assert queue.dequeue().equals(\"B\");\n        assert queue.dequeue().equals(\"C\");\n        assert queue.dequeue().equals(\"D\");\n        expect(NoSuchElementException.class, queue::peek);\n        System.out.println(\"linked-queue checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "head指向最早票号，tail指向最新票号。",
+    "入队连接tail.next；出队移动head，均不遍历链表。",
+    "删除最后节点时把tail同步设为null，覆盖清空后重新入队。"
+  ],
+  "steps": [
+    {
+      "id": "node-state",
+      "day": "2026-11-20",
+      "title": "定义节点与首尾",
+      "instruction": "Node保存票号和next，队列保存head、tail、size。",
+      "hint": "空队列首尾都为null。",
+      "knowledge": [
+        "节点",
+        "不变量"
+      ]
+    },
+    {
+      "id": "enqueue-dequeue",
+      "day": "2026-11-20",
+      "title": "实现首出尾入",
+      "instruction": "新节点接到tail，删除时移动head。",
+      "hint": "不遍历链表。",
+      "knowledge": [
+        "FIFO",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "last-node",
+      "day": "2026-11-20",
+      "title": "清空边界",
+      "instruction": "删除最后节点时同步清空tail。",
+      "hint": "随后再次入队。",
+      "knowledge": [
+        "单元素",
+        "边界测试"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "单元素恢复",
+      "input": "enqueue A, dequeue A, enqueue B",
+      "output": "linked-queue checks: OK",
+      "purpose": "验证head/tail清空"
+    },
+    {
+      "id": "t2",
+      "label": "FIFO与非法输入",
+      "input": "B,C,D; empty; blank; drained",
+      "output": "linked-queue checks: OK",
+      "purpose": "验证顺序和异常"
+    }
+  ],
+  "recall": [
+    {
+      "id": "two-pointers",
+      "question": "为什么链表队列同时保存head和tail？",
+      "answer": "head让出队O(1)，tail让入队O(1)；缺少tail时入队需遍历到末尾。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：LinkedQueue",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/LinkedQueue.html",
+      "attribution": "2026-11-20 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Java SE 25：Queue",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Queue.html",
+      "attribution": "2026-11-20 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton：Bags, Queues, and Stacks",
+      "url": "https://algs4.cs.princeton.edu/13stacks/",
+      "attribution": "2026-11-20 实际核对，项目为原创教学练习"
+    }
+  ]
+}
