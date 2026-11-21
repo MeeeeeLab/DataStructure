@@ -18,9 +18,9 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-今日工作日小练习：[链式排队队列](projects/2026-11/daily-2026-11-20.md)（20–25 分钟；head、tail 与单元素边界）。
+今日周末项目：[排队叫号系统](projects/2026-11/weekend-2026-11-21.md)（11 月 21–22 日固定项目 ID；周日完成两种实现、边界与队列章节验收，不表示已经完成）。
 
-上一工作日小练习：[循环排队队列](projects/2026-11/daily-2026-11-19.md)（历史资料与项目 ID 保留）。
+上一工作日小练习：[链式排队队列](projects/2026-11/daily-2026-11-20.md)（历史资料与项目 ID 保留）。
 
 上个周末项目：[撤销操作模拟器](projects/2026-11/weekend-2026-11-14.md)（11 月 14–15 日使用同一项目 ID；历史资料与记录保留）。
 
@@ -79,6 +79,7 @@
 | 2026-11-17 | [数组实现队列与移动成本](notes/2026-11/2026-11-17_数组实现队列与移动成本.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-17_数组实现队列与移动成本.json) |
 | 2026-11-19 | [循环数组队列](notes/2026-11/2026-11-19_循环数组队列.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-19_循环数组队列.json) |
 | 2026-11-20 | [链表实现队列](notes/2026-11/2026-11-20_链表实现队列.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-20_链表实现队列.json) |
+| 2026-11-22 | [周末项目六：排队叫号系统综合验收](notes/2026-11/2026-11-22_周末项目六排队叫号系统综合验收.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-22_周末项目六排队叫号系统综合验收.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
