@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "projectId": "weekend-2026-11-21",
+  "track": "java",
+  "title": "排队叫号系统",
+  "goal": "用统一接口实现循环数组队列和链表队列，并完成FIFO与边界验收。",
+  "prerequisites": [
+    "队列FIFO",
+    "循环数组",
+    "单链表",
+    "边界测试"
+  ],
+  "filename": "TicketServiceSystem.java",
+  "runCommand": "java -ea TicketServiceSystem.java",
+  "starter": "public class TicketServiceSystem {\n    interface TicketQueue {\n        void enqueue(String ticket);\n        String dequeue();\n        String peek();\n        int size();\n    }\n    // TODO: CircularTicketQueue and LinkedTicketQueue\n}\n",
+  "solution": "import java.util.NoSuchElementException;\n\npublic class TicketServiceSystem {\n    interface TicketQueue {\n        void enqueue(String ticket);\n        String dequeue();\n        String peek();\n        int size();\n    }\n\n    static void requireTicket(String ticket) {\n        if (ticket == null || ticket.isBlank()) {\n            throw new IllegalArgumentException(\"ticket cannot be blank\");\n        }\n    }\n\n    static class CircularTicketQueue implements TicketQueue {\n        private final String[] items;\n        private int head;\n        private int size;\n\n        CircularTicketQueue(int capacity) {\n            if (capacity <= 0) throw new IllegalArgumentException(\"capacity must be positive\");\n            items = new String[capacity];\n        }\n\n        public void enqueue(String ticket) {\n            requireTicket(ticket);\n            if (size == items.length) throw new IllegalStateException(\"queue is full\");\n            int tail = (head + size) % items.length;\n            items[tail] = ticket;\n            size++;\n        }\n\n        public String dequeue() {\n            String ticket = peek();\n            items[head] = null;\n            head = (head + 1) % items.length;\n            size--;\n            return ticket;\n        }\n\n        public String peek() {\n            if (size == 0) throw new NoSuchElementException(\"queue is empty\");\n            return items[head];\n        }\n\n        public int size() {\n            return size;\n        }\n    }\n\n    static class LinkedTicketQueue implements TicketQueue {\n        private static class Node {\n            final String ticket;\n            Node next;\n            Node(String ticket) { this.ticket = ticket; }\n        }\n\n        private Node head;\n        private Node tail;\n        private int size;\n\n        public void enqueue(String ticket) {\n            requireTicket(ticket);\n            Node added = new Node(ticket);\n            if (tail == null) head = added;\n            else tail.next = added;\n            tail = added;\n            size++;\n        }\n\n        public String dequeue() {\n            String ticket = peek();\n            head = head.next;\n            size--;\n            if (head == null) tail = null;\n            return ticket;\n        }\n\n        public String peek() {\n            if (head == null) throw new NoSuchElementException(\"queue is empty\");\n            return head.ticket;\n        }\n\n        public int size() {\n            return size;\n        }\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    static void checkCommon(TicketQueue queue) {\n        expect(NoSuchElementException.class, queue::dequeue);\n        expect(NoSuchElementException.class, queue::peek);\n        expect(IllegalArgumentException.class, () -> queue.enqueue(\" \"));\n        queue.enqueue(\"A\");\n        assert queue.peek().equals(\"A\");\n        assert queue.dequeue().equals(\"A\");\n        assert queue.size() == 0;\n        queue.enqueue(\"B\");\n        queue.enqueue(\"C\");\n        assert queue.dequeue().equals(\"B\");\n        queue.enqueue(\"D\");\n        assert queue.dequeue().equals(\"C\");\n        assert queue.dequeue().equals(\"D\");\n        assert queue.size() == 0;\n    }\n\n    public static void main(String[] args) {\n        checkCommon(new CircularTicketQueue(2));\n        checkCommon(new LinkedTicketQueue());\n\n        CircularTicketQueue bounded = new CircularTicketQueue(2);\n        bounded.enqueue(\"A\");\n        bounded.enqueue(\"B\");\n        expect(IllegalStateException.class, () -> bounded.enqueue(\"C\"));\n        assert bounded.dequeue().equals(\"A\");\n        bounded.enqueue(\"C\");\n        assert bounded.dequeue().equals(\"B\");\n        assert bounded.dequeue().equals(\"C\");\n\n        expect(IllegalArgumentException.class, () -> new CircularTicketQueue(0));\n        System.out.println(\"weekend-queue checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "使用稳定周末项目ID；今天的完整材料可独立完成，不声称11月21日已经完成。",
+    "共享测试验收两种实现的FIFO契约，专项测试覆盖循环数组满容量和回绕。",
+    "公开仓库只保存教学材料，不保存个人答案、草稿或完成状态。"
+  ],
+  "steps": [
+    {
+      "id": "queue-contract",
+      "day": "2026-11-22",
+      "title": "固定队列契约",
+      "instruction": "定义enqueue、dequeue、peek和size。",
+      "hint": "使用方不依赖存储细节。",
+      "knowledge": [
+        "FIFO",
+        "接口"
+      ]
+    },
+    {
+      "id": "circular-queue",
+      "day": "2026-11-22",
+      "title": "实现循环数组队列",
+      "instruction": "用head和size计算尾下标。",
+      "hint": "(head+size)%capacity。",
+      "knowledge": [
+        "循环数组",
+        "模运算"
+      ]
+    },
+    {
+      "id": "linked-queue",
+      "day": "2026-11-22",
+      "title": "实现链表队列",
+      "instruction": "维护head、tail和size。",
+      "hint": "清空后tail也为null。",
+      "knowledge": [
+        "单链表",
+        "不变量"
+      ]
+    },
+    {
+      "id": "shared-tests",
+      "day": "2026-11-22",
+      "title": "共享边界测试",
+      "instruction": "同一组测试验收两种实现。",
+      "hint": "空、单元素、复用、FIFO。",
+      "knowledge": [
+        "测试",
+        "抽象"
+      ]
+    },
+    {
+      "id": "sunday-acceptance",
+      "day": "2026-11-22",
+      "title": "队列章节验收",
+      "instruction": "独立实现并说明复杂度与取舍。",
+      "hint": "两种实现主要操作均为O(1)。",
+      "knowledge": [
+        "章节验收",
+        "复杂度"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "公共FIFO",
+      "input": "empty; A; B,C,D",
+      "output": "weekend-queue checks: OK",
+      "purpose": "验收两种实现的公共契约"
+    },
+    {
+      "id": "t2",
+      "label": "循环回绕",
+      "input": "capacity=2; dequeue then enqueue",
+      "output": "weekend-queue checks: OK",
+      "purpose": "验收下标回绕"
+    },
+    {
+      "id": "t3",
+      "label": "容量与输入",
+      "input": "full; blank; zero capacity",
+      "output": "weekend-queue checks: OK",
+      "purpose": "验收失败边界"
+    }
+  ],
+  "recall": [
+    {
+      "id": "fifo",
+      "question": "为什么排队叫号使用FIFO？",
+      "answer": "最早取号者应最先服务。"
+    },
+    {
+      "id": "tradeoff",
+      "question": "循环数组与链表的主要取舍是什么？",
+      "answer": "循环数组空间连续但容量固定；链表按需增长但节点含引用开销。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Java SE 25：Queue",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Queue.html",
+      "attribution": "2026-11-22 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton：ResizingArrayQueue",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/ResizingArrayQueue.html",
+      "attribution": "2026-11-22 实际核对，项目为原创教学练习"
+    },
+    {
+      "title": "Princeton：Queue（链表实现说明）",
+      "url": "https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Queue.html",
+      "attribution": "2026-11-22 实际核对，项目为原创教学练习"
+    }
+  ]
+}
