@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-23",
+  "topic": "递归终止条件与调用过程",
+  "stage": "递归",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-23_递归终止条件与调用过程.md",
+  "collectedAt": "2026-11-23",
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Cornell：Understanding a recursive method",
+      "url": "https://www.cs.cornell.edu/courses/JavaAndDS/files/recursion2.pdf",
+      "kind": "Cornell 课程资料"
+    },
+    {
+      "title": "Java SE 25：StackOverflowError",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：队列公共契约",
+      "difficulty": "基础",
+      "prompt": "循环数组队列和链表队列内部不同，但出队顺序都必须满足什么原则？",
+      "answer": "FIFO（先进先出）",
+      "explanation": "实现可替换的前提是对外保持同一队列契约。",
+      "hint": "复习2026-11-22的排队叫号系统。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-23 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-22",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：基础队列顺序",
+      "difficulty": "基础",
+      "prompt": "依次将A、B、C加入空队列，连续两次移除分别得到什么？",
+      "answer": "A、B",
+      "explanation": "队列按最早加入者优先移除。",
+      "hint": "复习2026-11-16的FIFO。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-23 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-16",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：空数组边界",
+      "difficulty": "基础",
+      "prompt": "有效长度size为0时，为什么不能用scores[0]初始化最小值？",
+      "answer": "空有效区间没有第0个元素，访问scores[0]可能越界且没有有效数据含义",
+      "explanation": "空输入必须先定义独立返回契约，不能先读取元素。",
+      "hint": "复习2026-10-24的文本与成绩统计工具。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-23 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-24",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "递归能终止的条件",
+      "difficulty": "基础",
+      "prompt": "下面哪一组同时满足安全递归的两个核心条件？",
+      "answer": 1,
+      "explanation": "终止条件不再递归，递归步骤还必须让输入逐步靠近终止条件。",
+      "hint": "只写if还不够，参数也要变小。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-23 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "只有递归调用",
+        "有终止条件，且每次调用都更接近它",
+        "每次传入相同参数",
+        "捕获StackOverflowError后继续"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "递归求和与调用追踪",
+      "difficulty": "综合",
+      "prompt": "用Java递归实现0到n求和并记录进入/返回顺序；覆盖n=0、1、4、负数和n=3的精确调用轨迹。",
+      "answer": "public class RecursionBasics {\n    static int sumTo(int n) {\n        if (n < 0) {\n            throw new IllegalArgumentException(\"n must be non-negative\");\n        }\n        if (n == 0) {\n            return 0;\n        }\n        return n + sumTo(n - 1);\n    }\n\n    static int sumToWithTrace(int n, StringBuilder trace) {\n        if (n < 0) {\n            throw new IllegalArgumentException(\"n must be non-negative\");\n        }\n        trace.append(\"enter \").append(n).append('\\n');\n        if (n == 0) {\n            trace.append(\"return 0\\n\");\n            return 0;\n        }\n        int result = n + sumToWithTrace(n - 1, trace);\n        trace.append(\"return \").append(result).append('\\n');\n        return result;\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert sumTo(0) == 0;\n        assert sumTo(1) == 1;\n        assert sumTo(4) == 10;\n        expect(IllegalArgumentException.class, () -> sumTo(-1));\n\n        StringBuilder trace = new StringBuilder();\n        assert sumToWithTrace(3, trace) == 6;\n        String expected = \"enter 3\\nenter 2\\nenter 1\\nenter 0\\n\"\n                + \"return 0\\nreturn 1\\nreturn 3\\nreturn 6\\n\";\n        assert trace.toString().equals(expected) : trace;\n        System.out.println(\"recursion-basics checks: OK\");\n    }\n}\n",
+      "explanation": "终止条件n==0直接返回；递归步骤把n减1，返回阶段再逐层累加并记录结果。",
+      "hint": "先记录enter，递归返回后再记录return。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-23 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class RecursionBasics {\n    static int sumTo(int n) {\n        // TODO: validate, base case, reduction step\n        return 0;\n    }\n}\n",
+      "tests": [
+        {
+          "input": "n=0,1,4",
+          "output": "recursion-basics checks: OK"
+        },
+        {
+          "input": "n=-1; traced n=3",
+          "output": "recursion-basics checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-22",
+      "offset": 1,
+      "topic": "周末项目六排队叫号系统综合验收"
+    },
+    {
+      "sourceDate": "2026-11-16",
+      "offset": 7,
+      "topic": "队列FIFO与基本操作"
+    },
+    {
+      "sourceDate": "2026-10-24",
+      "offset": 30,
+      "topic": "周末项目二文本与成绩统计工具"
+    }
+  ]
+}
