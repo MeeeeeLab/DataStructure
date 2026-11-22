@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-23",
+  "track": "java",
+  "title": "递归求和调用追踪器",
+  "goal": "用终止条件、递减参数和精确轨迹理解递归调用与返回。",
+  "prerequisites": [
+    "Java方法",
+    "条件判断",
+    "StringBuilder",
+    "断言"
+  ],
+  "filename": "RecursionBasics.java",
+  "runCommand": "java -ea RecursionBasics.java",
+  "starter": "public class RecursionBasics {\n    static int sumTo(int n) {\n        // TODO: validate, base case, reduction step\n        return 0;\n    }\n}\n",
+  "solution": "public class RecursionBasics {\n    static int sumTo(int n) {\n        if (n < 0) {\n            throw new IllegalArgumentException(\"n must be non-negative\");\n        }\n        if (n == 0) {\n            return 0;\n        }\n        return n + sumTo(n - 1);\n    }\n\n    static int sumToWithTrace(int n, StringBuilder trace) {\n        if (n < 0) {\n            throw new IllegalArgumentException(\"n must be non-negative\");\n        }\n        trace.append(\"enter \").append(n).append('\\n');\n        if (n == 0) {\n            trace.append(\"return 0\\n\");\n            return 0;\n        }\n        int result = n + sumToWithTrace(n - 1, trace);\n        trace.append(\"return \").append(result).append('\\n');\n        return result;\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert sumTo(0) == 0;\n        assert sumTo(1) == 1;\n        assert sumTo(4) == 10;\n        expect(IllegalArgumentException.class, () -> sumTo(-1));\n\n        StringBuilder trace = new StringBuilder();\n        assert sumToWithTrace(3, trace) == 6;\n        String expected = \"enter 3\\nenter 2\\nenter 1\\nenter 0\\n\"\n                + \"return 0\\nreturn 1\\nreturn 3\\nreturn 6\\n\";\n        assert trace.toString().equals(expected) : trace;\n        System.out.println(\"recursion-basics checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "n==0直接返回，是不再递归的终止条件。",
+    "n每次减1，因此有限步后到达0；返回阶段逐层完成加法。",
+    "工作日小练习控制在约25–35分钟，不增加大型项目。"
+  ],
+  "steps": [
+    {
+      "id": "contract",
+      "day": "2026-11-23",
+      "title": "固定输入契约",
+      "instruction": "仅接受非负整数。",
+      "hint": "先拒绝负数。",
+      "knowledge": [
+        "前置条件",
+        "异常"
+      ]
+    },
+    {
+      "id": "base-case",
+      "day": "2026-11-23",
+      "title": "写终止条件",
+      "instruction": "n==0时直接返回0。",
+      "hint": "这一分支不能再次调用自身。",
+      "knowledge": [
+        "终止条件"
+      ]
+    },
+    {
+      "id": "reduction",
+      "day": "2026-11-23",
+      "title": "写递归步骤",
+      "instruction": "把sumTo(n)化为n+sumTo(n-1)。",
+      "hint": "参数必须靠近0。",
+      "knowledge": [
+        "递归",
+        "缩小问题"
+      ]
+    },
+    {
+      "id": "trace",
+      "day": "2026-11-23",
+      "title": "追踪进入与返回",
+      "instruction": "记录n=3的完整调用与返回顺序。",
+      "hint": "返回顺序与进入顺序相反。",
+      "knowledge": [
+        "调用栈",
+        "追踪"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正常与终止边界",
+      "input": "n=0,1,4",
+      "output": "recursion-basics checks: OK",
+      "purpose": "验证求和与终止条件"
+    },
+    {
+      "id": "t2",
+      "label": "非法输入与轨迹",
+      "input": "n=-1; traced n=3",
+      "output": "recursion-basics checks: OK",
+      "purpose": "验证输入契约和调用返回顺序"
+    }
+  ],
+  "recall": [
+    {
+      "id": "termination",
+      "question": "为什么n-1能保证本例终止？",
+      "answer": "非负n每次减1，有限步后到达终止条件0。"
+    },
+    {
+      "id": "stack",
+      "question": "为什么return记录从0、1、3到6？",
+      "answer": "最深调用先返回，外层调用随后继续计算。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "attribution": "2026-11-23 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Cornell：Understanding a recursive method",
+      "url": "https://www.cs.cornell.edu/courses/JavaAndDS/files/recursion2.pdf",
+      "attribution": "2026-11-23 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Java SE 25：StackOverflowError",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html",
+      "attribution": "2026-11-23 实际核对，练习为原创教学内容"
+    }
+  ]
+}
