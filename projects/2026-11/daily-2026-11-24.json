@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-24",
+  "track": "java",
+  "title": "递归阶乘调用追踪器",
+  "goal": "用阶乘追踪调用深入、终止与逆序返回，并控制long边界。",
+  "prerequisites": [
+    "递归终止条件",
+    "Java方法",
+    "StringBuilder",
+    "long"
+  ],
+  "filename": "RecursiveFactorial.java",
+  "runCommand": "java -ea RecursiveFactorial.java",
+  "starter": "public class RecursiveFactorial {\n    static long factorial(int n) {\n        // TODO: range, base case, recursive step\n        return 0;\n    }\n}\n",
+  "solution": "public class RecursiveFactorial {\n    static long factorial(int n) {\n        if (n < 0 || n > 20) {\n            throw new IllegalArgumentException(\"n must be from 0 to 20\");\n        }\n        if (n == 0) {\n            return 1;\n        }\n        return n * factorial(n - 1);\n    }\n\n    static long factorialWithTrace(int n, StringBuilder trace) {\n        if (n < 0 || n > 20) {\n            throw new IllegalArgumentException(\"n must be from 0 to 20\");\n        }\n        trace.append(\"call \").append(n).append('\\n');\n        if (n == 0) {\n            trace.append(\"return 1\\n\");\n            return 1;\n        }\n        long result = n * factorialWithTrace(n - 1, trace);\n        trace.append(\"return \").append(result).append('\\n');\n        return result;\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert factorial(0) == 1;\n        assert factorial(1) == 1;\n        assert factorial(5) == 120;\n        assert factorial(20) == 2432902008176640000L;\n        expect(IllegalArgumentException.class, () -> factorial(-1));\n        expect(IllegalArgumentException.class, () -> factorial(21));\n\n        StringBuilder trace = new StringBuilder();\n        assert factorialWithTrace(4, trace) == 24;\n        String expected = \"call 4\\ncall 3\\ncall 2\\ncall 1\\ncall 0\\n\"\n                + \"return 1\\nreturn 1\\nreturn 2\\nreturn 6\\nreturn 24\\n\";\n        assert trace.toString().equals(expected) : trace;\n        System.out.println(\"recursive-factorial checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "0!等于1，是不再递归的终止条件。",
+    "每层保存自己的n，深层返回后再完成乘法。",
+    "限制0到20，避免long阶乘溢出干扰递归学习。"
+  ],
+  "steps": [
+    {
+      "id": "range",
+      "day": "2026-11-24",
+      "title": "固定数值边界",
+      "instruction": "仅接受0到20。",
+      "hint": "21!超过long。",
+      "knowledge": [
+        "前置条件",
+        "long"
+      ]
+    },
+    {
+      "id": "base-case",
+      "day": "2026-11-24",
+      "title": "写0的终止条件",
+      "instruction": "n==0时返回1。",
+      "hint": "0!定义为1。",
+      "knowledge": [
+        "终止条件"
+      ]
+    },
+    {
+      "id": "recursive-step",
+      "day": "2026-11-24",
+      "title": "写乘法递归",
+      "instruction": "返回n*factorial(n-1)。",
+      "hint": "先递归，再在返回阶段乘。",
+      "knowledge": [
+        "递归步骤",
+        "调用栈"
+      ]
+    },
+    {
+      "id": "trace",
+      "day": "2026-11-24",
+      "title": "精确追踪n=4",
+      "instruction": "记录call与return顺序。",
+      "hint": "最深调用最先返回。",
+      "knowledge": [
+        "调用顺序",
+        "返回顺序"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正常与边界阶乘",
+      "input": "0,1,5,20",
+      "output": "recursive-factorial checks: OK",
+      "purpose": "验证终止条件和long边界"
+    },
+    {
+      "id": "t2",
+      "label": "非法与轨迹",
+      "input": "-1,21; traced 4",
+      "output": "recursive-factorial checks: OK",
+      "purpose": "验证输入契约和调用栈"
+    }
+  ],
+  "recall": [
+    {
+      "id": "base",
+      "question": "为什么0!返回1？",
+      "answer": "它是阶乘递归的乘法单位元和终止条件。"
+    },
+    {
+      "id": "order",
+      "question": "为什么return结果按1、1、2、6、24出现？",
+      "answer": "调用栈后进先出，内层先完成，外层随后乘上自己的n。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "attribution": "2026-11-24 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Cornell：Understanding a recursive method",
+      "url": "https://www.cs.cornell.edu/courses/JavaAndDS/files/recursion2.pdf",
+      "attribution": "2026-11-24 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Java SE 25：StackOverflowError",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html",
+      "attribution": "2026-11-24 实际核对，练习为原创教学内容"
+    }
+  ]
+}
