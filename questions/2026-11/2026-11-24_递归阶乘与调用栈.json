@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-24",
+  "topic": "递归阶乘与调用栈",
+  "stage": "递归",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-24_递归阶乘与调用栈.md",
+  "collectedAt": "2026-11-24",
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Cornell：Understanding a recursive method",
+      "url": "https://www.cs.cornell.edu/courses/JavaAndDS/files/recursion2.pdf",
+      "kind": "Cornell 课程资料"
+    },
+    {
+      "title": "Java SE 25：StackOverflowError",
+      "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html",
+      "kind": "Java 官方 API"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：递归求和终止",
+      "difficulty": "基础",
+      "prompt": "昨天的sumTo(n)为什么要让递归参数从n变成n-1？",
+      "answer": "让非负参数逐步接近终止条件n==0，从而保证终止",
+      "explanation": "递归步骤必须把问题缩小并靠近终止条件。",
+      "hint": "复习2026-11-23。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-24 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-23",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d7",
+      "type": "short",
+      "title": "D+7：数组队列移动成本",
+      "difficulty": "基础",
+      "prompt": "固定数组队列每次出队都把剩余n-1个元素左移，最坏时间复杂度是什么？",
+      "answer": "O(n)",
+      "explanation": "出队可能移动与队列长度成正比的元素。",
+      "hint": "复习2026-11-17。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-24 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-17",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q3-review-d30",
+      "type": "short",
+      "title": "D+30：有效区间",
+      "difficulty": "基础",
+      "prompt": "数组{80,90,0,0}且size=2时，成绩摘要应读取哪些元素？",
+      "answer": "只读取下标0和1，即80、90",
+      "explanation": "size定义有效区间[0,size)，容量后的0不是有效成绩。",
+      "hint": "复习2026-10-25。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-24 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-25",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q4",
+      "type": "mcq",
+      "title": "阶乘返回顺序",
+      "difficulty": "基础",
+      "prompt": "计算factorial(3)时，最深层factorial(0)返回1后，后续结果按什么顺序形成？",
+      "answer": 2,
+      "explanation": "调用栈后进先出：先得到1!*1=1，再2，最后6。",
+      "hint": "返回顺序与进入顺序相反。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-24 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "6、2、1",
+        "0、1、2",
+        "1、2、6",
+        "3、2、1"
+      ]
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "递归阶乘调用追踪",
+      "difficulty": "综合",
+      "prompt": "用Java递归实现0到20的long阶乘并记录调用/返回轨迹；覆盖0、1、5、20、负数、21和n=4精确轨迹。",
+      "answer": "public class RecursiveFactorial {\n    static long factorial(int n) {\n        if (n < 0 || n > 20) {\n            throw new IllegalArgumentException(\"n must be from 0 to 20\");\n        }\n        if (n == 0) {\n            return 1;\n        }\n        return n * factorial(n - 1);\n    }\n\n    static long factorialWithTrace(int n, StringBuilder trace) {\n        if (n < 0 || n > 20) {\n            throw new IllegalArgumentException(\"n must be from 0 to 20\");\n        }\n        trace.append(\"call \").append(n).append('\\n');\n        if (n == 0) {\n            trace.append(\"return 1\\n\");\n            return 1;\n        }\n        long result = n * factorialWithTrace(n - 1, trace);\n        trace.append(\"return \").append(result).append('\\n');\n        return result;\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert factorial(0) == 1;\n        assert factorial(1) == 1;\n        assert factorial(5) == 120;\n        assert factorial(20) == 2432902008176640000L;\n        expect(IllegalArgumentException.class, () -> factorial(-1));\n        expect(IllegalArgumentException.class, () -> factorial(21));\n\n        StringBuilder trace = new StringBuilder();\n        assert factorialWithTrace(4, trace) == 24;\n        String expected = \"call 4\\ncall 3\\ncall 2\\ncall 1\\ncall 0\\n\"\n                + \"return 1\\nreturn 1\\nreturn 2\\nreturn 6\\nreturn 24\\n\";\n        assert trace.toString().equals(expected) : trace;\n        System.out.println(\"recursive-factorial checks: OK\");\n    }\n}\n",
+      "explanation": "n==0直接返回1，递归步骤n*factorial(n-1)；轨迹显示调用逐层深入、结果逆序返回。",
+      "hint": "long只能安全保存到20!，先验证范围。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-24 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class RecursiveFactorial {\n    static long factorial(int n) {\n        // TODO: range, base case, recursive step\n        return 0;\n    }\n}\n",
+      "tests": [
+        {
+          "input": "n=0,1,5,20",
+          "output": "recursive-factorial checks: OK"
+        },
+        {
+          "input": "n=-1,21; traced n=4",
+          "output": "recursive-factorial checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-23",
+      "offset": 1,
+      "topic": "递归终止条件与调用过程"
+    },
+    {
+      "sourceDate": "2026-11-17",
+      "offset": 7,
+      "topic": "数组实现队列与移动成本"
+    },
+    {
+      "sourceDate": "2026-10-25",
+      "offset": 30,
+      "topic": "周末项目二数组与字符串章节验收"
+    }
+  ]
+}
