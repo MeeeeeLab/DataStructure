@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "projectId": "daily-2026-11-26",
+  "track": "java",
+  "title": "递归字符串双端检查器",
+  "goal": "用递减索引和双端收缩实现字符串反转与回文判断。",
+  "prerequisites": [
+    "递归终止条件",
+    "调用栈",
+    "String.length",
+    "charAt"
+  ],
+  "filename": "RecursiveStringTools.java",
+  "runCommand": "java -ea RecursiveStringTools.java",
+  "starter": "public class RecursiveStringTools {\\n    static String reverse(String text) {\\n        // TODO\\n        return \\\"\\\";\\n    }\\n\\n    static boolean isPalindrome(String text) {\\n        // TODO\\n        return false;\\n    }\\n}\\n",
+  "solution": "public class RecursiveStringTools {\n    static String reverse(String text) {\n        requireText(text);\n        StringBuilder result = new StringBuilder(text.length());\n        appendReverse(text, text.length() - 1, result);\n        return result.toString();\n    }\n\n    private static void appendReverse(String text, int index, StringBuilder result) {\n        if (index < 0) return;\n        result.append(text.charAt(index));\n        appendReverse(text, index - 1, result);\n    }\n\n    static boolean isPalindrome(String text) {\n        requireText(text);\n        return isPalindrome(text, 0, text.length() - 1);\n    }\n\n    private static boolean isPalindrome(String text, int left, int right) {\n        if (left >= right) return true;\n        if (text.charAt(left) != text.charAt(right)) return false;\n        return isPalindrome(text, left + 1, right - 1);\n    }\n\n    private static void requireText(String text) {\n        if (text == null) throw new IllegalArgumentException(\"text cannot be null\");\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert reverse(\"abcd\").equals(\"dcba\");\n        assert reverse(\"\").equals(\"\");\n        assert reverse(\"中\").equals(\"中\");\n        assert isPalindrome(\"\");\n        assert isPalindrome(\"a\");\n        assert isPalindrome(\"level\");\n        assert isPalindrome(\"上海自来水来自海上\");\n        assert !isPalindrome(\"java\");\n        expect(IllegalArgumentException.class, () -> reverse(null));\n        expect(IllegalArgumentException.class, () -> isPalindrome(null));\n        System.out.println(\"recursive-string checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "反转索引从length()-1递减到-1。",
+    "回文比较两端，相同才向中间收缩。",
+    "空串与单字符自然命中left>=right，null则明确拒绝。"
+  ],
+  "steps": [
+    {
+      "id": "contract",
+      "day": "2026-11-26",
+      "title": "固定输入契约",
+      "instruction": "null抛出IllegalArgumentException。",
+      "hint": "空串不是null。",
+      "knowledge": [
+        "边界",
+        "前置条件"
+      ]
+    },
+    {
+      "id": "reverse",
+      "day": "2026-11-26",
+      "title": "递归反转",
+      "instruction": "从末下标逐个追加字符。",
+      "hint": "index<0终止。",
+      "knowledge": [
+        "递减参数",
+        "StringBuilder"
+      ]
+    },
+    {
+      "id": "palindrome",
+      "day": "2026-11-26",
+      "title": "双端判断",
+      "instruction": "比较两端并向中间收缩。",
+      "hint": "left>=right终止。",
+      "knowledge": [
+        "双端索引",
+        "递归"
+      ]
+    },
+    {
+      "id": "acceptance",
+      "day": "2026-11-26",
+      "title": "运行边界验收",
+      "instruction": "覆盖空串、单字符、中文、非回文和null。",
+      "hint": "使用-ea启用assert。",
+      "knowledge": [
+        "测试",
+        "复杂度"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正常与短边界",
+      "input": "abcd, empty, a, level, java",
+      "output": "recursive-string checks: OK",
+      "purpose": "验证递归终止与结果"
+    },
+    {
+      "id": "t2",
+      "label": "中文与null",
+      "input": "中文回文; null",
+      "output": "recursive-string checks: OK",
+      "purpose": "验证BMP字符与输入契约"
+    }
+  ],
+  "recall": [
+    {
+      "id": "base",
+      "question": "偶数长度回文为何用left>=right？",
+      "answer": "两指针会交叉而不一定相等，交叉即比较完成。"
+    },
+    {
+      "id": "cost",
+      "question": "回文递归的时间和额外空间是多少？",
+      "answer": "时间O(n)，调用栈空间O(n)。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "attribution": "2026-11-26 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Java SE 26：String",
+      "url": "https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/String.html",
+      "attribution": "2026-11-26 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Oracle Java Tutorial：Manipulating Characters in a String",
+      "url": "https://docs.oracle.com/javase/tutorial/java/data/manipstrings.html",
+      "attribution": "2026-11-26 实际核对，练习为原创教学内容"
+    }
+  ]
+}
