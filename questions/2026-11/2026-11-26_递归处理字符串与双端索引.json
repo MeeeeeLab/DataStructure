@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-26",
+  "topic": "递归处理字符串与双端索引",
+  "stage": "递归",
+  "estimatedMinutes": 30,
+  "notePath": "notes/2026-11/2026-11-26_递归处理字符串与双端索引.md",
+  "collectedAt": "2026-11-26",
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 26：String",
+      "url": "https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/String.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Oracle Java Tutorial：Manipulating Characters in a String",
+      "url": "https://docs.oracle.com/javase/tutorial/java/data/manipstrings.html",
+      "kind": "Oracle 官方教程"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d7",
+      "type": "short",
+      "title": "D+7：循环队列尾位置",
+      "difficulty": "基础",
+      "prompt": "容量5的循环数组队列，head=4、size=2时，下一个入队位置(head+size)%5是多少？",
+      "answer": "1",
+      "explanation": "(4+2)%5=1，取模让下标从数组末尾回绕。",
+      "hint": "复习2026-11-19。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-26 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-19",
+      "reviewOffset": 7
+    },
+    {
+      "id": "q2-review-d30",
+      "type": "short",
+      "title": "D+30：单链表头插",
+      "difficulty": "基础",
+      "prompt": "把newNode插到单链表头部的两条关键赋值依次是什么？",
+      "answer": "newNode.next = head; head = newNode;",
+      "explanation": "先保留旧头节点连接，再更新head；顺序反了会丢失旧链。",
+      "hint": "复习2026-10-27。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-26 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-27",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "偶数回文终止",
+      "difficulty": "基础",
+      "prompt": "双端递归判断回文时，哪个终止条件同时适用于奇数和偶数长度？",
+      "answer": 2,
+      "explanation": "奇数长度会相遇，偶数长度会交叉，因此使用left>=right。",
+      "hint": "考虑长度为0和2。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-26 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "left == 0",
+        "right == text.length()",
+        "left >= right",
+        "text.length() > 0"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "反转轨迹",
+      "difficulty": "基础",
+      "prompt": "appendReverse(\"ABC\", 2, result)依次追加哪些字符？请连续写出。",
+      "answer": "CBA",
+      "explanation": "索引按2、1、0递减，-1时终止。",
+      "hint": "charAt(2)是C。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-26 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "递归字符串工具",
+      "difficulty": "综合",
+      "prompt": "用Java实现递归反转和双端回文判断；覆盖普通、空串、单字符、中文、非回文和null。",
+      "answer": "public class RecursiveStringTools {\n    static String reverse(String text) {\n        requireText(text);\n        StringBuilder result = new StringBuilder(text.length());\n        appendReverse(text, text.length() - 1, result);\n        return result.toString();\n    }\n\n    private static void appendReverse(String text, int index, StringBuilder result) {\n        if (index < 0) return;\n        result.append(text.charAt(index));\n        appendReverse(text, index - 1, result);\n    }\n\n    static boolean isPalindrome(String text) {\n        requireText(text);\n        return isPalindrome(text, 0, text.length() - 1);\n    }\n\n    private static boolean isPalindrome(String text, int left, int right) {\n        if (left >= right) return true;\n        if (text.charAt(left) != text.charAt(right)) return false;\n        return isPalindrome(text, left + 1, right - 1);\n    }\n\n    private static void requireText(String text) {\n        if (text == null) throw new IllegalArgumentException(\"text cannot be null\");\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert reverse(\"abcd\").equals(\"dcba\");\n        assert reverse(\"\").equals(\"\");\n        assert reverse(\"中\").equals(\"中\");\n        assert isPalindrome(\"\");\n        assert isPalindrome(\"a\");\n        assert isPalindrome(\"level\");\n        assert isPalindrome(\"上海自来水来自海上\");\n        assert !isPalindrome(\"java\");\n        expect(IllegalArgumentException.class, () -> reverse(null));\n        expect(IllegalArgumentException.class, () -> isPalindrome(null));\n        System.out.println(\"recursive-string checks: OK\");\n    }\n}\n",
+      "explanation": "反转让单索引递减到-1；回文让左右索引收缩到相遇或交叉。",
+      "hint": "回文终止条件用left>=right。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-26 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class RecursiveStringTools {\\n    static String reverse(String text) {\\n        // TODO\\n        return \\\"\\\";\\n    }\\n\\n    static boolean isPalindrome(String text) {\\n        // TODO\\n        return false;\\n    }\\n}\\n",
+      "tests": [
+        {
+          "input": "abcd, empty, level, java, 中文回文",
+          "output": "recursive-string checks: OK"
+        },
+        {
+          "input": "null",
+          "output": "recursive-string checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "lesson",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-19",
+      "offset": 7,
+      "topic": "循环数组队列"
+    },
+    {
+      "sourceDate": "2026-10-27",
+      "offset": 30,
+      "topic": "单链表头插与查找"
+    }
+  ]
+}
