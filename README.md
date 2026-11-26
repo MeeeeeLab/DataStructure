@@ -18,7 +18,9 @@
 
 10 月 9–13 日已经发布的项目资料与个人进度全部保留。从 10 月 17 日起，数据结构工作日不额外叠加大型项目；周末两天继续同一个 Java 项目。项目目标、起始代码、自测与参考实现会放入当日笔记和练习，仍使用原数据结构网站完成。
 
-今日工作日小练习：[递归字符串双端检查器](projects/2026-11/daily-2026-11-26.md)（25–35 分钟；递减索引、双端收缩与边界）。
+今日工作日小练习：[递归数组区间求和器](projects/2026-11/daily-2026-11-27.md)（25–35 分钟；半开区间、递增索引与边界）。
+
+上一工作日小练习：[递归字符串双端检查器](projects/2026-11/daily-2026-11-26.md)（历史资料与项目 ID 保留）。
 
 上一工作日小练习：[递归阶乘调用追踪器](projects/2026-11/daily-2026-11-24.md)（历史资料与项目 ID 保留）。
 
@@ -89,6 +91,7 @@
 | 2026-11-23 | [递归终止条件与调用过程](notes/2026-11/2026-11-23_递归终止条件与调用过程.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-23_递归终止条件与调用过程.json) |
 | 2026-11-24 | [递归阶乘与调用栈](notes/2026-11/2026-11-24_递归阶乘与调用栈.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-24_递归阶乘与调用栈.json) |
 | 2026-11-26 | [递归处理字符串与双端索引](notes/2026-11/2026-11-26_递归字符串双端索引.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-26_递归处理字符串与双端索引.json) |
+| 2026-11-27 | [递归数组区间求和与边界](notes/2026-11/2026-11-27_递归数组区间求和与边界.md) | [打开每日练习](https://python-daily-lab.sillywood.chatgpt.site/?course=data-structures) · [题目数据](questions/2026-11/2026-11-27_递归数组区间求和与边界.json) |
 <!-- DAILY_NOTES_END -->
 
 点击上面的笔记标题即可阅读，或进入 `notes → YYYY-MM → 日期_知识点名.md`。`.md` 是阅读笔记；`questions` 里的 `.json` 是网站读取的数据。
