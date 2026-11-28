@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-28",
+  "topic": "周末项目七递归文本工具",
+  "stage": "递归周末项目",
+  "estimatedMinutes": 35,
+  "notePath": "notes/2026-11/2026-11-28_周末项目七递归文本工具.md",
+  "collectedAt": "2026-11-28",
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "kind": "Princeton 官方课程"
+    },
+    {
+      "title": "Java SE 26：String",
+      "url": "https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/String.html",
+      "kind": "Java 官方 API"
+    },
+    {
+      "title": "Oracle Java Tutorial：Arrays",
+      "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html",
+      "kind": "Oracle 官方教程"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q1-review-d1",
+      "type": "short",
+      "title": "D+1：数组区间终止",
+      "difficulty": "基础",
+      "prompt": "递归求和半开区间[from,to)时，空区间的终止条件是什么？",
+      "answer": "from == to",
+      "explanation": "半开区间长度为to-from，两端相等时没有元素可访问。",
+      "hint": "复习2026-11-27。",
+      "sourceIndex": 2,
+      "attribution": "依据 2026-11-28 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-11-27",
+      "reviewOffset": 1
+    },
+    {
+      "id": "q2-review-d30",
+      "type": "short",
+      "title": "D+30：删除单链表头节点",
+      "difficulty": "基础",
+      "prompt": "单链表要删除的节点正是head时，更新head的关键赋值是什么？",
+      "answer": "head = head.next;",
+      "explanation": "让head跳过原首节点即可断开它；其余链仍从新head继续。",
+      "hint": "复习2026-10-29。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-28 实际阅读的官方/课程资料原创，非官方原题",
+      "reviewOf": "2026-10-29",
+      "reviewOffset": 30
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "title": "反转终止条件",
+      "difficulty": "基础",
+      "prompt": "从字符串末尾向前递归追加字符时，哪个条件表示已经处理完？",
+      "answer": 1,
+      "explanation": "最后处理下标0，下一层index为-1，因此index<0终止。",
+      "hint": "最后合法下标是length()-1。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-28 实际阅读的官方/课程资料原创，非官方原题",
+      "options": [
+        "index == text.length()",
+        "index < 0",
+        "index > 0",
+        "text.isBlank()"
+      ]
+    },
+    {
+      "id": "q4",
+      "type": "short",
+      "title": "递归字符计数",
+      "difficulty": "基础",
+      "prompt": "countChar(\"banana\", 'a')应返回多少？",
+      "answer": "3",
+      "explanation": "索引从0递增到length，每层为当前字符匹配贡献0或1。",
+      "hint": "a出现在下标1、3、5。",
+      "sourceIndex": 1,
+      "attribution": "依据 2026-11-28 实际阅读的官方/课程资料原创，非官方原题"
+    },
+    {
+      "id": "q5",
+      "type": "code",
+      "title": "递归文本工具",
+      "difficulty": "综合",
+      "prompt": "用Java递归实现反转、回文和字符计数；覆盖空串、单字符、中文、非回文和null。",
+      "answer": "public class RecursiveTextToolkit {\n    static String reverse(String text) {\n        requireText(text);\n        StringBuilder result = new StringBuilder(text.length());\n        appendReverse(text, text.length() - 1, result);\n        return result.toString();\n    }\n\n    private static void appendReverse(String text, int index, StringBuilder result) {\n        if (index < 0) return;\n        result.append(text.charAt(index));\n        appendReverse(text, index - 1, result);\n    }\n\n    static boolean isPalindrome(String text) {\n        requireText(text);\n        return isPalindrome(text, 0, text.length() - 1);\n    }\n\n    private static boolean isPalindrome(String text, int left, int right) {\n        if (left >= right) return true;\n        if (text.charAt(left) != text.charAt(right)) return false;\n        return isPalindrome(text, left + 1, right - 1);\n    }\n\n    static int countChar(String text, char target) {\n        requireText(text);\n        return countChar(text, target, 0);\n    }\n\n    private static int countChar(String text, char target, int index) {\n        if (index == text.length()) return 0;\n        int current = text.charAt(index) == target ? 1 : 0;\n        return current + countChar(text, target, index + 1);\n    }\n\n    private static void requireText(String text) {\n        if (text == null) throw new IllegalArgumentException(\"text cannot be null\");\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert reverse(\"recursion\").equals(\"noisrucer\");\n        assert reverse(\"\").equals(\"\");\n        assert reverse(\"中\").equals(\"中\");\n        assert isPalindrome(\"\");\n        assert isPalindrome(\"level\");\n        assert isPalindrome(\"上海自来水来自海上\");\n        assert !isPalindrome(\"java\");\n        assert countChar(\"banana\", 'a') == 3;\n        assert countChar(\"\", 'x') == 0;\n        assert countChar(\"中文中文\", '中') == 2;\n        expect(IllegalArgumentException.class, () -> reverse(null));\n        expect(IllegalArgumentException.class, () -> isPalindrome(null));\n        expect(IllegalArgumentException.class, () -> countChar(null, 'x'));\n        System.out.println(\"recursive-text-toolkit checks: OK\");\n    }\n}\n",
+      "explanation": "三个方法分别使用递减索引、双端收缩和递增索引，但都要求问题严格缩小并有可达终止条件。",
+      "hint": "公开方法先检查null，再调用带索引的私有递归方法。",
+      "sourceIndex": 0,
+      "attribution": "依据 2026-11-28 实际阅读的官方/课程资料原创，非官方原题",
+      "language": "java",
+      "starter": "public class RecursiveTextToolkit {\\n    static String reverse(String text) {\\n        // TODO\\n        return \\\"\\\";\\n    }\\n    static boolean isPalindrome(String text) {\\n        // TODO\\n        return false;\\n    }\\n    static int countChar(String text, char target) {\\n        // TODO\\n        return 0;\\n    }\\n}\\n",
+      "tests": [
+        {
+          "input": "recursion/empty/level/java/中文",
+          "output": "recursive-text-toolkit checks: OK"
+        },
+        {
+          "input": "null for all public methods",
+          "output": "recursive-text-toolkit checks: OK"
+        }
+      ]
+    }
+  ],
+  "language": "Java",
+  "mode": "weekend-project",
+  "reviews": [
+    {
+      "sourceDate": "2026-11-27",
+      "offset": 1,
+      "topic": "递归数组区间求和与边界"
+    },
+    {
+      "sourceDate": "2026-10-29",
+      "offset": 30,
+      "topic": "单链表删除与边界"
+    }
+  ]
+}
