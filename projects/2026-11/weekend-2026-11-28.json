@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "projectId": "weekend-2026-11-28",
+  "track": "java",
+  "title": "递归文本工具",
+  "goal": "综合单索引递归与双端递归，实现反转、回文判断和字符计数。",
+  "prerequisites": [
+    "递归终止条件",
+    "调用栈",
+    "String.length",
+    "charAt"
+  ],
+  "filename": "RecursiveTextToolkit.java",
+  "runCommand": "java -ea RecursiveTextToolkit.java",
+  "starter": "public class RecursiveTextToolkit {\\n    static String reverse(String text) { /* TODO */ return \\\"\\\"; }\\n    static boolean isPalindrome(String text) { /* TODO */ return false; }\\n    static int countChar(String text, char target) { /* TODO */ return 0; }\\n}\\n",
+  "solution": "public class RecursiveTextToolkit {\n    static String reverse(String text) {\n        requireText(text);\n        StringBuilder result = new StringBuilder(text.length());\n        appendReverse(text, text.length() - 1, result);\n        return result.toString();\n    }\n\n    private static void appendReverse(String text, int index, StringBuilder result) {\n        if (index < 0) return;\n        result.append(text.charAt(index));\n        appendReverse(text, index - 1, result);\n    }\n\n    static boolean isPalindrome(String text) {\n        requireText(text);\n        return isPalindrome(text, 0, text.length() - 1);\n    }\n\n    private static boolean isPalindrome(String text, int left, int right) {\n        if (left >= right) return true;\n        if (text.charAt(left) != text.charAt(right)) return false;\n        return isPalindrome(text, left + 1, right - 1);\n    }\n\n    static int countChar(String text, char target) {\n        requireText(text);\n        return countChar(text, target, 0);\n    }\n\n    private static int countChar(String text, char target, int index) {\n        if (index == text.length()) return 0;\n        int current = text.charAt(index) == target ? 1 : 0;\n        return current + countChar(text, target, index + 1);\n    }\n\n    private static void requireText(String text) {\n        if (text == null) throw new IllegalArgumentException(\"text cannot be null\");\n    }\n\n    static void expect(Class<? extends Throwable> type, Runnable action) {\n        try {\n            action.run();\n        } catch (Throwable error) {\n            if (type.isInstance(error)) return;\n            throw error;\n        }\n        throw new AssertionError(\"expected \" + type.getSimpleName());\n    }\n\n    public static void main(String[] args) {\n        assert reverse(\"recursion\").equals(\"noisrucer\");\n        assert reverse(\"\").equals(\"\");\n        assert reverse(\"中\").equals(\"中\");\n        assert isPalindrome(\"\");\n        assert isPalindrome(\"level\");\n        assert isPalindrome(\"上海自来水来自海上\");\n        assert !isPalindrome(\"java\");\n        assert countChar(\"banana\", 'a') == 3;\n        assert countChar(\"\", 'x') == 0;\n        assert countChar(\"中文中文\", '中') == 2;\n        expect(IllegalArgumentException.class, () -> reverse(null));\n        expect(IllegalArgumentException.class, () -> isPalindrome(null));\n        expect(IllegalArgumentException.class, () -> countChar(null, 'x'));\n        System.out.println(\"recursive-text-toolkit checks: OK\");\n    }\n}\n",
+  "solutionExplanation": [
+    "周六先完成三个递归工具和边界测试，周日继续同一项目做章节验收。",
+    "递减、双端收缩和递增索引都保证子问题严格变小。",
+    "公开方法统一拒绝null，空串则由终止条件自然处理。"
+  ],
+  "steps": [
+    {
+      "id": "reverse",
+      "day": "2026-11-28",
+      "title": "递归反转",
+      "instruction": "从末下标向前追加字符。",
+      "hint": "index<0终止。",
+      "knowledge": [
+        "递减索引",
+        "StringBuilder"
+      ]
+    },
+    {
+      "id": "palindrome",
+      "day": "2026-11-28",
+      "title": "双端回文",
+      "instruction": "比较两端并向中间收缩。",
+      "hint": "left>=right终止。",
+      "knowledge": [
+        "双端索引",
+        "提前返回"
+      ]
+    },
+    {
+      "id": "count-char",
+      "day": "2026-11-28",
+      "title": "递归字符计数",
+      "instruction": "从左到右累计匹配次数。",
+      "hint": "index==length终止。",
+      "knowledge": [
+        "递增索引",
+        "递归求和"
+      ]
+    },
+    {
+      "id": "saturday-checks",
+      "day": "2026-11-28",
+      "title": "第一阶段边界测试",
+      "instruction": "覆盖空串、中文、非回文和null。",
+      "hint": "使用-ea启用assert。",
+      "knowledge": [
+        "边界测试"
+      ]
+    },
+    {
+      "id": "sunday-acceptance",
+      "day": "2026-11-29",
+      "title": "递归章节独立验收",
+      "instruction": "不看参考实现完成三种递归并说明复杂度。",
+      "hint": "先写终止条件和变化参数。",
+      "knowledge": [
+        "章节验收",
+        "复杂度"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "t1",
+      "label": "正常与短边界",
+      "input": "recursion/empty/single/level/java",
+      "output": "recursive-text-toolkit checks: OK",
+      "purpose": "验证三种递归形状"
+    },
+    {
+      "id": "t2",
+      "label": "中文与null",
+      "input": "中文回文/count/null",
+      "output": "recursive-text-toolkit checks: OK",
+      "purpose": "验证BMP字符和输入契约"
+    }
+  ],
+  "recall": [
+    {
+      "id": "progress",
+      "question": "三个递归方法如何保证向终止条件推进？",
+      "answer": "反转索引递减，回文左右索引相向移动，计数索引递增。"
+    },
+    {
+      "id": "cost",
+      "question": "长度n文本的时间和调用栈空间是多少？",
+      "answer": "均为O(n)。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Princeton：Recursion",
+      "url": "https://introcs.cs.princeton.edu/java/23recursion/",
+      "attribution": "2026-11-28 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Java SE 26：String",
+      "url": "https://docs.oracle.com/en/java/javase/26/docs/api/java.base/java/lang/String.html",
+      "attribution": "2026-11-28 实际核对，练习为原创教学内容"
+    },
+    {
+      "title": "Oracle Java Tutorial：Arrays",
+      "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html",
+      "attribution": "2026-11-28 实际核对，练习为原创教学内容"
+    }
+  ]
+}
